@@ -10,7 +10,7 @@ export interface IContractServerRequestArgument {
 
 export interface IContractServerRequest {
     arguments: IContractServerRequestArgument[];
-    respond: ContractServerRequestResponseFunction;
+    send: ContractServerRequestResponseFunction;
     rpc: string | undefined;
     role: EndpointContractRoleType;
 }
@@ -18,13 +18,13 @@ export interface IContractServerRequest {
 export class ContractServerRequest implements IContractServerRequest {
 
     arguments: IContractServerRequestArgument[];
-    respond: ContractServerRequestResponseFunction;
+    send: ContractServerRequestResponseFunction;
     rpc: string;
     role: EndpointContractRoleType;
 
     constructor(role: EndpointContractRoleType, rpc: string, args: IContractServerRequestArgument[], callback: ContractServerRequestResponseFunction) {
         this.arguments = args;
-        this.respond = callback;
+        this.send = callback;
         this.role = role;
         this.rpc = rpc;
     }
