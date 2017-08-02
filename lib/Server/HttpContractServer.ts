@@ -88,11 +88,7 @@ export class HttpContractServer extends ContractServer {
                 return true;
             });
 
-            if (rpc === "") {
-                return respond(ContractServerResponse.FormatError());
-            }
-
-            this.map({ respond, arguments: args, rpccode: rpc, role });
+            this.map(new ContractServerRequest(role, rpc, args, respond));
         });
     }
 }
