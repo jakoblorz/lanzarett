@@ -1,5 +1,5 @@
 import { IContractServerResponse } from "./ContractServerResponse";
-import { EndpointContractRoleType } from "../Contract/EndpointContract";
+import { EndpointContractRoleType } from "../contract/EndpointContract";
 
 export type ContractServerRequestResponseFunction = (response: IContractServerResponse) => Promise<void>;
 

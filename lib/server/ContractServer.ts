@@ -1,7 +1,7 @@
 import * as csreq from "./ContractServerRequest";
 import * as csres from "./ContractServerResponse";
 
-import { IEndpointContract } from "../Contract/EndpointContract";
+import { IEndpointContract } from "../contract/EndpointContract";
 
 export type RequestMapperFunction = (req: csreq.IContractServerRequest) => Promise<void>;
 
