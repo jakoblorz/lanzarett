@@ -17,7 +17,7 @@ export abstract class ContractServer implements IContractServer {
         this.map = ContractServer.createRequestMapperFromContractArray(contracts);
     }
 
-    public abstract start(port: number): Promise<any>;
+    public abstract start(port: number): Promise<void>;
 
     public static createRequestMapperFromContractArray(contracts: IEndpointContract[]): RequestMapperFunction {
         return async function (req: csreq.IContractServerRequest) {
