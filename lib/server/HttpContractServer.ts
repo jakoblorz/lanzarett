@@ -77,7 +77,7 @@ export class HttpContractServer extends ContractServer {
         this.server = http.createServer((request, response) => {
 
             // parse the url to extract query parameter and url pathname
-            const url = urlparse(request.url, true);
+            const url = urlparse(request.url as string, true);
             if (url.pathname === undefined) {
                 url.pathname = "/";
             }
