@@ -52,14 +52,16 @@ export class HttpContractServer extends ContractServer {
 
         this.server = http.createServer((request, response) => {
 
-            // parse the url to extract query parameter, url pathname
+            // parse the url to extract query parameter and url pathname
             const url = urlparse(request.url, true);
             if (url.pathname === undefined) {
                 url.pathname = "/";
             }
 
+            // create the function to respond to the client
             const respond = this.createResponseFunction(response);
 
+            // detect target role of the request
             let role: EndpointContractRoleType | "void" = "void";
             if (url.pathname === "/api/create" && request.method === "post") {
                 role = "create";
@@ -73,22 +75,16 @@ export class HttpContractServer extends ContractServer {
                 role = "ping";
             }
 
+            // block requests that do not match the role patterns
             if (role === "void") {
                 return respond(ContractServerResponse.NotFoundError());
             }
 
-            let rpc: string = "";
-            const args = this.extractArgumentsFromRequest(url.query, request.headers).filter((v) => {
+            // fetch all the arguments from the request and search the rpc code
+            const args = this.extractArgumentsFromRequest(url.query, request.headers);
+            const rpcc = args.filter((v) => v.key === "rpc")[0].value;
 
-                if (v.key === "rpc") {
-                    rpc = v.value;
-                    return false;
-                }
-
-                return true;
-            });
-
-            this.map(new ContractServerRequest(role, rpc, args, respond));
+            this.mapRequest(new ContractServerRequest(role, rpcc, args, respond));
         });
     }
 }
