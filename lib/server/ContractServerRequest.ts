@@ -24,11 +24,6 @@ export interface IContractServerRequest {
     arguments: IContractServerRequestArgument[];
 
     /**
-     * callback function to respond to the client
-     */
-    send: ContractServerResponseFunctionType;
-
-    /**
      * signal request type as role
      */
     role: EndpointContractRoleType;
@@ -40,12 +35,10 @@ export interface IContractServerRequest {
 export class ContractServerRequest implements IContractServerRequest {
 
     arguments: IContractServerRequestArgument[];
-    send: ContractServerResponseFunctionType;
     role: EndpointContractRoleType;
 
-    constructor(role: EndpointContractRoleType, args: IContractServerRequestArgument[], callback: ContractServerResponseFunctionType) {
+    constructor(role: EndpointContractRoleType, args: IContractServerRequestArgument[]) {
         this.arguments = args;
-        this.send = callback;
         this.role = role;
     }
 

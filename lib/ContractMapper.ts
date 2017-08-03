@@ -3,7 +3,7 @@ import * as csres from "./server/ContractServerResponse";
 
 import { IEndpointContract } from "./contract/EndpointContract";
 
-export type RequestMapperFunctionType = (req: csreq.IContractServerRequest) => Promise<void>;
+export type RequestMapperFunctionType = (req: csreq.IContractServerRequest) => Promise<csres.IContractServerResponse>;
 
 export interface IContractMapper {
     mapRequest: RequestMapperFunctionType;
@@ -33,38 +33,41 @@ export abstract class ContractMapper implements IContractMapper {
      * @param contracts list of contracts that will be accessible by requests
      */
     public static createRequestMapperFromContractArray(contracts: IEndpointContract[]): RequestMapperFunctionType {
-        return async function (req: csreq.IContractServerRequest) {
+        return function (req: csreq.IContractServerRequest) {
+            return new Promise<csres.IContractServerResponse>((resolve) => {
 
-            // try to find the rpc argument, if not found, respond with a format error
-            const rpc = req.arguments.filter((v) => v.key === "rpc")[0].value;
-            if (rpc === undefined) {
-                return await req.send(csres.ContractServerResponse.FormatError());
-            }
+                // try to find the rpc argument, if not found, respond with a format error
+                const rpc = req.arguments.filter((v) => v.key === "rpc")[0].value;
+                if (rpc === undefined) {
+                    return resolve(csres.ContractServerResponse.FormatError());
+                }
 
-            // try to find the contract, if not found, respond with a not found error
-            const contract = contracts.filter((c) => c.name === rpc && c.role === req.role)[0];
-            if (contract === undefined) {
-                return await req.send(csres.ContractServerResponse.NotFoundError());
-            }
+                // try to find the contract, if not found, respond with a not found error
+                const contract = contracts.filter((c) => c.name === rpc && c.role === req.role)[0];
+                if (contract === undefined) {
+                    return resolve(csres.ContractServerResponse.NotFoundError());
+                }
 
-            // evaluate argument completeness: if arguments are missing, respond with a format error
-            const isMissingArguments = contract.arguments
-                .filter((arg) => req.arguments
-                    .filter((a) => a.key === arg).length === 0).length > 0;
-            if (isMissingArguments) {
-                return await req.send(csres.ContractServerResponse.FormatError());
-            }
+                // evaluate argument completeness: if arguments are missing, respond with a format error
+                const isMissingArguments = contract.arguments
+                    .filter((arg) => req.arguments
+                        .filter((a) => a.key === arg).length === 0).length > 0;
+                if (isMissingArguments) {
+                    return resolve(csres.ContractServerResponse.FormatError());
+                }
 
-            // bring the arguments from the request in the right order
-            const args: csreq.IContractServerRequestArgument[] = [];
-            Array.prototype.push.apply(args, contract.arguments
-                .map((argument) => req.arguments.filter((a) => a.key === argument)[0].value));
+                // bring the arguments from the request in the right order
+                const args: csreq.IContractServerRequestArgument[] = [];
+                Array.prototype.push.apply(args, contract.arguments
+                    .map((argument) => req.arguments.filter((a) => a.key === argument)[0].value));
 
-            // invoke the function from the contract with the 
-            // arguments(these were brought in the right order previously)
-            (contract.function.apply(null, args) as Promise<any>)
-                .then((res) => req.send(csres.ContractServerResponse.Success(req.role, res)))
-                .catch((res) => req.send(csres.ContractServerResponse.ServerError()));
+                // invoke the function from the contract with the 
+                // arguments(these were brought in the right order previously)
+                (contract.function.apply(null, args) as Promise<any>)
+                    .then((res) => resolve(csres.ContractServerResponse.Success(req.role, res)))
+                    .catch((res) => resolve(csres.ContractServerResponse.ServerError()));
+
+            });
         }
     }
 }
