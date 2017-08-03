@@ -56,7 +56,7 @@ export abstract class ContractMapper implements IContractMapper {
             }
 
             // bring the arguments from the request in the right order
-            const args = [];
+            const args: csreq.IContractServerRequestArgument[] = [];
             Array.prototype.push.apply(args, contract.arguments
                 .map((argument) => req.arguments.filter((a) => a.key === argument)[0].value));
 
