@@ -1,7 +1,7 @@
 import { IContractServerResponse } from "./ContractServerResponse";
 import { EndpointContractRoleType } from "../contract/EndpointContract";
 
-export type ContractServerRequestResponseFunction = (response: IContractServerResponse) => Promise<void>;
+export type ContractServerResponseFunctionType = (response: IContractServerResponse) => Promise<void>;
 
 export interface IContractServerRequestArgument {
     key: string;
@@ -10,7 +10,7 @@ export interface IContractServerRequestArgument {
 
 export interface IContractServerRequest {
     arguments: IContractServerRequestArgument[];
-    send: ContractServerRequestResponseFunction;
+    send: ContractServerResponseFunctionType;
     rpc: string | undefined;
     role: EndpointContractRoleType;
 }
@@ -18,11 +18,11 @@ export interface IContractServerRequest {
 export class ContractServerRequest implements IContractServerRequest {
 
     arguments: IContractServerRequestArgument[];
-    send: ContractServerRequestResponseFunction;
+    send: ContractServerResponseFunctionType;
     rpc: string;
     role: EndpointContractRoleType;
 
-    constructor(role: EndpointContractRoleType, rpc: string, args: IContractServerRequestArgument[], callback: ContractServerRequestResponseFunction) {
+    constructor(role: EndpointContractRoleType, rpc: string, args: IContractServerRequestArgument[], callback: ContractServerResponseFunctionType) {
         this.arguments = args;
         this.send = callback;
         this.role = role;
