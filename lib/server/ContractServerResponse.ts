@@ -102,5 +102,7 @@ export class ContractServerResponse implements IContractServerResponse {
                 new ContractServerResponse(204, "object", JSON.stringify(data)) :
                 new ContractServerResponse(204, "string", data);
         }
+        
+        return ContractServerResponse.ServerError();
     }
 }
