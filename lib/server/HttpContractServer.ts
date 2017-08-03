@@ -105,7 +105,8 @@ export class HttpContractServer extends ContractServer {
             const args = this.extractArgumentsFromRequest(url.query, request.headers);
 
             // call the contract mapper to invoke contract functions
-            this.mapRequest(new ContractServerRequest(role, args, respond));
+            this.mapRequest(new ContractServerRequest(role, args))
+                .then((v) => respond(v));
         });
     }
 }
