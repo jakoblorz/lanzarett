@@ -73,18 +73,14 @@ export class HttpContractServer extends ContractServer {
                 role = "delete";
             } else if (url.pathname === "/api/ping" && request.method === "get") {
                 role = "ping";
-            }
-
-            // block requests that do not match the role patterns
-            if (role === "void") {
+            } else {
                 return respond(ContractServerResponse.NotFoundError());
             }
 
             // fetch all the arguments from the request and search the rpc code
             const args = this.extractArgumentsFromRequest(url.query, request.headers);
-            const rpcc = args.filter((v) => v.key === "rpc")[0].value;
 
-            this.mapRequest(new ContractServerRequest(role, rpcc, args, respond));
+            this.mapRequest(new ContractServerRequest(role, args, respond));
         });
     }
 }
