@@ -1,0 +1,1 @@
+export { EndpointContract } from "./lib"
