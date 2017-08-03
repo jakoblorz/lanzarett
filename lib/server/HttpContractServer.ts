@@ -10,7 +10,7 @@ export class HttpContractServer extends ContractServer {
 
     server: http.Server;
 
-    public async start(port: number): Promise<any> {
+    public async listen(port: number): Promise<any> {
         return new Promise<void>((resolve, reject) => this.server.listen(port, resolve));
     }
 
