@@ -1,5 +1,5 @@
 export type EndpointContractRoleType = "read" | "create" | "update" | "delete" | "ping";
-export type EndpointContractFunction = (...args: any[]) => Promise<void>;
+export type EndpointContractFunction = (...args: any[]) => Promise<any>;
 
 export interface IEndpointContract {
     name: string;
