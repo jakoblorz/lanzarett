@@ -36,13 +36,19 @@ export abstract class ContractMapper implements IContractMapper {
         return function (req: csreq.IContractServerRequest) {
             return new Promise<csres.IContractServerResponse>((resolve) => {
 
+                // respond with a format error as no argument was defined
+                if (req.arguments === undefined) {
+                    return resolve(csres.ContractServerResponse.FormatError());
+                }
+
                 // try to find the rpc argument, if not found, respond with a format error
-                const rpc = req.arguments.filter((v) => v.key === "rpc")[0].value;
-                if (rpc === undefined) {
+                const rpc_entry = req.arguments.filter((v) => v.key === "rpc")[0];
+                if (rpc_entry === undefined) {
                     return resolve(csres.ContractServerResponse.FormatError());
                 }
 
                 // try to find the contract, if not found, respond with a not found error
+                const rpc = rpc_entry.value;
                 const contract = contracts.filter((c) => c.name === rpc && c.role === req.role)[0];
                 if (contract === undefined) {
                     return resolve(csres.ContractServerResponse.NotFoundError());
