@@ -104,6 +104,7 @@ export class HttpContractServer extends ContractServer {
             // fetch all the arguments from the request and search the rpc code
             const args = this.extractArgumentsFromRequest(url.query, request.headers);
 
+            // call the contract mapper to invoke contract functions
             this.mapRequest(new ContractServerRequest(role, args, respond));
         });
     }
