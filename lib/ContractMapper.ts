@@ -1,6 +1,7 @@
 import * as csreq from "./server/ContractServerRequest";
 import * as csres from "./server/ContractServerResponse";
 
+import { KeyValueStore } from "./";
 import { IEndpointContract } from "./contract/EndpointContract";
 
 export type RequestMapperFunctionType = (req: csreq.IContractServerRequest) => Promise<csres.IContractServerResponse>;
@@ -62,10 +63,16 @@ export abstract class ContractMapper implements IContractMapper {
                     return resolve(csres.ContractServerResponse.FormatError());
                 }
 
-                // bring the arguments from the request in the right order
-                const args: csreq.IContractServerRequestArgument[] = [];
+                // === version 0.2: added kvs to prepare stack ===
+                const kvs = new KeyValueStore();
+
+                // bring the arguments from the request in the right order, 
+                // inject the new kvs as the first element in the list
+                const args: csreq.IContractServerRequestArgument[] = [kvs];
                 Array.prototype.push.apply(args, contract.arguments
                     .map((argument) => req.arguments.filter((a) => a.key === argument)[0].value));
+                
+                // === version 0.2: tests successful, kvs gets injected as first argument ===
 
                 // invoke the function from the contract with the 
                 // arguments(these were brought in the right order previously)
