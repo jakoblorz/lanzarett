@@ -34,6 +34,29 @@ export class HttpContractServer extends ContractServer {
     }
 
     /**
+     * recieve the body of a incomming http request WARNING: this method will
+     * always resolve with content! If json parsing or content recieving fails
+     * this method will resolve with {} without any further notice
+     * @param request incomming http request that might contain content
+     */
+    private recieveBody(request: http.IncomingMessage) {
+        return new Promise<{}>((resolve, reject) => {
+            body(request, (err, buf) => {
+                // error occured, but proceed with execution
+                if (err) resolve({});
+                
+                // resolve with parsed content, resolve even
+                // if error occured
+                try {
+                    resolve(JSON.parse(buf.toString()));
+                } catch (e) {
+                    resolve({});
+                }
+            });
+        });
+    }
+
+    /**
      * extract all arguments from a http request components using
      * the following hierachy: query - header - body
      * @param queries query arguments from the request
@@ -100,8 +123,8 @@ export class HttpContractServer extends ContractServer {
             }
 
             Promise.resolve({})
-                // recieve the body from the request if necessary    
-                .then(() => method === "POST" || method === "PUT" ? body(request) : Promise.resolve({}))
+                // recieve the body from the request if necessary
+                .then(() => method === "POST" || method === "PUT" ? this.recieveBody(request) : Promise.resolve({}))
                 // parse the arguments from the url, headers and body (if resolved with content)
                 .then((content) => this.extractArgumentsFromRequest(URL.query, headers, content))
                 // invoke the contracts function (if contract was found -> level 2 routing)
