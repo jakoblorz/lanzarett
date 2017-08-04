@@ -34,7 +34,7 @@ export class HttpContractServer extends ContractServer {
     }
 
     /**
-     * recieve the body of a incomming http request WARNING: this method will
+     * recieve the body of an incomming http request WARNING: this method will
      * always resolve with content! If json parsing or content recieving fails
      * this method will resolve with {} without any further notice
      * @param request incomming http request that might contain content
@@ -128,7 +128,7 @@ export class HttpContractServer extends ContractServer {
                 // parse the arguments from the url, headers and body (if resolved with content)
                 .then((content) => this.extractArgumentsFromRequest(URL.query, headers, content))
                 // invoke the contracts function (if contract was found -> level 2 routing)
-                .then((args) => this.mapRequest(new ContractServerRequest(role as EndpointContractRoleType, args)))
+                .then((args) => this.mapContractServerRequest(new ContractServerRequest(role as EndpointContractRoleType, args)))
                 // send the result back to the client
                 .then((res) => respond(res));
         });

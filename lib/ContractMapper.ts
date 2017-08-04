@@ -6,7 +6,7 @@ import { IEndpointContract } from "./contract/EndpointContract";
 export type RequestMapperFunctionType = (req: csreq.IContractServerRequest) => Promise<csres.IContractServerResponse>;
 
 export interface IContractMapper {
-    mapRequest: RequestMapperFunctionType;
+    mapContractServerRequest: RequestMapperFunctionType;
 }
 
 /**
@@ -17,14 +17,14 @@ export interface IContractMapper {
  */
 export abstract class ContractMapper implements IContractMapper {
 
-    mapRequest: RequestMapperFunctionType;
+    mapContractServerRequest: RequestMapperFunctionType;
 
     /**
      * create a new ContractMapper
      * @param contracts list of contracts that will be accessible by requests
      */
     constructor(contracts: IEndpointContract[]) {
-        this.mapRequest = ContractMapper.createRequestMapperFromContractArray(contracts);
+        this.mapContractServerRequest = ContractMapper.createRequestMapperFromContractArray(contracts);
     }
 
     /**
