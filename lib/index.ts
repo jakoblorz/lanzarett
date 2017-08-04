@@ -5,3 +5,4 @@ export { EndpointContract, EndpointContractFunction, EndpointContractRoleType, I
 export { ContractServerErrorResponseCode, ContractServerResponse, ContractServerResponseType, ContractServerSuccessResponseCode, IContractServerResponse} from "./server/ContractServerResponse";
 export { ContractServerRequest, ContractServerResponseFunctionType, IContractServerRequest, IContractServerRequestArgument } from "./server/ContractServerRequest";
 export { ContractMapper, IContractMapper, RequestMapperFunctionType } from "./ContractMapper";
+export { IKeyValueStoreGet, IKeyValueStoreSet, KeyValueStore } from "./KeyValueStore"
