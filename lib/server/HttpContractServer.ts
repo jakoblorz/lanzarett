@@ -71,10 +71,12 @@ export class HttpContractServer extends ContractServer {
 
         this.server = http.createServer((request, response) => {
 
+            const { headers, method, url } = request;
+
             // parse the url to extract query parameter and url pathname
-            const url = urlparse(request.url as string, true);
-            if (url.pathname === undefined) {
-                url.pathname = "/";
+            const URL = urlparse(url as string, true);
+            if (URL.pathname === undefined) {
+                URL.pathname = "/";
             }
 
             // create the function to respond to the client
@@ -82,22 +84,22 @@ export class HttpContractServer extends ContractServer {
 
             // detect target role of the request
             let role: EndpointContractRoleType | "void" = "void";
-            if (url.pathname === "/api/create" && request.method === "POST") {
+            if (URL.pathname === "/api/create" && method === "POST") {
                 role = "create";
-            } else if (url.pathname === "/api/read" && request.method === "GET") {
+            } else if (URL.pathname === "/api/read" && method === "GET") {
                 role = "read";
-            } else if (url.pathname === "/api/update" && request.method === "PUT") {
+            } else if (URL.pathname === "/api/update" && method === "PUT") {
                 role = "update";
-            } else if (url.pathname === "/api/delete" && request.method === "DELETE") {
+            } else if (URL.pathname === "/api/delete" && method === "DELETE") {
                 role = "delete";
-            } else if (url.pathname === "/api/ping" && request.method === "GET") {
+            } else if (URL.pathname === "/api/ping" && method === "GET") {
                 role = "ping";
             } else {
                 return respond(ContractServerResponse.NotFoundError());
             }
 
             // fetch all the arguments from the request and search the rpc code
-            const args = this.extractArgumentsFromRequest(url.query, request.headers);
+            const args = this.extractArgumentsFromRequest(URL.query, headers);
 
             // call the contract mapper to invoke contract functions
             this.mapRequest(new ContractServerRequest(role, args))
