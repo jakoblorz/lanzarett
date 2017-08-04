@@ -12,11 +12,11 @@ class HttpContractServerTest extends HttpContractServer {
 
     public static generateDummyContracts() {
         return [
-            new EndpointContract("createdummy", "create", async function (arga, argb) { if (arga === "abc" && argb === "bcd") { return "success"; } else { return "error" } }),
-            new EndpointContract("readdummy", "read", async function (arga, argb) { if (arga === "abc" && argb === "bcd") { return "success"; } else { return "error" } }),
-            new EndpointContract("updatedummy", "update", async function (arga, argb) { if (arga === "abc" && argb === "bcd") { return "success"; } else { return "error" } }),
-            new EndpointContract("deletedummy", "delete", async function (arga, argb) { if (arga === "abc" && argb === "bcd") { return "success"; } else { return "error" } }),
-            new EndpointContract("pingdummy", "ping", async function (arga, argb) { if (arga === "abc" && argb === "bcd") { return "success"; } else { return "error" } })
+            new EndpointContract("createdummy", "create", async function (kvs, arga, argb) { if (arga === "abc" && argb === "bcd") { return "success"; } else { return "error" } }),
+            new EndpointContract("readdummy", "read", async function (kvs, arga, argb) { if (arga === "abc" && argb === "bcd") { return "success"; } else { return "error" } }),
+            new EndpointContract("updatedummy", "update", async function (kvs, arga, argb) { if (arga === "abc" && argb === "bcd") { return "success"; } else { return "error" } }),
+            new EndpointContract("deletedummy", "delete", async function (kvs, arga, argb) { if (arga === "abc" && argb === "bcd") { return "success"; } else { return "error" } }),
+            new EndpointContract("pingdummy", "ping", async function (kvs, arga, argb) { if (arga === "abc" && argb === "bcd") { return "success"; } else { return "error" } })
         ]
     }
 }

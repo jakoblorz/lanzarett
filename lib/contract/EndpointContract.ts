@@ -1,5 +1,7 @@
+import { IKeyValueStoreGet } from "../";
+
 export type EndpointContractRoleType = "read" | "create" | "update" | "delete" | "ping";
-export type EndpointContractFunction = (...args: any[]) => Promise<any>;
+export type EndpointContractFunction = (kvs: IKeyValueStoreGet, ...args: any[]) => Promise<any>;
 
 export interface IEndpointContract {
     name: string;
@@ -24,7 +26,8 @@ export class EndpointContract implements IEndpointContract {
             throw new Error("could not find function string in callback argument - did you use a fat-arrow function definition?");
         }
 
-        this.arguments = EndpointContract.extractFunctionArguments(this);
+        // get the arguments from the function, ignoring the first one (kvs getter)
+        this.arguments = EndpointContract.extractFunctionArguments(this).filter((val, i) => i > 0);
     }
 
     public static extractFunctionArguments(contract: IEndpointContract) {

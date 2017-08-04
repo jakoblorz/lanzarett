@@ -9,9 +9,9 @@ export class ContractMapperTest extends ContractMapper {
 
     public static generateDummyContracts() {
         return [
-            new EndpointContract("getdummy1", "read", async function () { return "success"; }),
-            new EndpointContract("getdummy2", "read", async function (id) { if (id === "abc") { return "success"; } else { return "error"; } }),
-            new EndpointContract("getdummy3", "read", async function (id, name) { if (id === "abc" && name === "bcd") { return "success"; } else { return "error" } })
+            new EndpointContract("getdummy1", "read", async function (kvs) { return "success"; }),
+            new EndpointContract("getdummy2", "read", async function (kvs, id) { if (id === "abc") { return "success"; } else { return "error"; } }),
+            new EndpointContract("getdummy3", "read", async function (kvs, id, name) { if (id === "abc" && name === "bcd") { return "success"; } else { return "error" } })
         ];
     }
 }
