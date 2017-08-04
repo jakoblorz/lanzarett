@@ -27,12 +27,7 @@ export class HttpContractServer extends ContractServer {
      */
     private createResponseFunction(response: http.ServerResponse): ContractServerResponseFunctionType {
         return (res: IContractServerResponse) => new Promise<void>((resolve, reject) => {
-            if (res.type === "object") {
-                response.writeHead(res.code, { "Content-Type": "application/json" });
-            } else {
-                response.writeHead(res.code, { "Content-Type": "text/plain" });
-            }
-
+            response.writeHead(res.code, { "Content-Type": "application/json" });
             response.end(JSON.stringify(res));
         });
     }
