@@ -1,7 +1,7 @@
 import { EndpointContractRoleType } from "../contract/EndpointContract";
 
 export type ContractServerResponseType = "string" | "object";
-export type ContractServerSuccessResponseCode = 200 | 201 | 202 | 203 | 204;
+export type ContractServerSuccessResponseCode = 200 | 201 | 202 | 203 | 205;
 export type ContractServerErrorResponseCode = 400 | 403 | 404 | 500;
 
 /**
@@ -97,10 +97,10 @@ export class ContractServerResponse implements IContractServerResponse {
                 new ContractServerResponse(203, "object", JSON.stringify(data)) :
                 new ContractServerResponse(203, "string", data);
 
-        } else if (role === "ping") { // ping roles will resolve with success code 204
+        } else if (role === "ping") { // ping roles will resolve with success code 205
             return typeof data === "object" ?
-                new ContractServerResponse(204, "object", JSON.stringify(data)) :
-                new ContractServerResponse(204, "string", data);
+                new ContractServerResponse(205, "object", JSON.stringify(data)) :
+                new ContractServerResponse(205, "string", data);
         }
         
         return ContractServerResponse.ServerError();
