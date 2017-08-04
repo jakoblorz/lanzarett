@@ -2,7 +2,7 @@ import * as assert from "assert";
 import * as mocha from "mocha";
 import { ContractMapper, IEndpointContract, EndpointContract, ContractServerResponse, ContractServerRequest } from "../lib";
 
-class ContractMapperTest extends ContractMapper {
+export class ContractMapperTest extends ContractMapper {
     constructor(contracts: IEndpointContract[]) {
         super(contracts);
     }
