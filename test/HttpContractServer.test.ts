@@ -74,11 +74,47 @@ describe("Unit Testing HttpContractServer", () => {
             assert.deepEqual(res.body, ContractServerResponse.FormatError());
         });
 
-        it("[" + contract.role.toUpperCase() + "] should respond with Success Message containing success string", async () => {
+        it("[" + contract.role.toUpperCase() + "] should respond with Success Message when all arguments are url arguments", async () => {
             let res = await (httpt(server.server) as any)[method]("/api/" + contract.role + "?rpc=" + contract.name + "&arga=abc&argb=bcd");
             assert.equal(res.status, ContractServerResponse.Success(contract.role, "").code);
             assert.deepEqual(res.body, ContractServerResponse.Success(contract.role, "success"));
         });
+
+        it("[" + contract.role.toUpperCase() + "] should respond with Success Message when all arguments are header arguments", async () => {
+            let res = await (httpt(server.server) as any)[method]("/api/" + contract.role)
+                .set("rpc", contract.name)
+                .set("arga", "abc")
+                .set("argb", "bcd");
+            assert.equal(res.status, ContractServerResponse.Success(contract.role, "").code);
+            assert.deepEqual(res.body, ContractServerResponse.Success(contract.role, "success"));
+        });
+
+        // special test for post and put: using the request body
+        if (method === "post" || method === "put") {
+            it("[" + contract.role.toUpperCase() + "] should respond with Success Message when all arguments are body arguments", async () => {
+                let res = await (httpt(server.server) as any)[method]("/api/" + contract.role)
+                    .send({ rpc: contract.name, arga: "abc", argb: "bcd" });
+                assert.equal(res.status, ContractServerResponse.Success(contract.role, "").code);
+                assert.deepEqual(res.body, ContractServerResponse.Success(contract.role, "success"));
+            });
+
+            it("[" + contract.role.toUpperCase() + "] should respond with Success Message when arguments are spread over query, header and body", async () => {
+                let res = await (httpt(server.server) as any)[method]("/api/" + contract.role + "?rpc=" + contract.name)
+                    .set("arga", "abc")
+                    .send({ argb: "bcd" });
+                assert.equal(res.status, ContractServerResponse.Success(contract.role, "").code);
+                assert.deepEqual(res.body, ContractServerResponse.Success(contract.role, "success"));
+            });
+        } else {
+
+            it("[" + contract.role.toUpperCase() + "] should respond with Success Message when argument are spread over query and headers", async () => {
+                let res = await (httpt(server.server) as any)[method]("/api/" + contract.role + "?rpc=" + contract.name)
+                    .set("arga", "abc")
+                    .set("argb", "bcd");
+                assert.equal(res.status, ContractServerResponse.Success(contract.role, "").code);
+                assert.deepEqual(res.body, ContractServerResponse.Success(contract.role, "success"));
+            });
+        }
 
     });
 
