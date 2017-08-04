@@ -5,6 +5,7 @@ import { ContractServerResponseFunctionType, ContractServerRequest, IContractSer
 
 import * as http from "http";
 import { parse as urlparse } from "url";
+import * as body from "raw-body";
 
 /**
  * http protocol implementation of the ContractServer
@@ -98,12 +99,15 @@ export class HttpContractServer extends ContractServer {
                 return respond(ContractServerResponse.NotFoundError());
             }
 
-            // fetch all the arguments from the request and search the rpc code
-            const args = this.extractArgumentsFromRequest(URL.query, headers);
-
-            // call the contract mapper to invoke contract functions
-            this.mapRequest(new ContractServerRequest(role, args))
-                .then((v) => respond(v));
+            Promise.resolve({})
+                // recieve the body from the request if necessary    
+                .then(() => method === "POST" || method === "PUT" ? body(request) : Promise.resolve({}))
+                // parse the arguments from the url, headers and body (if resolved with content)
+                .then((content) => this.extractArgumentsFromRequest(URL.query, headers, content))
+                // invoke the contracts function (if contract was found -> level 2 routing)
+                .then((args) => this.mapRequest(new ContractServerRequest(role as EndpointContractRoleType, args)))
+                // send the result back to the client
+                .then((res) => respond(res));
         });
     }
 }
