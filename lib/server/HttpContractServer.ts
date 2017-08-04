@@ -82,15 +82,15 @@ export class HttpContractServer extends ContractServer {
 
             // detect target role of the request
             let role: EndpointContractRoleType | "void" = "void";
-            if (url.pathname === "/api/create" && request.method === "post") {
+            if (url.pathname === "/api/create" && request.method === "POST") {
                 role = "create";
-            } else if (url.pathname === "/api/read" && request.method === "get") {
+            } else if (url.pathname === "/api/read" && request.method === "GET") {
                 role = "read";
-            } else if (url.pathname === "/api/update" && request.method === "put") {
+            } else if (url.pathname === "/api/update" && request.method === "PUT") {
                 role = "update";
-            } else if (url.pathname === "/api/delete" && request.method === "delete") {
+            } else if (url.pathname === "/api/delete" && request.method === "DELETE") {
                 role = "delete";
-            } else if (url.pathname === "/api/ping" && request.method === "get") {
+            } else if (url.pathname === "/api/ping" && request.method === "GET") {
                 role = "ping";
             } else {
                 return respond(ContractServerResponse.NotFoundError());
