@@ -7,7 +7,16 @@ import { ContractServerResponse } from "../lib";
 
 class HttpContractServerTest extends HttpContractServer {
     constructor() {
-        super(HttpContractServerTest.generateDummyContracts());
+        const contracts = HttpContractServerTest.generateDummyContracts();
+        contracts.push(new EndpointContract("authtest", "create", async function (kvs, authorization) {
+            if (authorization === "abc") {
+                return "success";
+            }
+
+            return "error";
+        }));
+
+        super(contracts);
     }
 
     public static generateDummyContracts() {
@@ -116,6 +125,21 @@ describe("Unit Testing HttpContractServer", () => {
             });
         }
 
+    });
+
+    it("should protect authorization header from query injection", async () => {
+        let res = await httpt(server.server).post("/api/create?rpc=authtest&authorization=bcd")
+            .set("authorization", "abc");
+        assert.equal(res.status, ContractServerResponse.Success("create", "").code);
+        assert.deepEqual(res.body, ContractServerResponse.Success("create", "success"));
+    });
+
+    it("should protect authorization header from body injection", async () => {
+        let res = await httpt(server.server).post("/api/create?rpc=authtest")
+            .set("authorization", "abc")    
+            .send({ authorization: "bcd" });
+        assert.equal(res.status, ContractServerResponse.Success("create", "").code);
+        assert.deepEqual(res.body, ContractServerResponse.Success("create", "success"));
     });
 
 });

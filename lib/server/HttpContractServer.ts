@@ -63,7 +63,7 @@ export class HttpContractServer extends ContractServer {
      * @param headers header arguments from the request
      * @param body optional body arguments from the request
      */
-    private extractArgumentsFromRequest(queries: any, headers: any, body: any = {}) {
+    private extractArgumentsFromRequest(queries: any, headers: any, preFetch: IContractServerRequestArgument[] = [], body: any = {}) {
 
         // function that pushes a element into an array only if its key is not present yet
         function pushNoShadow<T extends { key: string }>(list: T[], key: string, value: T) {
@@ -73,7 +73,7 @@ export class HttpContractServer extends ContractServer {
         };
 
         // prepare the arguments array
-        const args: IContractServerRequestArgument[] = [];
+        const args: IContractServerRequestArgument[] = preFetch;
 
         // pushNoShadow query arguments
         Object.keys(queries).map<IContractServerRequestArgument>(
@@ -122,11 +122,18 @@ export class HttpContractServer extends ContractServer {
                 return respond(ContractServerResponse.NotFoundError());
             }
 
+            const preFetchArgs: IContractServerRequestArgument[] = [];
+
+            // prefetching of protected arguments: authorization
+            if (headers.authorization) {
+                preFetchArgs.push({ key: "authorization", value: headers.authorization });
+            }
+
             Promise.resolve({})
                 // recieve the body from the request if necessary
                 .then(() => method === "POST" || method === "PUT" ? this.recieveBody(request) : Promise.resolve({}))
                 // parse the arguments from the url, headers and body (if resolved with content)
-                .then((content) => this.extractArgumentsFromRequest(URL.query, headers, content))
+                .then((content) => this.extractArgumentsFromRequest(URL.query, headers, preFetchArgs, content))
                 // invoke the contracts function (if contract was found -> level 2 routing)
                 .then((args) => this.mapContractServerRequest(new ContractServerRequest(role as EndpointContractRoleType, args)))
                 // send the result back to the client
