@@ -16,15 +16,15 @@ export class MiddlewareContract implements IMiddlewareContract {
     constructor(name: string, callback: MiddlewareContractPreExecFunctionType) {
         this.name = name;
         this.function = callback;
-        this.arguments = MiddlewareContract.extractFunctionArguments(this);
+        this.arguments = MiddlewareContract.extractFunctionArguments(this.function);
     }
 
-    public static extractFunctionArguments(contract: IMiddlewareContract) {
-        if (contract.function.toString().indexOf("function") === -1) {
+    public static extractFunctionArguments(fn: (...args: any[]) => any | void) {
+        if (fn.toString().indexOf("function") === -1) {
             throw new Error("could not find function string in callback argument - did you use a fat-arrow function definition?");
         }
 
-        return (contract.function.toString()
+        return (fn.toString()
             .replace(/((\/\/.*$)|(\/\*[\s\S]*?\*\/)|(\s))/mg, "")
             .match(/^function\s*[^\(]*\(\s*([^\)]*)\)/m) as RegExpMatchArray)[1]
             .split(/,/);

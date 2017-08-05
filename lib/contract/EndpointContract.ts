@@ -27,7 +27,7 @@ export class EndpointContract implements IEndpointContract {
         this.middleware = middleware;
 
         // get the arguments from the function, ignoring the first one (kvs getter)
-        this.arguments = MiddlewareContract.extractFunctionArguments(this).filter((val, i) => i > 0);
+        this.arguments = MiddlewareContract.extractFunctionArguments(this.function).filter((val, i) => i > 0);
     }
     
     public static isEndpointContract(contract: any): contract is IEndpointContract {
