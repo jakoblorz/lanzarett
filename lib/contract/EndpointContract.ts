@@ -1,5 +1,5 @@
 import { IKeyValueStoreGet } from "../";
-import { MiddlewareContract } from "./MiddlewareContract";
+import { IMiddlewareContract, MiddlewareContract } from "./MiddlewareContract";
 
 export type EndpointContractRoleType = "read" | "create" | "update" | "delete" | "ping";
 export type EndpointContractFunction = (kvs: IKeyValueStoreGet, ...args: any[]) => Promise<any>;
@@ -9,6 +9,7 @@ export interface IEndpointContract {
     role: EndpointContractRoleType;
     arguments: string[];
     function: EndpointContractFunction;
+    middleware: IMiddlewareContract[];
 }
 
 export class EndpointContract implements IEndpointContract {
@@ -17,11 +18,13 @@ export class EndpointContract implements IEndpointContract {
     role: EndpointContractRoleType;
     arguments: string[];
     function: EndpointContractFunction;
+    middleware: IMiddlewareContract[];
 
-    constructor(name: string, role: EndpointContractRoleType, callback: EndpointContractFunction) {
+    constructor(name: string, role: EndpointContractRoleType, callback: EndpointContractFunction, middleware: IMiddlewareContract[] = []) {
         this.name = name;
         this.role = role;
         this.function = callback;
+        this.middleware = middleware;
 
         // get the arguments from the function, ignoring the first one (kvs getter)
         this.arguments = MiddlewareContract.extractFunctionArguments(this).filter((val, i) => i > 0);
