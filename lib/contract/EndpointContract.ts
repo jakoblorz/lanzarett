@@ -1,4 +1,5 @@
 import { IKeyValueStoreGet } from "../";
+import { MiddlewareContract } from "./MiddlewareContract";
 
 export type EndpointContractRoleType = "read" | "create" | "update" | "delete" | "ping";
 export type EndpointContractFunction = (kvs: IKeyValueStoreGet, ...args: any[]) => Promise<any>;
@@ -22,19 +23,8 @@ export class EndpointContract implements IEndpointContract {
         this.role = role;
         this.function = callback;
 
-        if (callback.toString().indexOf("function") === -1) {
-            throw new Error("could not find function string in callback argument - did you use a fat-arrow function definition?");
-        }
-
         // get the arguments from the function, ignoring the first one (kvs getter)
-        this.arguments = EndpointContract.extractFunctionArguments(this).filter((val, i) => i > 0);
-    }
-
-    public static extractFunctionArguments(contract: IEndpointContract) {
-        return (contract.function.toString()
-            .replace(/((\/\/.*$)|(\/\*[\s\S]*?\*\/)|(\s))/mg, "")
-            .match(/^function\s*[^\(]*\(\s*([^\)]*)\)/m) as RegExpMatchArray)[1]
-            .split(/,/);
+        this.arguments = MiddlewareContract.extractFunctionArguments(this).filter((val, i) => i > 0);
     }
     
     public static isEndpointContract(contract: any): contract is IEndpointContract {

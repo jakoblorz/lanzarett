@@ -16,14 +16,14 @@ export class MiddlewareContract implements IMiddlewareContract {
         this.name = name;
         this.function = callback;
 
-        if (callback.toString().indexOf("function") === -1) {
-            throw new Error("could not find function string in callback arguments - did you use a fat-arrow definition?");
-        }
-
         this.arguments = MiddlewareContract.extractFunctionArguments(this);
     }
 
     public static extractFunctionArguments(contract: IMiddlewareContract) {
+        if (contract.function.toString().indexOf("function") === -1) {
+            throw new Error("could not find function string in callback argument - did you use a fat-arrow function definition?");
+        }
+
         return (contract.function.toString()
             .replace(/((\/\/.*$)|(\/\*[\s\S]*?\*\/)|(\s))/mg, "")
             .match(/^function\s*[^\(]*\(\s*([^\)]*)\)/m) as RegExpMatchArray)[1]
