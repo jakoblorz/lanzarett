@@ -122,9 +122,10 @@ export class HttpContractServer extends ContractServer {
                 return respond(ContractServerResponse.NotFoundError());
             }
 
+            // pre-evaluate specific arguments before handling all other generic ones
             const preFetchArgs: IContractServerRequestArgument[] = [];
 
-            // prefetching of protected arguments: authorization
+            // authorization header
             if (headers.authorization) {
                 preFetchArgs.push({ key: "authorization", value: headers.authorization });
             }

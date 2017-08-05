@@ -15,7 +15,6 @@ export class MiddlewareContract implements IMiddlewareContract {
     constructor(name: string, callback: MiddlewareContractFunctionType) {
         this.name = name;
         this.function = callback;
-
         this.arguments = MiddlewareContract.extractFunctionArguments(this);
     }
 
