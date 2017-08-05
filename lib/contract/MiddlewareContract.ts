@@ -1,18 +1,19 @@
-export type MiddlewareContractFunctionType = <T>(...args: any[]) => Promise<T>;
+export type MiddlewareContractPreExecFunctionType = <T>(...args: any[]) => Promise<T>;
+export type MiddlewareContractPstExecFunctionType = () => Promise<void>;
 
 export interface IMiddlewareContract {
     name: string;
     arguments: string[];
-    function: MiddlewareContractFunctionType;
+    function: MiddlewareContractPreExecFunctionType;
 }
 
 export class MiddlewareContract implements IMiddlewareContract {
 
     name: string;
     arguments: string[];
-    function: MiddlewareContractFunctionType;
+    function: MiddlewareContractPreExecFunctionType;
 
-    constructor(name: string, callback: MiddlewareContractFunctionType) {
+    constructor(name: string, callback: MiddlewareContractPreExecFunctionType) {
         this.name = name;
         this.function = callback;
         this.arguments = MiddlewareContract.extractFunctionArguments(this);
