@@ -1,33 +1,29 @@
 import { IKeyValueStoreGet } from "../";
 import { IMiddlewareContract, MiddlewareContract } from "./MiddlewareContract";
+import { IRoutingContract, RoutingContract } from "./RoutingContract";
 
 export type EndpointContractRoleType = "read" | "create" | "update" | "delete" | "ping";
 export type EndpointContractFunction = (kvs: IKeyValueStoreGet, ...args: any[]) => Promise<any>;
 
-export interface IEndpointContract {
-    name: string;
+export interface IEndpointContract extends IRoutingContract {
     role: EndpointContractRoleType;
-    arguments: string[];
     function: EndpointContractFunction;
     middleware: IMiddlewareContract[];
 }
 
-export class EndpointContract implements IEndpointContract {
+export class EndpointContract extends RoutingContract implements IEndpointContract {
 
-    name: string;
     role: EndpointContractRoleType;
-    arguments: string[];
     function: EndpointContractFunction;
     middleware: IMiddlewareContract[];
 
     constructor(name: string, role: EndpointContractRoleType, callback: EndpointContractFunction, middleware: IMiddlewareContract[] = []) {
-        this.name = name;
+        // get the arguments from the function, ignoring the first one (kvs getter)
+        super(name, RoutingContract.extractFunctionArguments(callback).filter((val, i) => i > 0));
+        
         this.role = role;
         this.function = callback;
         this.middleware = middleware;
-
-        // get the arguments from the function, ignoring the first one (kvs getter)
-        this.arguments = MiddlewareContract.extractFunctionArguments(this.function).filter((val, i) => i > 0);
     }
     
     public static isEndpointContract(contract: any): contract is IEndpointContract {

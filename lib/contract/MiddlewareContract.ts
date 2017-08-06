@@ -1,36 +1,23 @@
+import { IRoutingContract, RoutingContract } from "./RoutingContract";
+
 export type MiddlewareContractBeforeExecFunctionType = <T>(...args: any[]) => Promise<T>;
 export type MiddlewareContractAfterExecFunctionType = () => Promise<void>;
 
-export interface IMiddlewareContract {
-    name: string;
-    arguments: string[];
+export interface IMiddlewareContract extends IRoutingContract {
     before: MiddlewareContractBeforeExecFunctionType;
     after?: MiddlewareContractAfterExecFunctionType;
 }
 
-export class MiddlewareContract implements IMiddlewareContract {
+export class MiddlewareContract extends RoutingContract implements IMiddlewareContract {
 
-    name: string;
-    arguments: string[];
     before: MiddlewareContractBeforeExecFunctionType;
     after?: MiddlewareContractAfterExecFunctionType;
 
     constructor(name: string, before: MiddlewareContractBeforeExecFunctionType, after?: MiddlewareContractAfterExecFunctionType) {
-        this.name = name;
+        super(name, RoutingContract.extractFunctionArguments(before));
+        
         this.before = before;
         this.after = after;
-        this.arguments = MiddlewareContract.extractFunctionArguments(this.before);
-    }
-
-    public static extractFunctionArguments(fn: (...args: any[]) => any | void) {
-        if (fn.toString().indexOf("function") === -1) {
-            throw new Error("could not find function string in callback argument - did you use a fat-arrow function definition?");
-        }
-
-        return (fn.toString()
-            .replace(/((\/\/.*$)|(\/\*[\s\S]*?\*\/)|(\s))/mg, "")
-            .match(/^function\s*[^\(]*\(\s*([^\)]*)\)/m) as RegExpMatchArray)[1]
-            .split(/,/);
     }
 
     public static isMiddlewareContract(contract: any): contract is IMiddlewareContract {
