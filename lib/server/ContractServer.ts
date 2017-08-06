@@ -10,31 +10,24 @@ export interface IContractMapper {
 }
 
 /**
- * the contract mapper is mapping incomming requests that are standardised using the
+ * the contract server is mapping incomming requests that are standardised using the
  * IContractServerRequest interface to contracts that were given previously in
  * the constructor. if the contract cannot be found or the request is faulty, the
  * appropriate error responses from the ContractServerResponse class are being sent back
  */
-export abstract class ContractMapper implements IContractMapper {
-
+export abstract class ContractServer implements IContractMapper {
+    
     mapContractServerRequest: RequestMapperFunctionType;
+    
+    public abstract listen(port: number): Promise<void>;
 
     /**
-     * create a new ContractMapper
-     * @param contracts list of contracts that will be accessible by requests
-     */
+    * create a new ContractMapper
+    * @param contracts list of contracts that will be accessible by requests
+    */
     constructor(contracts: IEndpointContract[]) {
-        this.mapContractServerRequest = ContractMapper.createRequestMapperFromContractArray(contracts);
-    }
-
-    /**
-     * create a function to map requests to the contracts, filtering out faulty
-     * requests
-     * @param contracts list of contracts that will be accessible by requests
-     */
-    public static createRequestMapperFromContractArray(contracts: IEndpointContract[]): RequestMapperFunctionType {
-        return function (req: IContractServerRequest) {
-            return new Promise<IContractServerResponse>((resolve) => {
+        this.mapContractServerRequest = function (req: IContractServerRequest) {
+            return new Promise<IContractServerResponse>((resolve, reject) => {
 
                 // respond with a format error as no argument was defined
                 if (req.arguments === undefined) {
@@ -82,9 +75,4 @@ export abstract class ContractMapper implements IContractMapper {
             });
         }
     }
-}
-
-
-export abstract class ContractServer extends ContractMapper {
-    public abstract listen(port: number): Promise<void>;
 }

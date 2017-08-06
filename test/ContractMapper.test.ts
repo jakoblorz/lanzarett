@@ -1,8 +1,13 @@
 import * as assert from "assert";
 import * as mocha from "mocha";
-import { ContractMapper, IEndpointContract, EndpointContract, ContractServerResponse, ContractServerRequest } from "../lib";
+import { ContractServer, IEndpointContract, EndpointContract, ContractServerResponse, ContractServerRequest } from "../lib";
 
-export class ContractMapperTest extends ContractMapper {
+export class ContractMapperTest extends ContractServer {
+
+    public listen(port: number): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+    
     constructor(contracts: IEndpointContract[]) {
         super(contracts);
     }
