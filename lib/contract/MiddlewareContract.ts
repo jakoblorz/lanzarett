@@ -1,6 +1,6 @@
 import { IRoutingContract, RoutingContract } from "./RoutingContract";
 
-export type MiddlewareContractBeforeExecFunctionType = <T>(...args: any[]) => Promise<T>;
+export type MiddlewareContractBeforeExecFunctionType = (...args: any[]) => Promise<any>;
 export type MiddlewareContractAfterExecFunctionType = () => Promise<void>;
 
 export interface IMiddlewareContract extends IRoutingContract {
