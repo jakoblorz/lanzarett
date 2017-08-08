@@ -1,4 +1,4 @@
-import { KeyValueStore } from "../";
+import { KeyValueStore, EndpointContract } from "../";
 import { IEndpointContract } from "../contract/EndpointContract";
 import { RoutingContract } from "../contract/RoutingContract";
 import { IContractServerRequest, IContractServerRequestArgument } from "./ContractServerRequest";
@@ -66,7 +66,7 @@ export abstract class ContractServer implements IContractMapper {
 
                 // invoke the function from the contract with the 
                 // arguments(these were brought in the right order previously)
-                RoutingContract.applyArguments(contract, args, "function")
+                EndpointContract.applyArgumentsToEndpoint(contract, args)
                     .then((res) => resolve(ContractServerResponse.Success(req.role, res)))
                     .catch((res) => resolve(ContractServerResponse.ServerError()));
 

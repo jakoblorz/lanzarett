@@ -1,4 +1,4 @@
-import { IKeyValueStoreGet } from "../";
+import { IKeyValueStoreGet, IContractServerRequestArgument } from "../";
 import { IMiddlewareContract, MiddlewareContract } from "./MiddlewareContract";
 import { IRoutingContract, RoutingContract } from "./RoutingContract";
 
@@ -24,6 +24,10 @@ export class EndpointContract extends RoutingContract implements IEndpointContra
         this.role = role;
         this.function = callback;
         this.middleware = middleware;
+    }
+
+    public static async applyArgumentsToEndpoint(contract: EndpointContract, args: any[]) {
+        return await super.applyArguments(contract, args, "function");
     }
     
     public static isEndpointContract(contract: any): contract is IEndpointContract {
