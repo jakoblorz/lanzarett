@@ -2,7 +2,7 @@ import * as assert from "assert";
 import * as mocha from "mocha";
 import { ContractServer, IEndpointContract, EndpointContract, ContractServerResponse, ContractServerRequest } from "../lib";
 
-export class ContractMapperTest extends ContractServer {
+export class ContractServerTest extends ContractServer {
 
     public listen(port: number): Promise<void> {
         throw new Error("Method not implemented.");
@@ -21,12 +21,12 @@ export class ContractMapperTest extends ContractServer {
     }
 }
 
-describe("Unit Testing ContractMapper", () => {
+describe("Unit Testing ContractServer", () => {
     
-    let test: ContractMapperTest;
+    let test: ContractServerTest;
 
     before(async () => {
-        test = new ContractMapperTest(ContractMapperTest.generateDummyContracts());
+        test = new ContractServerTest(ContractServerTest.generateDummyContracts());
     });
 
     it("should resolve with Format Error when argument list is empty", async () => {
