@@ -27,52 +27,81 @@ export abstract class ContractServer implements IContractMapper {
     * @param contracts list of contracts that will be accessible by requests
     */
     constructor(contracts: IEndpointContract[]) {
-        this.mapContractServerRequest = function (req: IContractServerRequest) {
-            return new Promise<IContractServerResponse>((resolve, reject) => {
+        this.mapContractServerRequest = async function (req: IContractServerRequest) {
 
-                // respond with a format error as no argument was defined
-                if (req.arguments === undefined) {
-                    return resolve(ContractServerResponse.FormatError());
-                }
+            // respond with a format error as no argument was defined
+            if (req.arguments === undefined) {
+                return ContractServerResponse.FormatError();
+            }
 
-                // try to find the rpc argument, if not found, respond with a format error
-                const rpc_entry = req.arguments.filter((v) => v.key === "rpc")[0];
-                if (rpc_entry === undefined) {
-                    return resolve(ContractServerResponse.FormatError());
-                }
+            // try to find the rpc argument, if not found, respond with a format error
+            const rpc_entry = req.arguments.filter((v) => v.key === "rpc")[0];
+            if (rpc_entry === undefined) {
+                return ContractServerResponse.FormatError();
+            }
 
-                // try to find the contract, if not found, respond with a not found error
-                const rpc = rpc_entry.value;
-                const contract = contracts.filter((c) => c.name === rpc && c.role === req.role)[0];
-                if (contract === undefined) {
-                    return resolve(ContractServerResponse.NotFoundError());
-                }
+            // try to find the contract, if not found, respond with a not found error
+            const rpc = rpc_entry.value;
+            const contract = contracts.filter((c) => c.name === rpc && c.role === req.role)[0];
+            if (contract === undefined) {
+                return ContractServerResponse.NotFoundError();
+            }
 
-                // evaluate argument completeness: if arguments are missing, respond with a format error
-                const isMissingArguments = EndpointContract.isMissingFunctionArguments(contract, req.arguments);
-                if (isMissingArguments) {
-                    return resolve(ContractServerResponse.FormatError());
-                }
+            // evaluate argument completeness: if arguments are missing, respond with a format error
+            const isMissingArguments = EndpointContract.isMissingFunctionArguments(contract, req.arguments);
+            if (isMissingArguments) {
+                return ContractServerResponse.FormatError();
+            }
 
-                const kvs = new KeyValueStore();
+            const kvs = new KeyValueStore();
 
+            let response: IContractServerResponse;
+
+            // initialize the endpoint -> execute the middleware before functions
+            try {
+
+                // execute the before middleware
+                await MiddlewareContract.createCallableMiddlewareChain(contract.middleware, req.arguments, kvs, "before");
+
+            } catch (e) {
+
+                // a error occured, before middleware functions that were not called yet
+                // cant have placed a result in the kvs -> after functions will only be 
+                // invoked if something had been stored in the kvs
+                await MiddlewareContract.createCallableMiddlewareChain(contract.middleware, req.arguments, kvs, "after");
+
+                // stack had been cleaned - respond with a server error
+                return ContractServerResponse.ServerError();
+            }
+
+            // execute the endpoint
+            try {
+
+                // call the endpoint function and set the response
+                const result = await EndpointContract.createInvokablePromise(contract, req.arguments, kvs);
+                response = ContractServerResponse.Success(req.role, result);
+
+            } catch (e) {
+
+                // a error occured -> response will be a server error
+                response = ContractServerResponse.ServerError();
+            }
+
+            // deinititialize the endpoint -> execute the middleware after functions
+            try {
+
+                // execute the after middleware
+                await MiddlewareContract.createCallableMiddlewareChain(contract.middleware, req.arguments, kvs, "after");
+
+            } catch (e) {
                 
-                Promise.resolve()
-                
-                    .then(() => MiddlewareContract.createCallableMiddlewareChain(contract.middleware, req.arguments, kvs, "before"))
-                    
-                    // execute the actual endpoint function
-                    .then(() => EndpointContract.createInvokablePromise(contract, req.arguments, kvs))
+                // a error occured -> response will be a server error
+                response = ContractServerResponse.ServerError();
+            }
 
-                    // respond with the result the the client
-                    .then((res) => resolve(ContractServerResponse.Success(req.role, res)))
-                    // respond with possible errors
-                    .catch((res) => resolve(ContractServerResponse.ServerError()))
+            // send the response back to the client
+            return response;
 
-                    // execute each middlewares after function 
-                    .then(() => MiddlewareContract.createCallableMiddlewareChain(contract.middleware, req.arguments, kvs, "after"));
-
-            });
         }
     }
 }
