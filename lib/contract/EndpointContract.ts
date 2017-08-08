@@ -26,7 +26,7 @@ export class EndpointContract extends RoutingContract implements IEndpointContra
         this.middleware = middleware;
     }
 
-    public static async reduceToPromise(contract: IEndpointContract, args: IContractServerRequestArgument[], kvs: IKeyValueStore) {
+    public static async createInvokablePromise(contract: IEndpointContract, args: IContractServerRequestArgument[], kvs: IKeyValueStore) {
         const argumentArray = [kvs];
         Array.prototype.push.apply(argumentArray, RoutingContract.sortAndReduceToValueFunctionArguments(contract, args));
         return EndpointContract.applyArgumentsToEndpoint(contract, argumentArray);

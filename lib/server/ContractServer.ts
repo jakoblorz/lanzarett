@@ -61,7 +61,7 @@ export abstract class ContractServer implements IContractMapper {
 
                 // invoke the function from the contract with the 
                 // arguments(these were brought in the right order previously)
-                EndpointContract.reduceToPromise(contract, req.arguments, kvs)
+                EndpointContract.createInvokablePromise(contract, req.arguments, kvs)
                     .then((res) => resolve(ContractServerResponse.Success(req.role, res)))
                     .catch((res) => resolve(ContractServerResponse.ServerError()));
 

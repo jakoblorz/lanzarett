@@ -16,7 +16,7 @@ export abstract class RoutingContract implements IRoutingContract {
         this.arguments = args;
     }
 
-    public static async reduceToPromise(...args: any[]) {
+    public static async createInvokablePromise(...args: any[]) {
         return Promise.resolve() as Promise<void>;
     }
 
