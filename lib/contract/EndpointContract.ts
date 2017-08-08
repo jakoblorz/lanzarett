@@ -26,24 +26,6 @@ export class EndpointContract extends RoutingContract implements IEndpointContra
         this.middleware = middleware;
     }
 
-    public static scheduleStackExecution(contract: IEndpointContract, kvs: IKeyValueStore, args: IContractServerRequestArgument[]){
-        const middlewareBeforeExecution = contract.middleware.reduce<Promise<void>>((p, m) => p.then(
-            () => MiddlewareContract.applyArgumentsToMiddleware(m,
-                RoutingContract.sortAndReduceToValueFunctionArguments(m, args), kvs, "before")), Promise.resolve());
-        
-        const endpointExecutionArgs = [kvs];
-        Array.prototype.push.apply(endpointExecutionArgs, RoutingContract.sortAndReduceToValueFunctionArguments(contract, args));
-        const endpointExecution = EndpointContract.applyArgumentsToEndpoint(contract, endpointExecutionArgs);
-
-        const middlewareAfterExecution = contract.middleware.reduce<Promise<void>>((p, m) => p.then(
-            () => m.after && kvs.get(m.name) ? m.after(kvs.get(m.name)) : Promise.resolve()), Promise.resolve());
-        
-        return middlewareBeforeExecution
-            .catch(() => middlewareAfterExecution)
-            .then(() => endpointExecution)
-            .then(() => middlewareAfterExecution);
-    }
-
     public static isMissingFunctionArguments(contract: IEndpointContract, args: IContractServerRequestArgument[]) {
         if (super.isMissingFunctionArguments(contract, args)) {
             return true;
