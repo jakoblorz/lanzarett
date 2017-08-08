@@ -66,7 +66,7 @@ export abstract class ContractServer implements IContractMapper {
 
                 // invoke the function from the contract with the 
                 // arguments(these were brought in the right order previously)
-                (contract.function.apply(null, args) as Promise<any>)
+                RoutingContract.applyArguments(contract, args, "function")
                     .then((res) => resolve(ContractServerResponse.Success(req.role, res)))
                     .catch((res) => resolve(ContractServerResponse.ServerError()));
 
