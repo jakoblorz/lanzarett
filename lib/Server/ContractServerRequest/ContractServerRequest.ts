@@ -1,8 +1,6 @@
 import { IContractServerResponse } from "../ContractServerResponse";
 import { EndpointContractRoleType } from "../../Contracts/EndpointContract/EndpointContractRoleType";
 
-export type ContractServerResponseFunctionType = (response: IContractServerResponse) => Promise<void>;
-
 /**
  * arguments from the request should be stored as
  * key-value pairs

@@ -2,7 +2,7 @@ import { EndpointContractRoleType } from "../Contracts/EndpointContract/Endpoint
 import { IEndpointContract } from "../Contracts/EndpointContract/IEndpointContract";
 import { ContractServer } from "./ContractServer";
 import { IContractServerResponse, ContractServerResponse } from "./ContractServerResponse";
-import { ContractServerResponseFunctionType, ContractServerRequest, IContractServerRequestArgument } from "./ContractServerRequest/ContractServerRequest"
+import { ContractServerRequest, IContractServerRequestArgument } from "./ContractServerRequest/ContractServerRequest"
 
 import * as http from "http";
 import { parse as urlparse } from "url";
@@ -27,7 +27,7 @@ export class HttpContractServer extends ContractServer {
      * create a function to respond to a http request with a IContractServerResponse
      * @param response http.ServerResponse response object
      */
-    private createResponseFunction(response: http.ServerResponse): ContractServerResponseFunctionType {
+    private createResponseFunction(response: http.ServerResponse) {
         return (res: IContractServerResponse) => new Promise<void>((resolve, reject) => {
             response.writeHead(res.code, { "Content-Type": "application/json" });
             response.end(JSON.stringify(res));
