@@ -1,5 +1,6 @@
 import { KeyValueStore } from "../";
 import { IEndpointContract } from "../contract/EndpointContract";
+import { RoutingContract } from "../contract/RoutingContract";
 import { IContractServerRequest, IContractServerRequestArgument } from "./ContractServerRequest";
 import { IContractServerResponse, ContractServerResponse } from "./ContractServerResponse";
 
@@ -48,10 +49,8 @@ export abstract class ContractServer implements IContractMapper {
                 }
 
                 // evaluate argument completeness: if arguments are missing, respond with a format error
-                const isMissingArguments = contract.arguments
-                    .filter((arg) => req.arguments
-                        .filter((a) => a.key === arg).length === 0).length > 0;
-                if (isMissingArguments) {
+                const argsFromArgumentSort = RoutingContract.sortArguments(contract, req.arguments);
+                if (argsFromArgumentSort === undefined) {
                     return resolve(ContractServerResponse.FormatError());
                 }
 
