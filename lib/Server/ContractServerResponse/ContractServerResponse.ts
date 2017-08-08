@@ -1,4 +1,4 @@
-import { EndpointContractRoleType } from "../Contracts/EndpointContract/EndpointContractRoleType";
+import { EndpointContractRoleType } from "../../Contracts/EndpointContract/EndpointContractRoleType";
 
 export type ContractServerResponseType = "string" | "object";
 export type ContractServerResponseSuccessCode = 200 | 201 | 202 | 203 | 205;

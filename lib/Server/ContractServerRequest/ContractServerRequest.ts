@@ -1,4 +1,4 @@
-import { IContractServerResponse } from "../ContractServerResponse";
+import { IContractServerResponse } from "../ContractServerResponse/ContractServerResponse";
 import { EndpointContractRoleType } from "../../Contracts/EndpointContract/EndpointContractRoleType";
 import { IContractServerRequest } from "./IContractServerRequest";
 import { IContractServerRequestArgument } from "./IContractServerRequestArgument";
