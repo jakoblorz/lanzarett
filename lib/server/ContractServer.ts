@@ -49,8 +49,8 @@ export abstract class ContractServer implements IContractMapper {
                 }
 
                 // evaluate argument completeness: if arguments are missing, respond with a format error
-                const argsFromArgumentSort = RoutingContract.sortArguments(contract, req.arguments);
-                if (argsFromArgumentSort === undefined) {
+                const isMissingArguments = RoutingContract.isMissingFunctionArguments(contract, req.arguments);
+                if (isMissingArguments) {
                     return resolve(ContractServerResponse.FormatError());
                 }
 
@@ -60,7 +60,7 @@ export abstract class ContractServer implements IContractMapper {
                 // bring the arguments from the request in the right order, 
                 // inject the new kvs as the first element in the list
                 const args: IContractServerRequestArgument[] = [kvs];
-                Array.prototype.push.apply(args, argsFromArgumentSort);
+                Array.prototype.push.apply(args, RoutingContract.sortFunctionArguments(contract, req.arguments));
 
                 // === version 0.2: tests successful, kvs gets injected as first argument ===
 
