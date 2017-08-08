@@ -2,7 +2,7 @@ import { IRoutingContract, RoutingContract } from "./RoutingContract";
 import { IContractServerRequestArgument, IKeyValueStore } from "../";
 
 export type MiddlewareContractBeforeExecFunctionType = (...args: any[]) => Promise<any>;
-export type MiddlewareContractAfterExecFunctionType = () => Promise<void>;
+export type MiddlewareContractAfterExecFunctionType = (value: any) => Promise<void>;
 
 export interface IMiddlewareContract extends IRoutingContract {
     before: MiddlewareContractBeforeExecFunctionType;
