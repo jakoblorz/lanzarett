@@ -29,4 +29,4 @@ export { NamedArgumentContract } from "./Contracts/NamedArgumentContract/NamedAr
 export { INamedArgumentContract } from "./Contracts/NamedArgumentContract/INamedArgumentContract";
 
 // export the key-value store functions
-export { IKeyValueStoreGet, IKeyValueStoreSet, IKeyValueStore, KeyValueStore } from "./KeyValueStore"
+export { IKeyValueStoreGet, IKeyValueStoreSet, IKeyValueStore, KeyValueStore } from "./KeyValueStore/KeyValueStore";
