@@ -15,7 +15,7 @@ export class RoutingContract implements IRoutingContract {
         this.arguments = args;
     }
 
-    public static async applyArguments<T extends RoutingContract>(contract: T, args: IContractServerRequestArgument[], target: "function" | "before" | "after") {
+    public static async applyArguments<T extends RoutingContract>(contract: T, args: any[], target: "function" | "before" | "after") {
         return await (contract as any)[target].apply(null, args);
     }
 
