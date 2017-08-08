@@ -18,7 +18,8 @@ export { MiddlewareContract } from "./Contracts/MiddlewareContract/MiddlewareCon
 export { MiddlewareContractAfterExecFunctionType } from "./Contracts/MiddlewareContract/MiddlewareContractAfterExecFunctionType";
 export { MiddlewareContractBeforeExecFunctionType } from "./Contracts/MiddlewareContract/MiddlewareContractBeforeExecFunctionType";
 
-export { INamedArgumentContract, NamedArgumentContract } from "./Contracts/NamedArgumentContract/NamedArgumentContract";
+export { NamedArgumentContract } from "./Contracts/NamedArgumentContract/NamedArgumentContract";
+export { INamedArgumentContract } from "./Contracts/NamedArgumentContract/INamedArgumentContract";
 
 // export the key-value store functions
 export { IKeyValueStoreGet, IKeyValueStoreSet, IKeyValueStore, KeyValueStore } from "./KeyValueStore"

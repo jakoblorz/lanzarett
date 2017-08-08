@@ -1,4 +1,5 @@
-import { INamedArgumentContract, NamedArgumentContract } from "../NamedArgumentContract/NamedArgumentContract";
+import { NamedArgumentContract } from "../NamedArgumentContract/NamedArgumentContract";
+import { INamedArgumentContract } from "../NamedArgumentContract/INamedArgumentContract";
 import { IContractServerRequestArgument, IKeyValueStore } from "../../";
 import { IMiddlewareContract } from "./IMiddlewareContract";
 import { MiddlewareContractAfterExecFunctionType } from "./MiddlewareContractAfterExecFunctionType";

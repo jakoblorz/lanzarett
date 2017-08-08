@@ -1,4 +1,4 @@
-import { INamedArgumentContract } from "../NamedArgumentContract/NamedArgumentContract";
+import { INamedArgumentContract } from "../NamedArgumentContract/INamedArgumentContract";
 import { MiddlewareContractAfterExecFunctionType } from "./MiddlewareContractAfterExecFunctionType";
 import { MiddlewareContractBeforeExecFunctionType } from "./MiddlewareContractBeforeExecFunctionType";
 
