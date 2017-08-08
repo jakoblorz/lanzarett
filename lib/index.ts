@@ -8,10 +8,10 @@ export { ContractServerRequest, ContractServerResponseFunctionType, IContractSer
 export { HttpContractServer } from "./server/HttpContractServer";
 
 // export the contract classes, interfaces, types and functions
-export { EndpointContract } from "./Contracts/Endpoint/EndpointContract";
-export { EndpointContractFunction } from "./Contracts/Endpoint/EndpointContractFunction";
-export { EndpointContractRoleType } from "./Contracts/Endpoint/EndpointContractRoleType";
-export { IEndpointContract } from "./Contracts/Endpoint/IEndpointContract";
+export { EndpointContract } from "./Contracts/EndpointContract/EndpointContract";
+export { EndpointContractFunction } from "./Contracts/EndpointContract/EndpointContractFunction";
+export { EndpointContractRoleType } from "./Contracts/EndpointContract/EndpointContractRoleType";
+export { IEndpointContract } from "./Contracts/EndpointContract/IEndpointContract";
 
 export { IMiddlewareContract } from "./Contracts/Middleware/IMiddlewareContract";
 export { MiddlewareContract } from "./Contracts/Middleware/MiddlewareContract";

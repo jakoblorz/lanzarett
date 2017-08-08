@@ -1,5 +1,5 @@
-import { EndpointContractRoleType } from "../Contracts/Endpoint/EndpointContractRoleType";
-import { IEndpointContract } from "../Contracts/Endpoint/IEndpointContract";
+import { EndpointContractRoleType } from "../Contracts/EndpointContract/EndpointContractRoleType";
+import { IEndpointContract } from "../Contracts/EndpointContract/IEndpointContract";
 import { ContractServer } from "./ContractServer";
 import { IContractServerResponse, ContractServerResponse } from "./ContractServerResponse";
 import { ContractServerResponseFunctionType, ContractServerRequest, IContractServerRequestArgument } from "./ContractServerRequest"
