@@ -25,7 +25,7 @@ export default new EndpointContract(
     /* name */ "getUserName", 
     /* role */ "read", 
     /* function */ async function(app, id){
-    return "bob;
+    return "bob";
 });
 ```
 
