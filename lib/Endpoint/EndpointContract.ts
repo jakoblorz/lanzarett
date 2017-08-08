@@ -1,15 +1,9 @@
 import { IKeyValueStoreGet, IContractServerRequestArgument, IKeyValueStore } from "../";
-import { IMiddlewareContract, MiddlewareContract } from "./MiddlewareContract";
-import { IRoutingContract, RoutingContract } from "./RoutingContract";
-
-export type EndpointContractRoleType = "read" | "create" | "update" | "delete" | "ping";
-export type EndpointContractFunction = (kvs: IKeyValueStoreGet, ...args: any[]) => Promise<any>;
-
-export interface IEndpointContract extends IRoutingContract {
-    role: EndpointContractRoleType;
-    function: EndpointContractFunction;
-    middleware: IMiddlewareContract[];
-}
+import { EndpointContractRoleType } from "./EndpointContractRoleType";
+import { EndpointContractFunction } from "./EndpointContractFunction";
+import { IEndpointContract } from "./IEndpointContract";
+import { IMiddlewareContract, MiddlewareContract } from "../contract/MiddlewareContract";
+import { IRoutingContract, RoutingContract } from "../contract/RoutingContract";
 
 export class EndpointContract extends RoutingContract implements IEndpointContract {
 
