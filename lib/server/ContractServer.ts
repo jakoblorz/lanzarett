@@ -1,4 +1,4 @@
-import { KeyValueStore, EndpointContract } from "../";
+import { KeyValueStore, EndpointContract, MiddlewareContract } from "../";
 import { IEndpointContract } from "../contract/EndpointContract";
 import { RoutingContract } from "../contract/RoutingContract";
 import { IContractServerRequest, IContractServerRequestArgument } from "./ContractServerRequest";
@@ -59,11 +59,34 @@ export abstract class ContractServer implements IContractMapper {
 
                 // === version 0.2: tests successful, kvs gets injected as first argument ===
 
+                
+                Promise.resolve()
+                
+                    // execute each middlewares before function    
+                    .then(() => contract.middleware
+                        .map((m) => MiddlewareContract.createInvokablePromise(m, req.arguments, kvs, "before"))
+                        .reduce<Promise<void>>((p, m) =>
+                            p.then(() => m), Promise.resolve()))
+                    
+                    // execute the actual endpoint function
+                    .then(() => EndpointContract.createInvokablePromise(contract, req.arguments, kvs))
+
+                    // respond with the result the the client
+                    .then((res) => resolve(ContractServerResponse.Success(req.role, res)))
+                    .catch((res) => resolve(ContractServerResponse.ServerError()))
+
+                    // execute each middlewares after function 
+                    .then(() => contract.middleware
+                        .map((m) => MiddlewareContract.createInvokablePromise(m, req.arguments, kvs, "after"))
+                        .reduce<Promise<void>>((p, m) =>
+                            p.then(() => m), Promise.resolve()));
+
                 // invoke the function from the contract with the 
                 // arguments(these were brought in the right order previously)
+                /*
                 EndpointContract.createInvokablePromise(contract, req.arguments, kvs)
                     .then((res) => resolve(ContractServerResponse.Success(req.role, res)))
-                    .catch((res) => resolve(ContractServerResponse.ServerError()));
+                    .catch((res) => resolve(ContractServerResponse.ServerError()));*/
 
             });
         }
