@@ -13,4 +13,4 @@ export { IMiddlewareContract, MiddlewareContract, MiddlewareContractAfterExecFun
 export { IRoutingContract, RoutingContract } from "./contract/RoutingContract";
 
 // export the key-value store functions
-export { IKeyValueStoreGet, IKeyValueStoreSet, KeyValueStore } from "./KeyValueStore"
+export { IKeyValueStoreGet, IKeyValueStoreSet, IKeyValueStore, KeyValueStore } from "./KeyValueStore"

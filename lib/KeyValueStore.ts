@@ -8,6 +8,10 @@ export interface IKeyValueStoreSet {
     set: <T>(key: string, value: T) => void;
 }
 
+export interface IKeyValueStore extends IKeyValueStoreGet, IKeyValueStoreSet {
+    
+}
+
 export class KeyValueStore implements IKeyValueStoreGet, IKeyValueStoreSet, IContractServerRequestArgument {
     
     key: string = "_internal_kvs";
