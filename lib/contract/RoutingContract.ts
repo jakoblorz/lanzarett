@@ -1,3 +1,5 @@
+import { IContractServerRequestArgument } from "../server/ContractServerRequest";
+
 export interface IRoutingContract {
     name: string;
     arguments: string[];
@@ -11,6 +13,17 @@ export class RoutingContract implements IRoutingContract {
     constructor(name: string, args: string[]) {
         this.name = name;
         this.arguments = args;
+    }
+
+    public static sortArguments(contract: IRoutingContract, args: IContractServerRequestArgument[]) {
+        const isMissingArguments = contract.arguments
+            .filter((arg) => args.filter((a) => a.key === arg).length === 0).length > 0;
+        if (isMissingArguments) {
+            return undefined;
+        }
+
+        return contract.arguments
+            .map((argument) => args.filter((a) => a.key === argument)[0].value);
     }
 
     public static extractFunctionArguments(fn: (...args: any[]) => any | void) {
