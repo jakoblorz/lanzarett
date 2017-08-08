@@ -13,8 +13,11 @@ export { EndpointContractFunction } from "./Endpoint/EndpointContractFunction";
 export { EndpointContractRoleType } from "./Endpoint/EndpointContractRoleType";
 export { IEndpointContract } from "./Endpoint/IEndpointContract";
 
+export { IMiddlewareContract } from "./Middleware/IMiddlewareContract";
+export { MiddlewareContract } from "./Middleware/MiddlewareContract";
+export { MiddlewareContractAfterExecFunctionType } from "./Middleware/MiddlewareContractAfterExecFunctionType";
+export { MiddlewareContractBeforeExecFunctionType } from "./Middleware/MiddlewareContractBeforeExecFunctionType";
 
-export { IMiddlewareContract, MiddlewareContract, MiddlewareContractAfterExecFunctionType, MiddlewareContractBeforeExecFunctionType } from "./contract/MiddlewareContract";
 export { IRoutingContract, RoutingContract } from "./contract/RoutingContract";
 
 // export the key-value store functions

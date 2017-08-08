@@ -1,13 +1,10 @@
-import { IRoutingContract, RoutingContract } from "./RoutingContract";
+import { IRoutingContract, RoutingContract } from "../contract/RoutingContract";
 import { IContractServerRequestArgument, IKeyValueStore } from "../";
+import { IMiddlewareContract } from "./IMiddlewareContract";
+import { MiddlewareContractAfterExecFunctionType } from "./MiddlewareContractAfterExecFunctionType";
+import { MiddlewareContractBeforeExecFunctionType } from "./MiddlewareContractBeforeExecFunctionType";
 
-export type MiddlewareContractBeforeExecFunctionType = (...args: any[]) => Promise<any>;
-export type MiddlewareContractAfterExecFunctionType = (value: any) => Promise<void>;
 
-export interface IMiddlewareContract extends IRoutingContract {
-    before: MiddlewareContractBeforeExecFunctionType;
-    after?: MiddlewareContractAfterExecFunctionType;
-}
 
 export class MiddlewareContract extends RoutingContract implements IMiddlewareContract {
 

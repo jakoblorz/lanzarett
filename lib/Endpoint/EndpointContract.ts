@@ -2,7 +2,8 @@ import { IKeyValueStoreGet, IContractServerRequestArgument, IKeyValueStore } fro
 import { EndpointContractRoleType } from "./EndpointContractRoleType";
 import { EndpointContractFunction } from "./EndpointContractFunction";
 import { IEndpointContract } from "./IEndpointContract";
-import { IMiddlewareContract, MiddlewareContract } from "../contract/MiddlewareContract";
+import { IMiddlewareContract } from "../Middleware/IMiddlewareContract";
+import { MiddlewareContract } from "../Middleware/MiddlewareContract";
 import { IRoutingContract, RoutingContract } from "../contract/RoutingContract";
 
 export class EndpointContract extends RoutingContract implements IEndpointContract {
