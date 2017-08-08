@@ -136,7 +136,7 @@ export class HttpContractServer extends ContractServer {
                 // parse the arguments from the url, headers and body (if resolved with content)
                 .then((content) => this.extractArgumentsFromRequest(URL.query, headers, preFetchArgs, content))
                 // invoke the contracts function (if contract was found -> level 2 routing)
-                .then((args) => this.mapContractServerRequest(new ContractServerRequest(role as EndpointContractRoleType, args)))
+                .then((args) => this.invokeMatchingContractToRequest(new ContractServerRequest(role as EndpointContractRoleType, args)))
                 // send the result back to the client
                 .then((res) => respond(res));
         });
