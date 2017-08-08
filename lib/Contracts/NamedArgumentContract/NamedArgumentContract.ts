@@ -1,4 +1,4 @@
-import { IContractServerRequestArgument } from "../../server/ContractServerRequest";
+import { IContractServerRequestArgument } from "../../Server/ContractServerRequest";
 import { IKeyValueStore } from "../../";
 
 import { INamedArgumentContract } from "./INamedArgumentContract";
