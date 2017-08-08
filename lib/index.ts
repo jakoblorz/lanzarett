@@ -13,10 +13,10 @@ export { EndpointContractFunction } from "./Contracts/EndpointContract/EndpointC
 export { EndpointContractRoleType } from "./Contracts/EndpointContract/EndpointContractRoleType";
 export { IEndpointContract } from "./Contracts/EndpointContract/IEndpointContract";
 
-export { IMiddlewareContract } from "./Contracts/Middleware/IMiddlewareContract";
-export { MiddlewareContract } from "./Contracts/Middleware/MiddlewareContract";
-export { MiddlewareContractAfterExecFunctionType } from "./Contracts/Middleware/MiddlewareContractAfterExecFunctionType";
-export { MiddlewareContractBeforeExecFunctionType } from "./Contracts/Middleware/MiddlewareContractBeforeExecFunctionType";
+export { IMiddlewareContract } from "./Contracts/MiddlewareContract/IMiddlewareContract";
+export { MiddlewareContract } from "./Contracts/MiddlewareContract/MiddlewareContract";
+export { MiddlewareContractAfterExecFunctionType } from "./Contracts/MiddlewareContract/MiddlewareContractAfterExecFunctionType";
+export { MiddlewareContractBeforeExecFunctionType } from "./Contracts/MiddlewareContract/MiddlewareContractBeforeExecFunctionType";
 
 export { IRoutingContract, RoutingContract } from "./Contracts/RoutingContract";
 
