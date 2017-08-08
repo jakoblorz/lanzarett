@@ -60,8 +60,7 @@ export abstract class ContractServer implements IContractMapper {
                 // bring the arguments from the request in the right order, 
                 // inject the new kvs as the first element in the list
                 const args: IContractServerRequestArgument[] = [kvs];
-                Array.prototype.push.apply(args, contract.arguments
-                    .map((argument) => req.arguments.filter((a) => a.key === argument)[0].value));
+                Array.prototype.push.apply(args, argsFromArgumentSort);
 
                 // === version 0.2: tests successful, kvs gets injected as first argument ===
 
