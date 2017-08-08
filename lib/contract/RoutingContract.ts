@@ -1,11 +1,12 @@
 import { IContractServerRequestArgument } from "../server/ContractServerRequest";
+import { IKeyValueStore } from "../";
 
 export interface IRoutingContract {
     name: string;
     arguments: string[];
 }
 
-export class RoutingContract implements IRoutingContract {
+export abstract class RoutingContract implements IRoutingContract {
     
     name: string;
     arguments: string[];
@@ -13,6 +14,10 @@ export class RoutingContract implements IRoutingContract {
     constructor(name: string, args: string[]) {
         this.name = name;
         this.arguments = args;
+    }
+
+    public static async reduceToPromise(...args: any[]) {
+        return Promise.resolve() as Promise<void>;
     }
 
     public static async applyArguments<T extends RoutingContract>(contract: T, args: any[], target: "function" | "before" | "after") {
