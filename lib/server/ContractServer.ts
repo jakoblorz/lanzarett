@@ -54,17 +54,17 @@ export abstract class ContractServer implements IContractMapper {
                     return resolve(ContractServerResponse.FormatError());
                 }
 
-                // === version 0.2: added kvs to prepare stack ===
                 const kvs = new KeyValueStore();
-
-                // === version 0.2: tests successful, kvs gets injected as first argument ===
-
                 
                 Promise.resolve()
                 
                     // execute each middlewares before function    
                     .then(() => contract.middleware
+                    
+                        // map the middleware functions to a invokable promise    
                         .map((m) => MiddlewareContract.createInvokablePromise(m, req.arguments, kvs, "before"))
+
+                        // process the promise array into a promise chain
                         .reduce<Promise<void>>((p, m) =>
                             p.then(() => m), Promise.resolve()))
                     
@@ -73,20 +73,18 @@ export abstract class ContractServer implements IContractMapper {
 
                     // respond with the result the the client
                     .then((res) => resolve(ContractServerResponse.Success(req.role, res)))
+                    // respond with possible errors
                     .catch((res) => resolve(ContractServerResponse.ServerError()))
 
                     // execute each middlewares after function 
                     .then(() => contract.middleware
+                    
+                        // map the middleware functions to a invokable promise 
                         .map((m) => MiddlewareContract.createInvokablePromise(m, req.arguments, kvs, "after"))
+
+                        // process the promise array into a promise chain
                         .reduce<Promise<void>>((p, m) =>
                             p.then(() => m), Promise.resolve()));
-
-                // invoke the function from the contract with the 
-                // arguments(these were brought in the right order previously)
-                /*
-                EndpointContract.createInvokablePromise(contract, req.arguments, kvs)
-                    .then((res) => resolve(ContractServerResponse.Success(req.role, res)))
-                    .catch((res) => resolve(ContractServerResponse.ServerError()));*/
 
             });
         }
