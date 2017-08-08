@@ -24,9 +24,9 @@ export class RoutingContract implements IRoutingContract {
             .filter((arg) => args.filter((a) => a.key === arg).length === 0).length > 0;
     }
 
-    public static sortFunctionArguments(contract: IRoutingContract, args: IContractServerRequestArgument[]) {
+    public static sortAndReduceToValueFunctionArguments(contract: IRoutingContract, args: IContractServerRequestArgument[]) {
         return contract.arguments
-            .map((argument) => args.filter((a) => a.key === argument)[0].value) as IContractServerRequestArgument[];
+            .map((argument) => args.filter((a) => a.key === argument)[0].value);
     }
 
     public static extractFunctionArguments(fn: (...args: any[]) => any | void) {
