@@ -55,18 +55,11 @@ export abstract class ContractServer implements IContractMapper {
                 }
 
                 const kvs = new KeyValueStore();
+
                 
                 Promise.resolve()
                 
-                    // execute each middlewares before function    
-                    .then(() => contract.middleware
-                    
-                        // map the middleware functions to a invokable promise    
-                        .map((m) => MiddlewareContract.createInvokablePromise(m, req.arguments, kvs, "before"))
-
-                        // process the promise array into a promise chain
-                        .reduce<Promise<void>>((p, m) =>
-                            p.then(() => m), Promise.resolve()))
+                    .then(() => MiddlewareContract.createCallableMiddlewareChain(contract.middleware, req.arguments, kvs, "before"))
                     
                     // execute the actual endpoint function
                     .then(() => EndpointContract.createInvokablePromise(contract, req.arguments, kvs))
@@ -77,14 +70,7 @@ export abstract class ContractServer implements IContractMapper {
                     .catch((res) => resolve(ContractServerResponse.ServerError()))
 
                     // execute each middlewares after function 
-                    .then(() => contract.middleware
-                    
-                        // map the middleware functions to a invokable promise 
-                        .map((m) => MiddlewareContract.createInvokablePromise(m, req.arguments, kvs, "after"))
-
-                        // process the promise array into a promise chain
-                        .reduce<Promise<void>>((p, m) =>
-                            p.then(() => m), Promise.resolve()));
+                    .then(() => MiddlewareContract.createCallableMiddlewareChain(contract.middleware, req.arguments, kvs, "after"));
 
             });
         }

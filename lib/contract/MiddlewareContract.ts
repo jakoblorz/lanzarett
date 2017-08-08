@@ -21,6 +21,12 @@ export class MiddlewareContract extends RoutingContract implements IMiddlewareCo
         this.after = after;
     }
 
+    public static async createCallableMiddlewareChain(contracts: IMiddlewareContract[], args: IContractServerRequestArgument[], kvs: IKeyValueStore, target: "before" | "after") {
+        return contracts
+            .map((m) => MiddlewareContract.createInvokablePromise(m, args, kvs, target))
+            .reduce<Promise<void>>((p, m) => p.then(() => m), Promise.resolve());
+    }
+
     public static async createInvokablePromise(contract: MiddlewareContract, args: IContractServerRequestArgument[], kvs: IKeyValueStore, target: "before" | "after") {
         return MiddlewareContract.applyArgumentsToMiddleware(contract,
             target === "before" ? RoutingContract.sortAndReduceToValueFunctionArguments(contract, args) : [], kvs, target);
