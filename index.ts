@@ -1,1 +1,1 @@
-export { EndpointContract } from "./lib"
+export { EndpointContract, MiddlewareContract } from "./lib"
