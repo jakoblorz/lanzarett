@@ -1,4 +1,5 @@
 import { IRoutingContract, RoutingContract } from "./RoutingContract";
+import { IContractServerRequestArgument, IKeyValueStore } from "../";
 
 export type MiddlewareContractBeforeExecFunctionType = (...args: any[]) => Promise<any>;
 export type MiddlewareContractAfterExecFunctionType = () => Promise<void>;
@@ -18,6 +19,11 @@ export class MiddlewareContract extends RoutingContract implements IMiddlewareCo
         
         this.before = before;
         this.after = after;
+    }
+
+    public static async applyArgumentsToMiddleware(contract: IMiddlewareContract, args: any[], kvs: IKeyValueStore, target: "before" | "after") {
+        const result = await super.applyArguments(contract, args, target);
+        kvs.set(contract.name, result);
     }
 
     public static isMiddlewareContract(contract: any): contract is IMiddlewareContract {
