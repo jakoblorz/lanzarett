@@ -1,32 +1,7 @@
 import { IContractServerResponse } from "../ContractServerResponse";
 import { EndpointContractRoleType } from "../../Contracts/EndpointContract/EndpointContractRoleType";
-
-/**
- * arguments from the request should be stored as
- * key-value pairs
- */
-export interface IContractServerRequestArgument {
-    key: string;
-    value: any;
-}
-
-/**
- * incomming requests should be standardised using this
- * interface
- */
-export interface IContractServerRequest {
-
-    /**
-     * store all arguments that were sent with the request
-     */
-    arguments: IContractServerRequestArgument[];
-
-    /**
-     * signal request type as role
-     */
-    role: EndpointContractRoleType;
-}
-
+import { IContractServerRequest } from "./IContractServerRequest";
+import { IContractServerRequestArgument } from "./IContractServerRequestArgument";
 /**
  * simple implementation of the IContractServerRequest interface
  */
