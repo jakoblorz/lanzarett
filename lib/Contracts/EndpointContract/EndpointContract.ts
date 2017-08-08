@@ -1,4 +1,6 @@
-import { IKeyValueStoreGet, IContractServerRequestArgument, IKeyValueStore } from "../../";
+import { IKeyValueStore } from "../../KeyValueStore/IKeyValueStore";
+import { IKeyValueStoreGet } from "../../KeyValueStore/IKeyValueStoreGet";
+import { IContractServerRequestArgument } from "../../Server/ContractServerRequest/IContractServerRequestArgument";
 import { EndpointContractRoleType } from "./EndpointContractRoleType";
 import { EndpointContractFunction } from "./EndpointContractFunction";
 import { IEndpointContract } from "./IEndpointContract";

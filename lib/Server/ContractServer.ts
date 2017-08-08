@@ -1,5 +1,7 @@
-import { KeyValueStore, EndpointContract, MiddlewareContract } from "../";
+import { KeyValueStore } from "../KeyValueStore/KeyValueStore";
+import { EndpointContract } from "../Contracts/EndpointContract/EndpointContract";
 import { IEndpointContract } from "../Contracts/EndpointContract/IEndpointContract";
+import { MiddlewareContract } from "../Contracts/MiddlewareContract/MiddlewareContract";
 import { NamedArgumentContract } from "../Contracts/NamedArgumentContract/NamedArgumentContract";
 import { IContractServerRequest } from "./ContractServerRequest/IContractServerRequest";
 import { IContractServerRequestArgument } from "./ContractServerRequest/IContractServerRequestArgument";

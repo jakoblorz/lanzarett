@@ -1,9 +1,7 @@
 import * as assert from "assert";
 import * as mocha from "mocha";
 import * as httpt from "supertest";
-import { HttpContractServer } from "../lib";
-import { EndpointContract } from "../lib";
-import { ContractServerResponse } from "../lib";
+import { HttpContractServer, EndpointContract, ContractServerResponse } from "../lib";
 
 class HttpContractServerTest extends HttpContractServer {
     constructor() {

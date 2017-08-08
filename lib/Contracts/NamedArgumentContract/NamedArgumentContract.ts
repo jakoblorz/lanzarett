@@ -1,6 +1,5 @@
 import { IContractServerRequestArgument } from "../../Server/ContractServerRequest/IContractServerRequestArgument";
-import { IKeyValueStore } from "../../";
-
+import { IKeyValueStore } from "../../KeyValueStore/IKeyValueStore";
 import { INamedArgumentContract } from "./INamedArgumentContract";
 
 export abstract class NamedArgumentContract implements INamedArgumentContract {

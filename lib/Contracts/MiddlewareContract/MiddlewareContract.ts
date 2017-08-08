@@ -1,6 +1,7 @@
 import { NamedArgumentContract } from "../NamedArgumentContract/NamedArgumentContract";
 import { INamedArgumentContract } from "../NamedArgumentContract/INamedArgumentContract";
-import { IContractServerRequestArgument, IKeyValueStore } from "../../";
+import { IKeyValueStore } from "../../KeyValueStore/IKeyValueStore";
+import { IContractServerRequestArgument } from "../../Server/ContractServerRequest/IContractServerRequestArgument";
 import { IMiddlewareContract } from "./IMiddlewareContract";
 import { MiddlewareContractAfterExecFunctionType } from "./MiddlewareContractAfterExecFunctionType";
 import { MiddlewareContractBeforeExecFunctionType } from "./MiddlewareContractBeforeExecFunctionType";
