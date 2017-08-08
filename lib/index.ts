@@ -2,7 +2,7 @@
 export { FileSystem } from "./FileSystem";
 
 // export the server classes, interfaces and functions
-export { ContractServer, RequestMapperFunctionType } from "./Server/ContractServer";
+export { ContractServer } from "./Server/ContractServer";
 export { ContractServerErrorResponseCode, ContractServerResponse, ContractServerResponseType, ContractServerSuccessResponseCode, IContractServerResponse } from "./Server/ContractServerResponse";
 export { ContractServerRequest, ContractServerResponseFunctionType, IContractServerRequest, IContractServerRequestArgument } from "./Server/ContractServerRequest";
 export { HttpContractServer } from "./Server/HttpContractServer";

@@ -4,8 +4,6 @@ import { NamedArgumentContract } from "../Contracts/NamedArgumentContract/NamedA
 import { IContractServerRequest, IContractServerRequestArgument } from "./ContractServerRequest";
 import { IContractServerResponse, ContractServerResponse } from "./ContractServerResponse";
 
-export type RequestMapperFunctionType = (req: IContractServerRequest) => Promise<IContractServerResponse>;
-
 /**
  * the contract server is mapping incomming requests that are standardised using the
  * IContractServerRequest interface to contracts that were given previously in
