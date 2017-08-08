@@ -1,6 +1,6 @@
 import { KeyValueStore, EndpointContract, MiddlewareContract } from "../";
-import { IEndpointContract } from "../Endpoint/IEndpointContract";
-import { RoutingContract } from "../contract/RoutingContract";
+import { IEndpointContract } from "../Contracts/Endpoint/IEndpointContract";
+import { RoutingContract } from "../Contracts/RoutingContract";
 import { IContractServerRequest, IContractServerRequestArgument } from "./ContractServerRequest";
 import { IContractServerResponse, ContractServerResponse } from "./ContractServerResponse";
 

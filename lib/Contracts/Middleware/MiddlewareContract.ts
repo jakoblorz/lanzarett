@@ -1,5 +1,5 @@
-import { IRoutingContract, RoutingContract } from "../contract/RoutingContract";
-import { IContractServerRequestArgument, IKeyValueStore } from "../";
+import { IRoutingContract, RoutingContract } from "../RoutingContract";
+import { IContractServerRequestArgument, IKeyValueStore } from "../../";
 import { IMiddlewareContract } from "./IMiddlewareContract";
 import { MiddlewareContractAfterExecFunctionType } from "./MiddlewareContractAfterExecFunctionType";
 import { MiddlewareContractBeforeExecFunctionType } from "./MiddlewareContractBeforeExecFunctionType";

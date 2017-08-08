@@ -8,17 +8,17 @@ export { ContractServerRequest, ContractServerResponseFunctionType, IContractSer
 export { HttpContractServer } from "./server/HttpContractServer";
 
 // export the contract classes, interfaces, types and functions
-export { EndpointContract } from "./Endpoint/EndpointContract";
-export { EndpointContractFunction } from "./Endpoint/EndpointContractFunction";
-export { EndpointContractRoleType } from "./Endpoint/EndpointContractRoleType";
-export { IEndpointContract } from "./Endpoint/IEndpointContract";
+export { EndpointContract } from "./Contracts/Endpoint/EndpointContract";
+export { EndpointContractFunction } from "./Contracts/Endpoint/EndpointContractFunction";
+export { EndpointContractRoleType } from "./Contracts/Endpoint/EndpointContractRoleType";
+export { IEndpointContract } from "./Contracts/Endpoint/IEndpointContract";
 
-export { IMiddlewareContract } from "./Middleware/IMiddlewareContract";
-export { MiddlewareContract } from "./Middleware/MiddlewareContract";
-export { MiddlewareContractAfterExecFunctionType } from "./Middleware/MiddlewareContractAfterExecFunctionType";
-export { MiddlewareContractBeforeExecFunctionType } from "./Middleware/MiddlewareContractBeforeExecFunctionType";
+export { IMiddlewareContract } from "./Contracts/Middleware/IMiddlewareContract";
+export { MiddlewareContract } from "./Contracts/Middleware/MiddlewareContract";
+export { MiddlewareContractAfterExecFunctionType } from "./Contracts/Middleware/MiddlewareContractAfterExecFunctionType";
+export { MiddlewareContractBeforeExecFunctionType } from "./Contracts/Middleware/MiddlewareContractBeforeExecFunctionType";
 
-export { IRoutingContract, RoutingContract } from "./contract/RoutingContract";
+export { IRoutingContract, RoutingContract } from "./Contracts/RoutingContract";
 
 // export the key-value store functions
 export { IKeyValueStoreGet, IKeyValueStoreSet, IKeyValueStore, KeyValueStore } from "./KeyValueStore"

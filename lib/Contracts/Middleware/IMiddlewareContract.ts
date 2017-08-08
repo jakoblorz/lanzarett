@@ -1,4 +1,4 @@
-import { IRoutingContract } from "../contract/RoutingContract";
+import { IRoutingContract } from "../RoutingContract";
 import { MiddlewareContractAfterExecFunctionType } from "./MiddlewareContractAfterExecFunctionType";
 import { MiddlewareContractBeforeExecFunctionType } from "./MiddlewareContractBeforeExecFunctionType";
 
