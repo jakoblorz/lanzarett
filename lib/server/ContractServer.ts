@@ -49,7 +49,7 @@ export abstract class ContractServer implements IContractMapper {
                 }
 
                 // evaluate argument completeness: if arguments are missing, respond with a format error
-                const isMissingArguments = RoutingContract.isMissingFunctionArguments(contract, req.arguments);
+                const isMissingArguments = EndpointContract.isMissingFunctionArguments(contract, req.arguments);
                 if (isMissingArguments) {
                     return resolve(ContractServerResponse.FormatError());
                 }

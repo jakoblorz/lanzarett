@@ -26,6 +26,14 @@ export class EndpointContract extends RoutingContract implements IEndpointContra
         this.middleware = middleware;
     }
 
+    public static isMissingFunctionArguments(contract: EndpointContract, args: IContractServerRequestArgument[]) {
+        if (super.isMissingFunctionArguments(contract, args)) {
+            return true;
+        }
+
+        return contract.middleware.filter((c) => super.isMissingFunctionArguments(c, args)).length > 0;
+    }
+
     public static async applyArgumentsToEndpoint(contract: IEndpointContract, args: any[]) {
         return await super.applyArguments(contract, args, "function");
     }
