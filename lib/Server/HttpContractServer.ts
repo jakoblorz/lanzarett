@@ -2,7 +2,7 @@ import { EndpointContractRoleType } from "../Contracts/EndpointContract/Endpoint
 import { IEndpointContract } from "../Contracts/EndpointContract/IEndpointContract";
 import { ContractServer } from "./ContractServer";
 import { IContractServerResponse, ContractServerResponse } from "./ContractServerResponse";
-import { ContractServerResponseFunctionType, ContractServerRequest, IContractServerRequestArgument } from "./ContractServerRequest"
+import { ContractServerResponseFunctionType, ContractServerRequest, IContractServerRequestArgument } from "./ContractServerRequest/ContractServerRequest"
 
 import * as http from "http";
 import { parse as urlparse } from "url";
