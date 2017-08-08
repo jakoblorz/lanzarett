@@ -18,12 +18,13 @@ export class RoutingContract implements IRoutingContract {
     public static sortArguments(contract: IRoutingContract, args: IContractServerRequestArgument[]) {
         const isMissingArguments = contract.arguments
             .filter((arg) => args.filter((a) => a.key === arg).length === 0).length > 0;
+        
         if (isMissingArguments) {
             return undefined;
         }
 
         return contract.arguments
-            .map((argument) => args.filter((a) => a.key === argument)[0].value);
+            .map((argument) => args.filter((a) => a.key === argument)[0].value) as IContractServerRequestArgument[];
     }
 
     public static extractFunctionArguments(fn: (...args: any[]) => any | void) {
