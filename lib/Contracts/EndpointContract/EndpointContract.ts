@@ -4,7 +4,7 @@ import { EndpointContractFunction } from "./EndpointContractFunction";
 import { IEndpointContract } from "./IEndpointContract";
 import { IMiddlewareContract } from "../MiddlewareContract/IMiddlewareContract";
 import { MiddlewareContract } from "../MiddlewareContract/MiddlewareContract";
-import { INamedArgumentContract, NamedArgumentContract } from "../RoutingContract";
+import { INamedArgumentContract, NamedArgumentContract } from "../NamedArgumentContract/NamedArgumentContract";
 
 export class EndpointContract extends NamedArgumentContract implements IEndpointContract {
 
