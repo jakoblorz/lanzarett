@@ -1,4 +1,4 @@
-import { IRoutingContract, RoutingContract } from "../RoutingContract";
+import { INamedArgumentContract, NamedArgumentContract } from "../RoutingContract";
 import { IContractServerRequestArgument, IKeyValueStore } from "../../";
 import { IMiddlewareContract } from "./IMiddlewareContract";
 import { MiddlewareContractAfterExecFunctionType } from "./MiddlewareContractAfterExecFunctionType";
@@ -6,13 +6,13 @@ import { MiddlewareContractBeforeExecFunctionType } from "./MiddlewareContractBe
 
 
 
-export class MiddlewareContract extends RoutingContract implements IMiddlewareContract {
+export class MiddlewareContract extends NamedArgumentContract implements IMiddlewareContract {
 
     before: MiddlewareContractBeforeExecFunctionType;
     after?: MiddlewareContractAfterExecFunctionType;
 
     constructor(name: string, before: MiddlewareContractBeforeExecFunctionType, after?: MiddlewareContractAfterExecFunctionType) {
-        super(name, RoutingContract.extractFunctionArguments(before));
+        super(name, NamedArgumentContract.extractFunctionArguments(before));
         
         this.before = before;
         this.after = after;
@@ -26,7 +26,7 @@ export class MiddlewareContract extends RoutingContract implements IMiddlewareCo
 
     public static async createInvokablePromise(contract: MiddlewareContract, args: IContractServerRequestArgument[], kvs: IKeyValueStore, target: "before" | "after") {
         return MiddlewareContract.applyArgumentsToMiddleware(contract,
-            target === "before" ? RoutingContract.sortAndReduceToValueFunctionArguments(contract, args) : [], kvs, target);
+            target === "before" ? NamedArgumentContract.sortAndReduceToValueFunctionArguments(contract, args) : [], kvs, target);
     }
 
     public static async applyArgumentsToMiddleware(contract: IMiddlewareContract, args: any[], kvs: IKeyValueStore, target: "before" | "after") {

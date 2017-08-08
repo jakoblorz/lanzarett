@@ -1,12 +1,12 @@
 import { IContractServerRequestArgument } from "../server/ContractServerRequest";
 import { IKeyValueStore } from "../";
 
-export interface IRoutingContract {
+export interface INamedArgumentContract {
     name: string;
     arguments: string[];
 }
 
-export abstract class RoutingContract implements IRoutingContract {
+export abstract class NamedArgumentContract implements INamedArgumentContract {
     
     name: string;
     arguments: string[];
@@ -20,16 +20,16 @@ export abstract class RoutingContract implements IRoutingContract {
         return Promise.resolve() as Promise<void>;
     }
 
-    public static async applyArguments<T extends RoutingContract>(contract: T, args: any[], target: "function" | "before" | "after") {
+    public static async applyArguments<T extends NamedArgumentContract>(contract: T, args: any[], target: "function" | "before" | "after") {
         return await (contract as any)[target].apply(null, args);
     }
 
-    public static isMissingFunctionArguments(contract: IRoutingContract, args: IContractServerRequestArgument[]) {
+    public static isMissingFunctionArguments(contract: INamedArgumentContract, args: IContractServerRequestArgument[]) {
         return contract.arguments
             .filter((arg) => args.filter((a) => a.key === arg).length === 0).length > 0;
     }
 
-    public static sortAndReduceToValueFunctionArguments(contract: IRoutingContract, args: IContractServerRequestArgument[]) {
+    public static sortAndReduceToValueFunctionArguments(contract: INamedArgumentContract, args: IContractServerRequestArgument[]) {
         return contract.arguments
             .map((argument) => args.filter((a) => a.key === argument)[0].value);
     }

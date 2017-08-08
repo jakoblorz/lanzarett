@@ -1,9 +1,9 @@
 import { EndpointContractRoleType } from "./EndpointContractRoleType";
 import { EndpointContractFunction } from "./EndpointContractFunction";
 import { IMiddlewareContract } from "../MiddlewareContract/IMiddlewareContract";
-import { IRoutingContract } from "../RoutingContract";
+import { INamedArgumentContract } from "../RoutingContract";
 
-export interface IEndpointContract extends IRoutingContract {
+export interface IEndpointContract extends INamedArgumentContract {
     role: EndpointContractRoleType;
     function: EndpointContractFunction;
     middleware: IMiddlewareContract[];

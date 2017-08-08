@@ -4,9 +4,9 @@ import { EndpointContractFunction } from "./EndpointContractFunction";
 import { IEndpointContract } from "./IEndpointContract";
 import { IMiddlewareContract } from "../MiddlewareContract/IMiddlewareContract";
 import { MiddlewareContract } from "../MiddlewareContract/MiddlewareContract";
-import { IRoutingContract, RoutingContract } from "../RoutingContract";
+import { INamedArgumentContract, NamedArgumentContract } from "../RoutingContract";
 
-export class EndpointContract extends RoutingContract implements IEndpointContract {
+export class EndpointContract extends NamedArgumentContract implements IEndpointContract {
 
     role: EndpointContractRoleType;
     function: EndpointContractFunction;
@@ -14,7 +14,7 @@ export class EndpointContract extends RoutingContract implements IEndpointContra
 
     constructor(name: string, role: EndpointContractRoleType, callback: EndpointContractFunction, middleware: IMiddlewareContract[] = []) {
         // get the arguments from the function, ignoring the first one (kvs getter)
-        super(name, RoutingContract.extractFunctionArguments(callback).filter((val, i) => i > 0));
+        super(name, NamedArgumentContract.extractFunctionArguments(callback).filter((val, i) => i > 0));
         
         this.role = role;
         this.function = callback;
@@ -23,7 +23,7 @@ export class EndpointContract extends RoutingContract implements IEndpointContra
 
     public static async createInvokablePromise(contract: IEndpointContract, args: IContractServerRequestArgument[], kvs: IKeyValueStore) {
         const argumentArray = [kvs];
-        Array.prototype.push.apply(argumentArray, RoutingContract.sortAndReduceToValueFunctionArguments(contract, args));
+        Array.prototype.push.apply(argumentArray, NamedArgumentContract.sortAndReduceToValueFunctionArguments(contract, args));
         return EndpointContract.applyArgumentsToEndpoint(contract, argumentArray);
     }
 
