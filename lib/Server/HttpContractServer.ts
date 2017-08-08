@@ -29,7 +29,7 @@ export class HttpContractServer extends ContractServer {
      * create a function to respond to a http request with a IContractServerResponse
      * @param response http.ServerResponse response object
      */
-    private createResponseFunction(response: http.ServerResponse) {
+    public static createResponseFunctionFromHttpResponse(response: http.ServerResponse) {
         return (res: IContractServerResponse) => new Promise<void>((resolve, reject) => {
             response.writeHead(res.code, { "Content-Type": "application/json" });
             response.end(JSON.stringify(res));
@@ -42,7 +42,7 @@ export class HttpContractServer extends ContractServer {
      * this method will resolve with {} without any further notice
      * @param request incomming http request that might contain content
      */
-    private recieveBody(request: http.IncomingMessage) {
+    public static extractMessageBodyFromIncommingMessage(request: http.IncomingMessage) {
         return new Promise<{}>((resolve, reject) => {
             body(request, (err, buf) => {
                 // error occured, but proceed with execution
@@ -66,7 +66,7 @@ export class HttpContractServer extends ContractServer {
      * @param headers header arguments from the request
      * @param body optional body arguments from the request
      */
-    private extractArgumentsFromRequest(queries: any, headers: any, preFetch: IContractServerRequestArgument[] = [], body: any = {}) {
+    public static combineArgumentsIntoSingleArray(queries: any, headers: any, preFetch: IContractServerRequestArgument[] = [], body: any = {}) {
 
         // function that pushes a element into an array only if its key is not present yet
         function pushNoShadow<T extends { key: string }>(list: T[], key: string, value: T) {
@@ -107,7 +107,7 @@ export class HttpContractServer extends ContractServer {
             }
 
             // create the function to respond to the client
-            const respond = this.createResponseFunction(response);
+            const respond = HttpContractServer.createResponseFunctionFromHttpResponse(response);
 
             // detect target role of the request
             let role: EndpointContractRoleType | "void" = "void";
@@ -135,11 +135,11 @@ export class HttpContractServer extends ContractServer {
 
             Promise.resolve({})
                 // recieve the body from the request if necessary
-                .then(() => method === "POST" || method === "PUT" ? this.recieveBody(request) : Promise.resolve({}))
+                .then(() => method === "POST" || method === "PUT" ? HttpContractServer.extractMessageBodyFromIncommingMessage(request) : Promise.resolve({}))
                 // parse the arguments from the url, headers and body (if resolved with content)
-                .then((content) => this.extractArgumentsFromRequest(URL.query, headers, preFetchArgs, content))
+                .then((content) => HttpContractServer.combineArgumentsIntoSingleArray(URL.query, headers, preFetchArgs, content))
                 // invoke the contracts function (if contract was found -> level 2 routing)
-                .then((args) => this.invokeMatchingContractToRequest(new ContractServerRequest(role as EndpointContractRoleType, args)))
+                .then((args) => HttpContractServer.invokeMatchingContractToRequest(this.contracts, new ContractServerRequest(role as EndpointContractRoleType, args)))
                 // send the result back to the client
                 .then((res) => respond(res));
         });

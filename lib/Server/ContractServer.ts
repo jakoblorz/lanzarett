@@ -29,7 +29,7 @@ export abstract class ContractServer {
     /**
      * invokeMatchingContractToRequest
      */
-    public async invokeMatchingContractToRequest(req: IContractServerRequest) {
+    public static async invokeMatchingContractToRequest(contracts: IEndpointContract[], req: IContractServerRequest) {
         // respond with a format error as no argument was defined
         if (req.arguments === undefined) {
             return ContractServerResponse.FormatError();
@@ -43,7 +43,7 @@ export abstract class ContractServer {
 
         // try to find the contract, if not found, respond with a not found error
         const rpc = rpc_entry.value;
-        const contract = this.contracts.filter((c) => c.name === rpc && c.role === req.role)[0];
+        const contract = contracts.filter((c) => c.name === rpc && c.role === req.role)[0];
         if (contract === undefined) {
             return ContractServerResponse.NotFoundError();
         }
