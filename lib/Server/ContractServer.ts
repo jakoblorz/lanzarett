@@ -3,7 +3,8 @@ import { IEndpointContract } from "../Contracts/EndpointContract/IEndpointContra
 import { NamedArgumentContract } from "../Contracts/NamedArgumentContract/NamedArgumentContract";
 import { IContractServerRequest } from "./ContractServerRequest/IContractServerRequest";
 import { IContractServerRequestArgument } from "./ContractServerRequest/IContractServerRequestArgument";
-import { IContractServerResponse, ContractServerResponse } from "./ContractServerResponse/ContractServerResponse";
+import { ContractServerResponse } from "./ContractServerResponse/ContractServerResponse";
+import { IContractServerResponse } from "./ContractServerResponse/IContractServerResponse";
 
 /**
  * the contract server is mapping incomming requests that are standardised using the

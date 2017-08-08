@@ -1,30 +1,8 @@
 import { EndpointContractRoleType } from "../../Contracts/EndpointContract/EndpointContractRoleType";
-
-export type ContractServerResponseType = "string" | "object";
-export type ContractServerResponseSuccessCode = 200 | 201 | 202 | 203 | 205;
-export type ContractServerResponseErrorCode = 400 | 403 | 404 | 500;
-
-/**
- * a general interface to standardize communication between
- * contract server and low-level protocol servers (http, etc..)
- */
-export interface IContractServerResponse {
-
-    /**
-     * success/error code to signal status
-     */
-    code: ContractServerResponseErrorCode | ContractServerResponseSuccessCode;
-
-    /**
-     * type of the message (string could be json)
-     */
-    type: ContractServerResponseType;
-
-    /**
-     * message to send (payload)
-     */
-    message: string;
-}
+import { ContractServerResponseErrorCode } from "./ContractServerResponseErrorCode";
+import { ContractServerResponseSuccessCode } from "./ContractServerResponseSuccessCode";
+import { ContractServerResponseType } from "./ContractServerResponseType";
+import { IContractServerResponse } from "./IContractServerResponse";
 
 /**
  * implementation of the IContractServerResponse,
