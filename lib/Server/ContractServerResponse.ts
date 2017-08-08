@@ -1,8 +1,8 @@
 import { EndpointContractRoleType } from "../Contracts/EndpointContract/EndpointContractRoleType";
 
 export type ContractServerResponseType = "string" | "object";
-export type ContractServerSuccessResponseCode = 200 | 201 | 202 | 203 | 205;
-export type ContractServerErrorResponseCode = 400 | 403 | 404 | 500;
+export type ContractServerResponseSuccessCode = 200 | 201 | 202 | 203 | 205;
+export type ContractServerResponseErrorCode = 400 | 403 | 404 | 500;
 
 /**
  * a general interface to standardize communication between
@@ -13,7 +13,7 @@ export interface IContractServerResponse {
     /**
      * success/error code to signal status
      */
-    code: ContractServerErrorResponseCode | ContractServerSuccessResponseCode;
+    code: ContractServerResponseErrorCode | ContractServerResponseSuccessCode;
 
     /**
      * type of the message (string could be json)
@@ -32,11 +32,11 @@ export interface IContractServerResponse {
  */
 export class ContractServerResponse implements IContractServerResponse {
 
-    code: ContractServerErrorResponseCode | ContractServerSuccessResponseCode;
+    code: ContractServerResponseErrorCode | ContractServerResponseSuccessCode;
     type: ContractServerResponseType;
     message: string;
 
-    constructor(code: ContractServerErrorResponseCode | ContractServerSuccessResponseCode, type: ContractServerResponseType, message: string) {
+    constructor(code: ContractServerResponseErrorCode | ContractServerResponseSuccessCode, type: ContractServerResponseType, message: string) {
         this.code = code;
         this.type = type;
         this.message = message;
