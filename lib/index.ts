@@ -1,9 +1,6 @@
 // export the filesystem functions
 export { FileSystem } from "./FileSystem";
 
-// export the server classes, interfaces and functions
-export { ContractServer } from "./Server/ContractServer";
-
 export { ContractServerResponse } from "./Server/ContractServerResponse/ContractServerResponse";
 export { ContractServerResponseErrorCode } from "./Server/ContractServerResponse/ContractServerResponseErrorCode";
 export { ContractServerResponseSuccessCode } from "./Server/ContractServerResponse/ContractServerResponseSuccessCode";
@@ -14,6 +11,7 @@ export { ContractServerRequest } from "./Server/ContractServerRequest/ContractSe
 export { IContractServerRequest } from "./Server/ContractServerRequest/IContractServerRequest";
 export { IContractServerRequestArgument } from "./Server/ContractServerRequest/IContractServerRequestArgument";
 
+export { ContractServer } from "./Server/ContractServer";
 export { HttpContractServer } from "./Server/HttpContractServer";
 
 // export the contract classes, interfaces, types and functions
