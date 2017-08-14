@@ -43,7 +43,8 @@ export namespace ServiceEndpointResponse {
      * class implementing response interface
      * can be used to create valid ServiceEndpointResponses
      */
-    export class ServiceEndpointResponse<DataType = boolean | number | object | string> implements IServiceEndpointResponse {
+    export class ServiceEndpointResponse<DataType = boolean | number | object | string>
+        implements IServiceEndpointResponse {
         
         /**
          * signal how to process content_data
@@ -65,7 +66,10 @@ export namespace ServiceEndpointResponse {
          * @param data payload containing the data to be sent back to the client
          * @param code signal the status of this response
          */
-        constructor(data: DataType, code: ServiceEndpointResponseErrorCode | ServiceEndpointResponseStatusCode) {
+        constructor(
+            data: DataType,
+            code: ServiceEndpointResponseErrorCode | ServiceEndpointResponseStatusCode) {
+
             this.status_code = code;
 
             if (typeof data === "boolean") {
@@ -92,7 +96,8 @@ export namespace ServiceEndpointResponse {
          * does not have all required arguments or that the rpc argument
          * is missing. Status Code is 400
          */
-        export class FormatErrorResponse extends ServiceEndpointResponse<string> {
+        export class FormatErrorResponse
+            extends ServiceEndpointResponse<string> {
             constructor() {
                 super("Format Error", 400);
             }
@@ -102,7 +107,8 @@ export namespace ServiceEndpointResponse {
          * Forbidden Error Response is used to signal that a request
          * is not allowed to access this endpoint. Status Code is 403
          */
-        export class ForbiddenErrorResponse extends ServiceEndpointResponse<string> {
+        export class ForbiddenErrorResponse
+            extends ServiceEndpointResponse<string> {
             constructor() {
                 super("Forbidden Error", 403);
             }
@@ -113,7 +119,8 @@ export namespace ServiceEndpointResponse {
          * is requesting a resource or a endpoint that does not exist.
          * Status Code is 404
          */
-        export class NotFoundErrorResponse extends ServiceEndpointResponse<string> {
+        export class NotFoundErrorResponse
+            extends ServiceEndpointResponse<string> {
             constructor() {
                 super("Not Found Error", 404);
             }
@@ -124,7 +131,8 @@ export namespace ServiceEndpointResponse {
          * could not be properly processed because of a problem server-side.
          * Status Code is 500
          */
-        export class ServerErrorResponse extends ServiceEndpointResponse<string> {
+        export class ServerErrorResponse
+            extends ServiceEndpointResponse<string> {
             constructor() {
                 super("Server Error", 500);
             }
@@ -139,7 +147,8 @@ export namespace ServiceEndpointResponse {
          * create-typed endpoint. it features its standard response code
          * of 202
          */
-        export class CreateServiceEndpointResponse<DataType> extends ServiceEndpointResponse<DataType> {
+        export class CreateServiceEndpointResponse<DataType>
+            extends ServiceEndpointResponse<DataType> {
             constructor(data: DataType) {
                 super(data, 202);
             }
@@ -150,7 +159,8 @@ export namespace ServiceEndpointResponse {
          * read-typed endpoint. it features its standard response code
          * of 200
          */
-        export class ReadServiceEndpointResponse<DataType> extends ServiceEndpointResponse<DataType> {
+        export class ReadServiceEndpointResponse<DataType>
+            extends ServiceEndpointResponse<DataType> {
             constructor(data: DataType) {
                 super(data, 200);
             }
@@ -161,7 +171,8 @@ export namespace ServiceEndpointResponse {
          * update-typed endpoint. it features its standard response code
          * of 203
          */
-        export class UpdateServiceEndpointResponse<DataType> extends ServiceEndpointResponse<DataType> {
+        export class UpdateServiceEndpointResponse<DataType>
+            extends ServiceEndpointResponse<DataType> {
             constructor(data: DataType) {
                 super(data, 203);
             }
@@ -172,7 +183,8 @@ export namespace ServiceEndpointResponse {
          * delete-typed endpoint. it features its standard response code
          * of 204
          */
-        export class DeleteServiceEndpointResponse<DataType> extends ServiceEndpointResponse<DataType>{
+        export class DeleteServiceEndpointResponse<DataType>
+            extends ServiceEndpointResponse<DataType>{
             constructor(data: DataType) {
                 super(data, 204);
             }
