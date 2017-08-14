@@ -25,16 +25,19 @@ export namespace ServiceEndpointResponse {
         public status_code: ServiceEndpointResponseErrorCode | ServiceEndpointResponseStatusCode;
 
         constructor(data: DataType, code: ServiceEndpointResponseErrorCode | ServiceEndpointResponseStatusCode) {
-            this.content_type = typeof data;
             this.status_code = code;
 
             if (typeof data === "boolean") {
+                this.content_type = "boolean";
                 this.content_data = data === true ? "true" : "false";
             } else if (typeof data === "number") {
+                this.content_type = "number";
                 this.content_data = data.toString();
             } else if (typeof data === "object") {
+                this.content_type = "object";
                 this.content_data = JSON.stringify(data);
             } else if (typeof data === "string") {
+                this.content_type = "string";
                 this.content_data = data;
             }
 

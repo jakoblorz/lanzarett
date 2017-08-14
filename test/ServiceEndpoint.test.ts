@@ -3,8 +3,38 @@ import * as assert from "assert";
 
 import { ServiceEndpoint, ServiceEndpointMapper, ServiceEndpointResponse } from "../lib/ServiceEndpoint";
 
+describe("ServiceEndpointResponse", () => {
+    it("should be a valid IServiceEndpointResponse when creating ServiceEndpointResponse<DataType>", async () => {
+        const ep = new ServiceEndpointResponse.ServiceEndpointResponse<string>("test", 200);
 
-describe("ServiceEndpointErrorResponse testing", () => {
+        assert.equal("content_data" in ep, true);
+        assert.equal("content_type" in ep, true);
+        assert.equal("status_code" in ep, true);
+    });
+
+    it("should set fields correctly when invoking constructor", async () => {
+        const ep = new ServiceEndpointResponse.ServiceEndpointResponse<string>("test", 200);
+
+        assert.equal(ep.content_data, "test");
+        assert.equal(ep.status_code, 200);
+    });
+
+    it("should detect content_type correctly", async () => {
+        const sep = new ServiceEndpointResponse.ServiceEndpointResponse<string>("test", 200);
+        assert.equal(sep.content_type, "string");
+
+        const nep = new ServiceEndpointResponse.ServiceEndpointResponse<number>(10, 200);
+        assert.equal(nep.content_type, "number");
+
+        const bep = new ServiceEndpointResponse.ServiceEndpointResponse<boolean>(true, 200);
+        assert.equal(bep.content_type, "boolean");
+
+        const oep = new ServiceEndpointResponse.ServiceEndpointResponse<{ key: string, value: string }>({ key: "", value: "" }, 200);
+        assert.equal(oep.content_type, "object");
+    });
+});
+
+describe("ServiceEndpointErrorResponse", () => {
     it("FormatErrorResponse: 400/string/(Format Err)", async () => {
         const fEResponse = new ServiceEndpointResponse.ServiceEndpointErrorResponse
             .FormatErrorResponse();
