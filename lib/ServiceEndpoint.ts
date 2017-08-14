@@ -66,21 +66,22 @@ export namespace ServiceEndpointResponse {
          * @param data payload containing the data to be sent back to the client
          * @param code signal the status of this response
          */
-        constructor(
-            data: DataType,
-            code: ServiceEndpointResponseErrorCode | ServiceEndpointResponseStatusCode) {
+        constructor(data: DataType, code: ServiceEndpointResponseErrorCode | ServiceEndpointResponseStatusCode) {
 
             this.status_code = code;
 
             if (typeof data === "boolean") {
                 this.content_type = "boolean";
                 this.content_data = data === true ? "true" : "false";
+
             } else if (typeof data === "number") {
                 this.content_type = "number";
                 this.content_data = data.toString();
+
             } else if (typeof data === "object") {
                 this.content_type = "object";
                 this.content_data = JSON.stringify(data);
+
             } else if (typeof data === "string") {
                 this.content_type = "string";
                 this.content_data = data;
@@ -98,6 +99,7 @@ export namespace ServiceEndpointResponse {
          */
         export class FormatErrorResponse
             extends ServiceEndpointResponse<string> {
+
             constructor() {
                 super("Format Error", 400);
             }
@@ -109,6 +111,7 @@ export namespace ServiceEndpointResponse {
          */
         export class ForbiddenErrorResponse
             extends ServiceEndpointResponse<string> {
+
             constructor() {
                 super("Forbidden Error", 403);
             }
@@ -121,6 +124,7 @@ export namespace ServiceEndpointResponse {
          */
         export class NotFoundErrorResponse
             extends ServiceEndpointResponse<string> {
+
             constructor() {
                 super("Not Found Error", 404);
             }
@@ -133,6 +137,7 @@ export namespace ServiceEndpointResponse {
          */
         export class ServerErrorResponse
             extends ServiceEndpointResponse<string> {
+
             constructor() {
                 super("Server Error", 500);
             }
@@ -149,6 +154,7 @@ export namespace ServiceEndpointResponse {
          */
         export class CreateServiceEndpointResponse<DataType>
             extends ServiceEndpointResponse<DataType> {
+
             constructor(data: DataType) {
                 super(data, 202);
             }
@@ -161,6 +167,7 @@ export namespace ServiceEndpointResponse {
          */
         export class ReadServiceEndpointResponse<DataType>
             extends ServiceEndpointResponse<DataType> {
+
             constructor(data: DataType) {
                 super(data, 200);
             }
@@ -173,6 +180,7 @@ export namespace ServiceEndpointResponse {
          */
         export class UpdateServiceEndpointResponse<DataType>
             extends ServiceEndpointResponse<DataType> {
+
             constructor(data: DataType) {
                 super(data, 203);
             }
@@ -185,6 +193,7 @@ export namespace ServiceEndpointResponse {
          */
         export class DeleteServiceEndpointResponse<DataType>
             extends ServiceEndpointResponse<DataType>{
+
             constructor(data: DataType) {
                 super(data, 204);
             }
@@ -197,7 +206,7 @@ export namespace ServiceEndpointResponse {
 export namespace ServiceEndpoint {
 
     /**
-     * there are 4 types of endpoints: create, read, update and deleted typed endpoints.
+     * there are 4 types of endpoints: create, read, update and deleted typed endpoints;
      * each process data in a manner following their role
      */
     export type ServiceEndpointRole = "create" | "read" | "update" | "delete";
@@ -255,12 +264,15 @@ export namespace ServiceEndpoint {
             if (this.role === "create") {
                 return new ServiceEndpointResponse.ServiceEndpointRoleResponse
                     .CreateServiceEndpointResponse(data);
+
             } else if (this.role === "read") {
                 return new ServiceEndpointResponse.ServiceEndpointRoleResponse
                     .ReadServiceEndpointResponse(data);
+
             } else if (this.role === "update") {
                 return new ServiceEndpointResponse.ServiceEndpointRoleResponse
                     .UpdateServiceEndpointResponse(data);
+
             } else if (this.role === "delete") {
                 return new ServiceEndpointResponse.ServiceEndpointRoleResponse
                     .DeleteServiceEndpointResponse(data);
@@ -309,7 +321,9 @@ export namespace ServiceEndpoint {
         /**
          * a ServiceEndpoint thats purpose is to create a resource
          */
-        export abstract class CreateServiceEndpoint<DataType> extends ServiceEndpoint<DataType> {
+        export abstract class CreateServiceEndpoint<DataType>
+            extends ServiceEndpoint<DataType> {
+
             constructor(name: string, args: string[], sample: DataType) {
                 super(name, args, "create", sample);
             }
@@ -318,7 +332,9 @@ export namespace ServiceEndpoint {
         /**
          * a ServiceEndpoint thats purpose is to respond with a resource
          */
-        export abstract class ReadServiceEndpoint<DataType> extends ServiceEndpoint<DataType> {
+        export abstract class ReadServiceEndpoint<DataType>
+            extends ServiceEndpoint<DataType> {
+
             constructor(name: string, args: string[], sample: DataType) {
                 super(name, args, "read", sample);
             }
@@ -327,7 +343,9 @@ export namespace ServiceEndpoint {
         /**
          * a ServiceEndpoint thats purpose is to update a resource
          */
-        export abstract class UpdateServiceEndpoint<DataType> extends ServiceEndpoint<DataType> {
+        export abstract class UpdateServiceEndpoint<DataType>
+            extends ServiceEndpoint<DataType> {
+
             constructor(name: string, args: string[], sample: DataType) {
                 super(name, args, "update", sample);
             }
@@ -336,7 +354,9 @@ export namespace ServiceEndpoint {
         /**
          * a ServiceEndpoint thats purpose is to remove a resource
          */
-        export abstract class DeleteServiceEndpoint<DataType> extends ServiceEndpoint<DataType> {
+        export abstract class DeleteServiceEndpoint<DataType>
+            extends ServiceEndpoint<DataType> {
+
             constructor(name: string, args: string[], sample: DataType) {
                 super(name, args, "delete", sample);
             }
@@ -344,24 +364,43 @@ export namespace ServiceEndpoint {
     }
 }
 
+/**
+ * a abstract class to provide a method to invoke a endpoint from a list
+ */
 export abstract class ServiceEndpointMapper {
 
     public async abstract listen(port: number): Promise<void>;
 
+    /**
+     * create a new ServiceEndpointMapper
+     * @param endpoints list of endpoints that need to be available
+     */
     constructor(private endpoints: ServiceEndpoint.ServiceEndpoint<any>[]) {
 
     }
 
+    /**
+     * search for the endpoint mentioned in the request and execute it.
+     * will return a IServiceEndpointResponse in any case
+     * @param role select the role of this request
+     * @param args arguments the request delivered
+     */
     public async invokeServiceEndpointFromRequest(
         role: ServiceEndpoint.ServiceEndpointRole,
         args: any): Promise<ServiceEndpointResponse.IServiceEndpointResponse> {
 
+        // search for the name argument in the argument object,
+        // should be found under key "rpc" - return a 
+        // Format Error if not found
         const name = args["rpc"];
         if (name === undefined) {
             return new ServiceEndpointResponse
                 .ServiceEndpointErrorResponse.FormatErrorResponse();
         }
 
+        // search for the endpoint object in the endpoint list,
+        // matching the role and name filters - return a
+        // Not Found Error if not found
         const endpoint = this.endpoints
             .filter((v) => v.role === role)
             .filter((v) => v.name === name)[0];
@@ -370,6 +409,8 @@ export abstract class ServiceEndpointMapper {
                 .ServiceEndpointErrorResponse.NotFoundErrorResponse();
         }
 
+        // check if there are any arguments missing the endpoint
+        // requires - return a Format Error if any are missing
         const isMissingArguments = endpoint.args
             .filter((v) => args[v] === undefined).length > 0;
         if (isMissingArguments) {
@@ -377,7 +418,20 @@ export abstract class ServiceEndpointMapper {
                 .ServiceEndpointErrorResponse.FormatErrorResponse();
         }
 
-        return await endpoint.call.apply(null, endpoint.args.map((a) => args[a]));
+        // execute the call method of the endpoint - using
+        // the apply function a array (sorted using the map function)
+        // can be passed as arguments - try to execute, catch errors
+        // if errors occured, return a Server Error, otherwise return
+        // the result of the endpoint call method (which can also
+        // be an error!)
+        try {
 
+            return await endpoint.call.apply(null, endpoint.args.map((a) => args[a]));
+
+        } catch (err) {
+
+            return new ServiceEndpointResponse.ServiceEndpointErrorResponse
+                .ServerErrorResponse();
+        }
     }
 }
