@@ -1,1 +1,0 @@
-export type EndpointContractRoleType = "read" | "create" | "update" | "delete" | "ping";
