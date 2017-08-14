@@ -1,6 +1,15 @@
 export namespace ServiceEndpointResponse {
 
+    /**
+     * different status codes depending on endpoint role:
+     * read(200), create(202), update(203) and delete(204)
+     */
     export type ServiceEndpointResponseStatusCode = 200 | 202 | 203 | 204;
+
+    /**
+     * different error codes depending on error type:
+     * format(400), forbidden(403), notfound(404) and general server(500)
+     */
     export type ServiceEndpointResponseErrorCode = 400 | 403 | 404 | 500;
 
     export interface IServiceEndpointResponse {
