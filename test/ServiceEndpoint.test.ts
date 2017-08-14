@@ -34,6 +34,36 @@ describe("ServiceEndpointResponse", () => {
     });
 });
 
+describe("ServiceEndpointRoleResponse", () => {
+    it("CreateServiceEndpointResponse<DataType> should set status_code to 202", async () => {
+        const cser = new ServiceEndpointResponse.ServiceEndpointRoleResponse
+            .CreateServiceEndpointResponse<string>("");
+        
+        assert.equal(cser.status_code, 202);
+    });
+
+    it("ReadServiceEndpointResponse<DataType> should set status_code to 200", async () => {
+        const rser = new ServiceEndpointResponse.ServiceEndpointRoleResponse
+            .ReadServiceEndpointResponse<string>("");
+        
+        assert.equal(rser.status_code, 200);
+    });
+
+    it("UpdateServiceEndpointResponse<DataType> should set status_code to 203", async () => {
+        const user = new ServiceEndpointResponse.ServiceEndpointRoleResponse
+            .UpdateServiceEndpointResponse<string>("");
+        
+        assert.equal(user.status_code, 203);
+    });
+
+    it("DeleteServiceEndpointResponse<DataType> should set status_code to 204", async () => {
+        const dser = new ServiceEndpointResponse.ServiceEndpointRoleResponse
+            .DeleteServiceEndpointResponse<string>("");
+        
+        assert.equal(dser.status_code, 204);
+    });
+});
+
 describe("ServiceEndpointErrorResponse", () => {
     it("FormatErrorResponse: 400/string/(Format Err)", async () => {
         const fEResponse = new ServiceEndpointResponse.ServiceEndpointErrorResponse
