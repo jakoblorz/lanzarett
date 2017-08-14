@@ -389,6 +389,11 @@ export abstract class ServiceEndpointMapper {
         role: ServiceEndpoint.ServiceEndpointRole,
         args: any): Promise<ServiceEndpointResponse.IServiceEndpointResponse> {
 
+        if (args === undefined) {
+            return new ServiceEndpointResponse
+                .ServiceEndpointErrorResponse.FormatErrorResponse();
+        }
+        
         // search for the name argument in the argument object,
         // should be found under key "rpc" - return a 
         // Format Error if not found
@@ -426,10 +431,9 @@ export abstract class ServiceEndpointMapper {
         // be an error!)
         try {
 
-            return await endpoint.call.apply(null, endpoint.args.map((a) => args[a]));
+            return await endpoint.call.apply(endpoint, endpoint.args.map((a) => args[a]));
 
         } catch (err) {
-
             return new ServiceEndpointResponse.ServiceEndpointErrorResponse
                 .ServerErrorResponse();
         }
