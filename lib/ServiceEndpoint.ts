@@ -97,3 +97,83 @@ export namespace ServiceEndpointResponse {
     }
 
 }
+
+export namespace ServiceEndpoint {
+
+    export type ServiceEndpointRole = "create" | "read" | "update" | "delete";
+
+    export abstract class ServiceEndpoint<DataType> {
+
+        public name: string;
+        public args: string[];
+        public role: ServiceEndpointRole;
+        public sample: DataType;
+
+        constructor(name: string, args: string[], role: ServiceEndpointRole, sample: DataType) {
+            this.name = name;
+            this.args = args;
+            this.role = role;
+            this.sample = sample;
+        }
+
+        public async abstract call(...args: any[]): Promise<ServiceEndpointResponse.IServiceEndpointResponse>
+
+
+        public Success(data: DataType) {
+
+            if (this.role === "create") {
+                return new ServiceEndpointResponse.ServiceEndpointRoleResponse.CreateServiceEndpointResponse(data);
+            } else if (this.role === "read") {
+                return new ServiceEndpointResponse.ServiceEndpointRoleResponse.ReadServiceEndpointResponse(data);
+            } else if (this.role === "update") {
+                return new ServiceEndpointResponse.ServiceEndpointRoleResponse.UpdateServiceEndpointResponse(data);
+            } else if (this.role === "delete") {
+                return new ServiceEndpointResponse.ServiceEndpointRoleResponse.DeleteServiceEndpointResponse(data);
+            }
+
+        }
+
+        public FormatError() {
+            return new ServiceEndpointResponse.ServiceEndpointErrorResponse.FormatErrorResponse();
+        }
+
+        public ForbiddenError() {
+            return new ServiceEndpointResponse.ServiceEndpointErrorResponse.ForbiddenErrorResponse();
+        }
+
+        public NotFoundError() {
+            return new ServiceEndpointResponse.ServiceEndpointErrorResponse.NotFoundErrorResponse();
+        }
+
+        public ServerError() {
+            return new ServiceEndpointResponse.ServiceEndpointErrorResponse.ServerErrorResponse();
+        }
+    }
+
+    export namespace ServiceEndpointRoleClasses {
+
+        export abstract class CreateServiceEndpoint<DataType> extends ServiceEndpoint<DataType> {
+            constructor(name: string, args: string[], sample: DataType) {
+                super(name, args, "create", sample);
+            }
+        }
+
+        export abstract class ReadServiceEndpoint<DataType> extends ServiceEndpoint<DataType> {
+            constructor(name: string, args: string[], sample: DataType) {
+                super(name, args, "read", sample);
+            }
+        }
+
+        export abstract class UpdateServiceEndpoint<DataType> extends ServiceEndpoint<DataType> {
+            constructor(name: string, args: string[], sample: DataType) {
+                super(name, args, "update", sample);
+            }
+        }
+
+        export abstract class DeleteServiceEndpoint<DataType> extends ServiceEndpoint<DataType> {
+            constructor(name: string, args: string[], sample: DataType) {
+                super(name, args, "delete", sample);
+            }
+        }
+    }
+}
