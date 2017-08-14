@@ -9,6 +9,7 @@ const UpdateServiceEndpoint = ServiceEndpoint.ServiceEndpointRoleClasses
 const DeleteServiceEndpoint = ServiceEndpoint.ServiceEndpointRoleClasses
     .DeleteServiceEndpoint;
 
+
 export {
     CreateServiceEndpoint,
     ReadServiceEndpoint,
