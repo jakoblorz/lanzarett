@@ -1,1 +1,0 @@
-export { EndpointContract, MiddlewareContract } from "./lib"
