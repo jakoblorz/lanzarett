@@ -184,15 +184,46 @@ export namespace ServiceEndpointResponse {
 
 export namespace ServiceEndpoint {
 
+    /**
+     * there are 4 types of endpoints: create, read, update and deleted typed endpoints.
+     * each process data in a manner following their role
+     */
     export type ServiceEndpointRole = "create" | "read" | "update" | "delete";
 
+    /**
+     * abstract implementation of a ServiceEndpoint
+     * contains a name to be uniquely identifiable, args of the abstract call
+     * method, the unique role and a response data sample
+     */
     export abstract class ServiceEndpoint<DataType> {
 
+        /**
+         * unique name to be identifiable
+         */
         public name: string;
+
+        /**
+         * arguments of the abstract call method
+         */
         public args: string[];
+
+        /**
+         * data-process role
+         */
         public role: ServiceEndpointRole;
+
+        /**
+         * response data sample
+         */
         public sample: DataType;
 
+        /**
+         * create a new ServiceEndpoint
+         * @param name unqiue name for this endpoint
+         * @param args name the arguments of the abstract call method on a protocol level
+         * @param role select the role of this endpoint
+         * @param sample give a sample of a successful payload
+         */
         constructor(name: string, args: string[], role: ServiceEndpointRole, sample: DataType) {
             this.name = name;
             this.args = args;
@@ -200,60 +231,99 @@ export namespace ServiceEndpoint {
             this.sample = sample;
         }
 
-        public async abstract call(...args: any[]): Promise<ServiceEndpointResponse.IServiceEndpointResponse>
+        public async abstract call(...args: any[]):
+            Promise<ServiceEndpointResponse.IServiceEndpointResponse>
 
-
+        /**
+         * respond with a success-flag, sending data as well
+         * @param data payload to send back to the client
+         */
         public Success(data: DataType) {
 
             if (this.role === "create") {
-                return new ServiceEndpointResponse.ServiceEndpointRoleResponse.CreateServiceEndpointResponse(data);
+                return new ServiceEndpointResponse.ServiceEndpointRoleResponse
+                    .CreateServiceEndpointResponse(data);
             } else if (this.role === "read") {
-                return new ServiceEndpointResponse.ServiceEndpointRoleResponse.ReadServiceEndpointResponse(data);
+                return new ServiceEndpointResponse.ServiceEndpointRoleResponse
+                    .ReadServiceEndpointResponse(data);
             } else if (this.role === "update") {
-                return new ServiceEndpointResponse.ServiceEndpointRoleResponse.UpdateServiceEndpointResponse(data);
+                return new ServiceEndpointResponse.ServiceEndpointRoleResponse
+                    .UpdateServiceEndpointResponse(data);
             } else if (this.role === "delete") {
-                return new ServiceEndpointResponse.ServiceEndpointRoleResponse.DeleteServiceEndpointResponse(data);
+                return new ServiceEndpointResponse.ServiceEndpointRoleResponse
+                    .DeleteServiceEndpointResponse(data);
             }
 
         }
 
+        /**
+         * respond with a format error, the data given was somewhat
+         * wrongly formatted
+         */
         public FormatError() {
-            return new ServiceEndpointResponse.ServiceEndpointErrorResponse.FormatErrorResponse();
+            return new ServiceEndpointResponse.ServiceEndpointErrorResponse
+                .FormatErrorResponse();
         }
 
+        /**
+         * respond with a forbidden error, the request is not authenticated or is
+         * at least not allowed to proceed or request this endpoints
+         */
         public ForbiddenError() {
-            return new ServiceEndpointResponse.ServiceEndpointErrorResponse.ForbiddenErrorResponse();
+            return new ServiceEndpointResponse.ServiceEndpointErrorResponse
+                .ForbiddenErrorResponse();
         }
 
+        /**
+         * respond with a not found error, the requested resource was not found
+         * or the endpoint was not found
+         */
         public NotFoundError() {
-            return new ServiceEndpointResponse.ServiceEndpointErrorResponse.NotFoundErrorResponse();
+            return new ServiceEndpointResponse.ServiceEndpointErrorResponse
+                .NotFoundErrorResponse();
         }
 
+        /**
+         * respond with a general error: a error occured on the server side
+         */
         public ServerError() {
-            return new ServiceEndpointResponse.ServiceEndpointErrorResponse.ServerErrorResponse();
+            return new ServiceEndpointResponse.ServiceEndpointErrorResponse
+                .ServerErrorResponse();
         }
     }
 
     export namespace ServiceEndpointRoleClasses {
 
+        /**
+         * a ServiceEndpoint thats purpose is to create a resource
+         */
         export abstract class CreateServiceEndpoint<DataType> extends ServiceEndpoint<DataType> {
             constructor(name: string, args: string[], sample: DataType) {
                 super(name, args, "create", sample);
             }
         }
 
+        /**
+         * a ServiceEndpoint thats purpose is to respond with a resource
+         */
         export abstract class ReadServiceEndpoint<DataType> extends ServiceEndpoint<DataType> {
             constructor(name: string, args: string[], sample: DataType) {
                 super(name, args, "read", sample);
             }
         }
 
+        /**
+         * a ServiceEndpoint thats purpose is to update a resource
+         */
         export abstract class UpdateServiceEndpoint<DataType> extends ServiceEndpoint<DataType> {
             constructor(name: string, args: string[], sample: DataType) {
                 super(name, args, "update", sample);
             }
         }
 
+        /**
+         * a ServiceEndpoint thats purpose is to remove a resource
+         */
         export abstract class DeleteServiceEndpoint<DataType> extends ServiceEndpoint<DataType> {
             constructor(name: string, args: string[], sample: DataType) {
                 super(name, args, "delete", sample);
