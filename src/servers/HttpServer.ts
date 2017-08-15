@@ -1,4 +1,4 @@
-import { ServiceEndpointMapper, ServiceEndpoint, ServiceEndpointResponse } from "../lib/ServiceEndpoint";
+import { ServiceEndpointMapper, ServiceEndpoint, ServiceEndpointResponse } from "../../lib/ServiceEndpoint";
 import * as http from "http";
 import * as urlp from "url";
 
