@@ -64,6 +64,9 @@ describe("HttpServer", () => {
                 break;
         }
 
+        function name() {
+            return endpoint.role + "-dummy";
+        }
 
         it("[" + endpoint.role.toUpperCase() + "] should respond with Format Error when rpc code missing", async () => {
             const response = await (http(server.server) as any)[method]("/api/" + endpoint.role + "?a=a&b=b");
@@ -73,12 +76,26 @@ describe("HttpServer", () => {
                 .FormatErrorResponse());
         });
 
-        it("[" + endpoint.role.toUpperCase() + "] should response with Format Error when all arguments are missing", async () => {
+        it("[" + endpoint.role.toUpperCase() + "] should respond with Format Error when all arguments are missing", async () => {
             const response = await (http(server.server) as any)[method]("/api/" + endpoint.role);
             assert.equal(response.status, new ServiceEndpointResponse.ServiceEndpointErrorResponse
                 .FormatErrorResponse().status_code);
             assert.deepEqual(response.body, new ServiceEndpointResponse.ServiceEndpointErrorResponse
                 .FormatErrorResponse());
+        });
+
+        it("[" + endpoint.role.toUpperCase() + "] should respond with Format Error when one argument is missing", async () => {
+            const response = await (http(server.server) as any)[method]("/api/" + endpoint.role + "?rpc=" + name() + "&a=a");
+            assert.equal(response.status, new ServiceEndpointResponse.ServiceEndpointErrorResponse
+                .FormatErrorResponse().status_code);
+            assert.deepEqual(response.body, new ServiceEndpointResponse.ServiceEndpointErrorResponse
+                .FormatErrorResponse());
+        });
+
+        it("[" + endpoint.role.toUpperCase() + "] should respond with success when all arguments are header arguments", async () => {
+            const response = await (http(server.server) as any)[method]("/api/" + endpoint.role + "?rpc=" + name() + "&a=a&b=b");
+            assert.equal(response.status, (endpoint.Success("success") as any).status_code);
+            assert.deepEqual(response.body, endpoint.Success("success"));
         });
     });
 
