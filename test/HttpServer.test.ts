@@ -92,13 +92,13 @@ describe("HttpServer", () => {
                 .FormatErrorResponse());
         });
 
-        it("[" + endpoint.role.toUpperCase() + "] should respond with success when all arguments are query arguments", async () => {
+        it("[" + endpoint.role.toUpperCase() + "] should respond with success when all arguments are QUERY arguments", async () => {
             const response = await (http(server.server) as any)[method]("/api/" + endpoint.role + "?rpc=" + name() + "&a=a&b=b");
             assert.equal(response.status, (endpoint.Success("success") as any).status_code);
             assert.deepEqual(response.body, endpoint.Success("success"));
         });
 
-        it("[" + endpoint.role.toUpperCase() + "] should respond with success when all arguments are header arguments", async () => {
+        it("[" + endpoint.role.toUpperCase() + "] should respond with success when all arguments are HEADER arguments", async () => {
             const response = await (http(server.server) as any)[method]("/api/" + endpoint.role)
                 .set("rpc", name())
                 .set("a", "a")
@@ -106,6 +106,34 @@ describe("HttpServer", () => {
             assert.equal(response.status, (endpoint.Success("success") as any).status_code);
             assert.deepEqual(response.body, endpoint.Success("success"));
         });
+
+        if (method === "post" || method === "put") {
+
+            it("[" + endpoint.role.toUpperCase() + "] should respond with success when all arguments are BODY arguments", async () => {
+                const response = await (http(server.server) as any)[method]("/api/" + endpoint.role)
+                    .send({ rpc: name(), a: "a", b: "b" });
+                assert.equal(response.status, (endpoint.Success("success") as any).status_code);
+                assert.deepEqual(response.body, endpoint.Success("success"));
+            });
+
+            it("[" + endpoint.role.toUpperCase() + "] should respond with success when all arguments are spread over QUERY, HEADER and BODY", async () => {
+                const response = await (http(server.server) as any)[method]("/api/" + endpoint.role + "?rpc=" + name())
+                    .set("a", "a")
+                    .send({ b: "b" });
+                assert.equal(response.status, (endpoint.Success("success") as any).status_code);
+                assert.deepEqual(response.body, endpoint.Success("success"));
+            });
+
+        } else {
+
+            it("[" + endpoint.role.toUpperCase() + "] should respond with success when all arguments are spread over QUERY and HEADER", async () => {
+                const response = await (http(server.server) as any)[method]("/api/" + endpoint.role + "?rpc=" + name())
+                    .set("a", "a")
+                    .set("b", "b");
+                assert.equal(response.status, (endpoint.Success("success") as any).status_code);
+                assert.deepEqual(response.body, endpoint.Success("success"));
+            });
+        }
     });
 
 });
