@@ -92,8 +92,17 @@ describe("HttpServer", () => {
                 .FormatErrorResponse());
         });
 
-        it("[" + endpoint.role.toUpperCase() + "] should respond with success when all arguments are header arguments", async () => {
+        it("[" + endpoint.role.toUpperCase() + "] should respond with success when all arguments are query arguments", async () => {
             const response = await (http(server.server) as any)[method]("/api/" + endpoint.role + "?rpc=" + name() + "&a=a&b=b");
+            assert.equal(response.status, (endpoint.Success("success") as any).status_code);
+            assert.deepEqual(response.body, endpoint.Success("success"));
+        });
+
+        it("[" + endpoint.role.toUpperCase() + "] should respond with success when all arguments are header arguments", async () => {
+            const response = await (http(server.server) as any)[method]("/api/" + endpoint.role)
+                .set("rpc", name())
+                .set("a", "a")
+                .set("b", "b");
             assert.equal(response.status, (endpoint.Success("success") as any).status_code);
             assert.deepEqual(response.body, endpoint.Success("success"));
         });
