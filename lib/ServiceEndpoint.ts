@@ -4,7 +4,7 @@ export namespace ServiceEndpointResponse {
      * different status codes depending on endpoint role:
      * read(200), create(202), update(203) and delete(204)
      */
-    export type ServiceEndpointResponseStatusCode = 200 | 202 | 203 | 204;
+    export type ServiceEndpointResponseStatusCode = 200 | 201 | 202 | 203;
 
     /**
      * different error codes depending on error type:
@@ -156,7 +156,7 @@ export namespace ServiceEndpointResponse {
             extends ServiceEndpointResponse<DataType> {
 
             constructor(data: DataType) {
-                super(data, 202);
+                super(data, 201);
             }
         }
 
@@ -182,7 +182,7 @@ export namespace ServiceEndpointResponse {
             extends ServiceEndpointResponse<DataType> {
 
             constructor(data: DataType) {
-                super(data, 203);
+                super(data, 202);
             }
         }
 
@@ -195,7 +195,7 @@ export namespace ServiceEndpointResponse {
             extends ServiceEndpointResponse<DataType>{
 
             constructor(data: DataType) {
-                super(data, 204);
+                super(data, 203);
             }
         }
 

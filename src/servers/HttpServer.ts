@@ -1,6 +1,7 @@
 import { ServiceEndpointMapper, ServiceEndpoint, ServiceEndpointResponse } from "../../lib/ServiceEndpoint";
 import * as http from "http";
 import * as urlp from "url";
+import * as body from "raw-body";
 
 /**
  * HttpServer is a server to respond to http requests on a given port
@@ -40,6 +41,24 @@ export class HttpServer extends ServiceEndpointMapper {
     }
 
     /**
+     * recieve the body from a request
+     * @param request incoming request of a POST or PUT http request
+     */
+    public async recieveBody(request: http.IncomingMessage) {
+        return new Promise<{}>((resolve, reject) => {
+            body(request, (err, buff) => {
+                if (err) resolve({});
+
+                try {
+                    resolve(JSON.parse(buff.toString()));
+                } catch (e){
+                    resolve({});
+                }
+            });
+        });
+    }
+
+    /**
      * create a new http server to host endpoints
      * @param endpoints specify the endpoints that can be reached with http
      * requests
@@ -47,7 +66,7 @@ export class HttpServer extends ServiceEndpointMapper {
     constructor(endpoints: ServiceEndpoint.ServiceEndpoint<any>[]) {
         super(endpoints);
 
-        this.server = http.createServer((request, response) => {
+        this.server = http.createServer(async (request, response) => {
 
             // get headers, method, pathname and query parameters
             // from the request. block requests that cannot be parsed
@@ -101,6 +120,16 @@ export class HttpServer extends ServiceEndpointMapper {
             Object.keys(headers)
                 .filter((k) => args[k] === undefined)
                 .forEach((k) => args[k] = headers[k]);
+            
+            // strip the arguments from the body if method
+            // is POST or PUT -> these are the methods allowed
+            // to transport a body
+            if (method === "POST" || method === "PUT") {
+                const bodyFromRequest = await this.recieveBody(request);
+                Object.keys(bodyFromRequest)
+                    .filter((k) => args[k] === undefined)
+                    .forEach((k) => args[k] = (bodyFromRequest as any)[k]);
+            }
             
             // the authorization header is a special one,
             // overwrite possible duplicate argument definition

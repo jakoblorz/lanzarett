@@ -35,11 +35,11 @@ describe("ServiceEndpointResponse", () => {
 });
 
 describe("ServiceEndpointRoleResponse", () => {
-    it("CreateServiceEndpointResponse<DataType> should set status_code to 202", async () => {
+    it("CreateServiceEndpointResponse<DataType> should set status_code to 201", async () => {
         const cser = new ServiceEndpointResponse.ServiceEndpointRoleResponse
             .CreateServiceEndpointResponse<string>("");
         
-        assert.equal(cser.status_code, 202);
+        assert.equal(cser.status_code, 201);
     });
 
     it("ReadServiceEndpointResponse<DataType> should set status_code to 200", async () => {
@@ -49,18 +49,18 @@ describe("ServiceEndpointRoleResponse", () => {
         assert.equal(rser.status_code, 200);
     });
 
-    it("UpdateServiceEndpointResponse<DataType> should set status_code to 203", async () => {
+    it("UpdateServiceEndpointResponse<DataType> should set status_code to 202", async () => {
         const user = new ServiceEndpointResponse.ServiceEndpointRoleResponse
             .UpdateServiceEndpointResponse<string>("");
         
-        assert.equal(user.status_code, 203);
+        assert.equal(user.status_code, 202);
     });
 
-    it("DeleteServiceEndpointResponse<DataType> should set status_code to 204", async () => {
+    it("DeleteServiceEndpointResponse<DataType> should set status_code to 203", async () => {
         const dser = new ServiceEndpointResponse.ServiceEndpointRoleResponse
             .DeleteServiceEndpointResponse<string>("");
         
-        assert.equal(dser.status_code, 204);
+        assert.equal(dser.status_code, 203);
     });
 });
 
