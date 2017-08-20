@@ -379,6 +379,44 @@ export namespace ServiceEndpoint {
     }
 }
 
+export class ServiceEndpointNamespace {
+
+    public name: string;
+    public endpoints: ServiceEndpoint.IServiceEndpoint<any>[];
+
+    constructor(name: string) {
+        this.name = name;
+        this.endpoints = [];
+    }
+
+    /**
+     * register
+     */
+    public register<T = boolean | number | string | object >(role: ServiceEndpoint.ServiceEndpointRole, name: string, fn: (...args: any[]) => Promise<ServiceEndpointResponse.IServiceEndpointResponse>, sample: T) {
+        this.endpoints.push({
+            callback: fn,
+            args: this.extractFunctionArguments(fn),
+            name: this.name + "." + name,
+            role: role,
+            sample: sample
+        });
+    }
+
+    /**
+     * extractFunctionArguments
+     */
+    public extractFunctionArguments(fn: (...args: any[]) => any)  {
+        if (fn.toString().indexOf("function") === -1) {
+            throw new Error("could not find function string in callback argument - did you use a fat-arrow function definition?");
+        }
+        
+        return (fn.toString()
+            .replace(/((\/\/.*$)|(\/\*[\s\S]*?\*\/)|(\s))/mg, "")
+            .match(/^function\s*[^\(]*\(\s*([^\)]*)\)/m) as RegExpMatchArray)[1]
+            .split(/,/);      
+    }
+}
+
 /**
  * a abstract class to provide a method to invoke a endpoint from a list
  */
