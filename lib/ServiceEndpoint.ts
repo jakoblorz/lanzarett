@@ -211,12 +211,20 @@ export namespace ServiceEndpoint {
      */
     export type ServiceEndpointRole = "create" | "read" | "update" | "delete";
 
+    export interface IServiceEndpoint<T> {
+        name: string;
+        args: string[];
+        role: ServiceEndpointRole;
+        sample: T;
+        callback: (...args: any[]) => Promise<ServiceEndpointResponse.IServiceEndpointResponse>;
+    }
+
     /**
      * abstract implementation of a ServiceEndpoint
      * contains a name to be uniquely identifiable, args of the abstract call
      * method, the unique role and a response data sample
      */
-    export abstract class ServiceEndpoint<DataType> {
+    export abstract class ServiceEndpoint<DataType> implements IServiceEndpoint<DataType> {
 
         /**
          * unique name to be identifiable
@@ -239,6 +247,12 @@ export namespace ServiceEndpoint {
         public sample: DataType;
 
         /**
+         * method that will be called
+         */
+        public callback: (...args: any[]) => Promise<ServiceEndpointResponse.IServiceEndpointResponse>;
+
+
+        /**
          * create a new ServiceEndpoint
          * @param name unqiue name for this endpoint
          * @param args name the arguments of the abstract call method on a protocol level
@@ -250,6 +264,7 @@ export namespace ServiceEndpoint {
             this.args = args;
             this.role = role;
             this.sample = sample;
+            this.callback = this.call;
         }
 
         public async abstract call(...args: any[]):
