@@ -484,7 +484,7 @@ export abstract class ServiceEndpointMapper {
         // be an error!)
         try {
 
-            return await endpoint.call.apply(endpoint, endpoint.args.map((a) => args[a]));
+            return await endpoint.callback.apply(endpoint, endpoint.args.map((a) => args[a]));
 
         } catch (err) {
             return new ServiceEndpointResponse.ServiceEndpointErrorResponse
