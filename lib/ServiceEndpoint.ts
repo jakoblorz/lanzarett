@@ -17,6 +17,8 @@ export namespace ServiceEndpointResponse {
      */
     export type ServiceEndpointResponseContentType = "boolean" | "number" | "object" | "string";
 
+    export type ServiceEndpointResponseDataType = boolean | number | object | string;
+
     /**
      * interface to standardise all kinds of responses that
      * get send to the client
@@ -43,7 +45,7 @@ export namespace ServiceEndpointResponse {
      * class implementing response interface
      * can be used to create valid ServiceEndpointResponses
      */
-    export class ServiceEndpointResponse<DataType = boolean | number | object | string>
+    export class ServiceEndpointResponse<DataType = ServiceEndpointResponseDataType>
         implements IServiceEndpointResponse {
         
         /**
@@ -392,7 +394,11 @@ export class ServiceEndpointNamespace {
     /**
      * register
      */
-    public register<T = boolean | number | string | object >(role: ServiceEndpoint.ServiceEndpointRole, name: string, fn: (...args: any[]) => Promise<ServiceEndpointResponse.IServiceEndpointResponse>, sample: T) {
+    public register<T = ServiceEndpointResponse.ServiceEndpointResponseDataType>(
+        role: ServiceEndpoint.ServiceEndpointRole,
+        name: string, fn: (...args: any[]) => Promise<ServiceEndpointResponse.IServiceEndpointResponse>,
+        sample: T) {
+
         this.endpoints.push({
             callback: fn,
             args: this.extractFunctionArguments(fn),
