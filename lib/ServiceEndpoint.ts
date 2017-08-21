@@ -303,7 +303,7 @@ export namespace ServiceEndpoint {
          */
         public FormatError() {
             return new ServiceEndpointResponse.ServiceEndpointErrorResponse
-                .FormatErrorResponse();
+                .FormatErrorResponse() as ServiceEndpointResponse.IServiceEndpointResponse;
         }
 
         /**
@@ -312,7 +312,7 @@ export namespace ServiceEndpoint {
          */
         public ForbiddenError() {
             return new ServiceEndpointResponse.ServiceEndpointErrorResponse
-                .ForbiddenErrorResponse();
+                .ForbiddenErrorResponse() as ServiceEndpointResponse.IServiceEndpointResponse;
         }
 
         /**
@@ -321,7 +321,7 @@ export namespace ServiceEndpoint {
          */
         public NotFoundError() {
             return new ServiceEndpointResponse.ServiceEndpointErrorResponse
-                .NotFoundErrorResponse();
+                .NotFoundErrorResponse() as ServiceEndpointResponse.IServiceEndpointResponse;
         }
 
         /**
@@ -329,7 +329,7 @@ export namespace ServiceEndpoint {
          */
         public ServerError() {
             return new ServiceEndpointResponse.ServiceEndpointErrorResponse
-                .ServerErrorResponse();
+                .ServerErrorResponse() as ServiceEndpointResponse.IServiceEndpointResponse;
         }
     }
 
