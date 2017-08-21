@@ -230,6 +230,11 @@ export namespace ServiceEndpoint {
         name: string;
 
         /**
+         * namespace of this endpoint function
+         */
+        namespace: "*" | string;
+
+        /**
          * arguments of this endpoint function
          * in the right order
          */
@@ -265,6 +270,11 @@ export namespace ServiceEndpoint {
         public name: string;
 
         /**
+         * namespace of this endpoint
+         */
+        public namespace: "*";
+
+        /**
          * arguments of the abstract call method
          */
         public args: string[];
@@ -294,6 +304,7 @@ export namespace ServiceEndpoint {
          */
         constructor(name: string, args: string[], role: ServiceEndpointRole, sample: DataType) {
             this.name = name;
+            this.namespace = "*";
             this.args = args;
             this.role = role;
             this.sample = sample;
@@ -471,7 +482,8 @@ export class ServiceEndpointNamespace {
         this.endpoints.push({
             callback: callbackFn,
             args: this.extractFunctionArguments(fn),
-            name: this.name + "." + name,
+            name: name,
+            namespace: this.name,
             role: role,
             sample: sample
         });
