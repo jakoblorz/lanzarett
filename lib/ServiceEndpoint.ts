@@ -70,20 +70,26 @@ export namespace ServiceEndpointResponse {
          */
         constructor(data: DataType, code: ServiceEndpointResponseErrorCode | ServiceEndpointResponseStatusCode) {
 
+            // set the status code
             this.status_code = code;
 
+            // check the data-type, encode the data
+            // if data is boolean, content_data is then true or false
             if (typeof data === "boolean") {
                 this.content_type = "boolean";
                 this.content_data = data === true ? "true" : "false";
 
+            // if data is number, content_data is then stringified number
             } else if (typeof data === "number") {
                 this.content_type = "number";
                 this.content_data = data.toString();
 
+            // if data is object, content_data will be json encoded object
             } else if (typeof data === "object") {
                 this.content_type = "object";
                 this.content_data = JSON.stringify(data);
 
+            // if data is string, content_data will be the plain string
             } else if (typeof data === "string") {
                 this.content_type = "string";
                 this.content_data = data;
@@ -213,11 +219,36 @@ export namespace ServiceEndpoint {
      */
     export type ServiceEndpointRole = "create" | "read" | "update" | "delete";
 
+    /**
+     * describes a basic function endpoint
+     */
     export interface IServiceEndpoint<T> {
+
+        /**
+         * name of this endpoint function
+         */
         name: string;
+
+        /**
+         * arguments of this endpoint function
+         * in the right order
+         */
         args: string[];
+
+        /**
+         * crud-role definition of this endpoint
+         * function
+         */
         role: ServiceEndpointRole;
+
+        /**
+         * sample response of this endpoint function
+         */
         sample: T;
+
+        /**
+         * actual function that will be called
+         */
         callback: (...args: any[]) => Promise<ServiceEndpointResponse.IServiceEndpointResponse>;
     }
 
@@ -428,6 +459,12 @@ export class ServiceEndpointNamespace {
                     .DeleteServiceEndpointResponse(data) as ServiceEndpointResponse.IServiceEndpointResponse;
             }
         };
+
+        // check if there is an endpoint with the name already
+        const isDuplicateName = this.endpoints.filter((e) => e.name === name).length > 0;
+        if (isDuplicateName) {
+            throw new Error("duplicated endpoint name found: namespace '" + this.name + "' already contains endpoint with name '" + name + "'");
+        }
         
         // push this endpoint function to the list of endpoint functions, 
         // making use of the wrapper function itself
@@ -445,7 +482,7 @@ export class ServiceEndpointNamespace {
      */
     public extractFunctionArguments(fn: (...args: any[]) => any)  {
         if (fn.toString().indexOf("function") === -1) {
-            throw new Error("could not find function string in callback argument - did you use a fat-arrow function definition?");
+            throw new Error("could not find function string in callback argument");
         }
         
         return (fn.toString()
