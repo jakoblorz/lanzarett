@@ -400,12 +400,16 @@ export class ServiceEndpointNamespace {
      */
     public register<T = ServiceEndpointResponse.ServiceEndpointResponseDataType>(
         role: ServiceEndpoint.ServiceEndpointRole,
-        name: string, fn: (...args: any[]) => Promise<ServiceEndpointResponse.ServiceEndpointResponseDataType>,
+        name: string, fn: (...args: any[]) => Promise<ServiceEndpointResponse.ServiceEndpointResponseDataType | ServiceEndpointResponse.IServiceEndpointResponse>,
         sample: T) {
 
         // wrapper function to respond to the client using the correct response structure
         const callbackFn = async (...args: any[]): Promise<ServiceEndpointResponse.IServiceEndpointResponse> => {
-            const data = await fn.apply(this, args) as ServiceEndpointResponse.ServiceEndpointResponseDataType;
+            const data = await fn.apply(this, args);
+
+            if ("content_type" in data && "content_data" in data && "status_code" in data) {
+                return data as ServiceEndpointResponse.IServiceEndpointResponse;
+            }
 
             if (role === "create") {
                 return new ServiceEndpointResponse.ServiceEndpointRoleResponse
