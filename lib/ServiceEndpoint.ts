@@ -280,19 +280,19 @@ export namespace ServiceEndpoint {
 
             if (this.role === "create") {
                 return new ServiceEndpointResponse.ServiceEndpointRoleResponse
-                    .CreateServiceEndpointResponse(data);
+                    .CreateServiceEndpointResponse(data) as ServiceEndpointResponse.IServiceEndpointResponse;
 
             } else if (this.role === "read") {
                 return new ServiceEndpointResponse.ServiceEndpointRoleResponse
-                    .ReadServiceEndpointResponse(data);
+                    .ReadServiceEndpointResponse(data) as ServiceEndpointResponse.IServiceEndpointResponse;
 
             } else if (this.role === "update") {
                 return new ServiceEndpointResponse.ServiceEndpointRoleResponse
-                    .UpdateServiceEndpointResponse(data);
+                    .UpdateServiceEndpointResponse(data) as ServiceEndpointResponse.IServiceEndpointResponse;
 
             } else if (this.role === "delete") {
                 return new ServiceEndpointResponse.ServiceEndpointRoleResponse
-                    .DeleteServiceEndpointResponse(data);
+                    .DeleteServiceEndpointResponse(data) as ServiceEndpointResponse.IServiceEndpointResponse;
             }
 
         }
