@@ -450,7 +450,7 @@ export class ServiceEndpointNamespace {
         const callbackFn = async (...args: any[]): Promise<ServiceEndpointResponse.IServiceEndpointResponse> => {
             const data = await fn.apply(this, args);
 
-            if ("content_type" in data && "content_data" in data && "status_code" in data) {
+            if (typeof data === "object" && "content_type" in data && "content_data" in data && "status_code" in data) {
                 return data as ServiceEndpointResponse.IServiceEndpointResponse;
             }
 
@@ -522,7 +522,7 @@ export abstract class ServiceEndpointMapper {
      * create a new ServiceEndpointMapper
      * @param endpoints list of endpoints that need to be available
      */
-    constructor(private endpoints: ServiceEndpoint.ServiceEndpoint<any>[]) {
+    constructor(private endpoints: ServiceEndpoint.IServiceEndpoint<any>[]) {
 
     }
 
