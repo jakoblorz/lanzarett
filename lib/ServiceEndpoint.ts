@@ -442,7 +442,8 @@ export class ServiceEndpointNamespace {
      */
     public register<T = ServiceEndpointResponse.ServiceEndpointResponseDataType>(
         role: ServiceEndpoint.ServiceEndpointRole,
-        name: string, fn: (...args: any[]) => Promise<ServiceEndpointResponse.ServiceEndpointResponseDataType | ServiceEndpointResponse.IServiceEndpointResponse>,
+        name: string,
+        fn: (...args: any[]) => Promise<T | ServiceEndpointResponse.IServiceEndpointResponse>,
         sample: T) {
 
         // wrapper function to respond to the client using the correct response structure
@@ -492,15 +493,21 @@ export class ServiceEndpointNamespace {
     /**
      * extractFunctionArguments
      */
-    public extractFunctionArguments(fn: (...args: any[]) => any)  {
+    private extractFunctionArguments(fn: (...args: any[]) => any)  {
         if (fn.toString().indexOf("function") === -1) {
             throw new Error("could not find function string in callback argument");
         }
         
-        return (fn.toString()
+        const args = (fn.toString()
             .replace(/((\/\/.*$)|(\/\*[\s\S]*?\*\/)|(\s))/mg, "")
             .match(/^function\s*[^\(]*\(\s*([^\)]*)\)/m) as RegExpMatchArray)[1]
-            .split(/,/);      
+            .split(/,/);
+        
+        if (args.length === 1 && args[0] === "") {
+            return [];
+        } else {
+            return args;
+        }
     }
 }
 
