@@ -1,7 +1,10 @@
 import * as mocha from "mocha";
 import * as assert from "assert";
 
-import { ServiceEndpoint, ServiceEndpointMapper, ServiceEndpointResponse, ServiceEndpointNamespace } from "../lib/ServiceEndpoint";
+import { ServiceEndpoint} from "../lib/ServiceEndpoint";
+import { ServiceEndpointMapper } from "../lib/ServiceEndpointMapper";
+import { ServiceEndpointResponse } from "../lib/ServiceEndpointResponse";
+import { ServiceEndpointNamespace } from "../lib/ServiceEndpointNamespace";
 
 class TestNamespace extends ServiceEndpointNamespace {
 
@@ -31,50 +34,6 @@ class TestNamespace extends ServiceEndpointNamespace {
 
         return "error";
     }
-}
-
-class NoArgCreateEndpoint extends ServiceEndpoint.ServiceEndpointRoleClasses.CreateServiceEndpoint<string> {
-    
-    constructor() {
-        super("noarg-create", [], "test");
-    }
-
-    public async call(): Promise<ServiceEndpointResponse.IServiceEndpointResponse> {
-        return this.Success("success") as ServiceEndpointResponse.IServiceEndpointResponse;
-    }
-
-}
-
-class SingleArgCreateEndpoint extends ServiceEndpoint.ServiceEndpointRoleClasses.CreateServiceEndpoint<string> {
-    
-    constructor() {
-        super("singlearg-create", ["a"], "test");
-    }
-
-    public async call(a: string): Promise<ServiceEndpointResponse.IServiceEndpointResponse> {
-        if (a !== undefined && a === "a") {
-            return this.Success("success") as ServiceEndpointResponse.IServiceEndpointResponse;
-        }
-
-        return this.Success("error") as ServiceEndpointResponse.IServiceEndpointResponse;
-    }
-
-}
-
-class MultiArgCreateEndpoint extends ServiceEndpoint.ServiceEndpointRoleClasses.CreateServiceEndpoint<string> {
-
-    constructor() {
-        super("multiarg-create", ["a", "b"], "test");
-    }
-
-    public async call(a: string, b: string): Promise<ServiceEndpointResponse.IServiceEndpointResponse> {
-        if (a !== undefined && a === "a" && b !== undefined && b === "b") {
-            return this.Success("success") as ServiceEndpointResponse.IServiceEndpointResponse;
-        }
-
-        return this.Success("error") as ServiceEndpointResponse.IServiceEndpointResponse;
-    }
-
 }
 
 class Mapper extends ServiceEndpointMapper {
@@ -151,9 +110,4 @@ describe("ServiceEndpointMapper", () => {
     }
 
     testEndpointArray("namespace based testing", new TestNamespace().endpoints, "test");
-    testEndpointArray("crud class based testing", [
-        new NoArgCreateEndpoint(),
-        new SingleArgCreateEndpoint(),
-        new MultiArgCreateEndpoint()
-    ]);
 });

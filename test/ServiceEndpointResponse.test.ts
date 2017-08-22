@@ -1,7 +1,7 @@
 import * as mocha from "mocha";
 import * as assert from "assert";
 
-import { ServiceEndpoint, ServiceEndpointMapper, ServiceEndpointResponse } from "../lib/ServiceEndpoint";
+import { ServiceEndpointResponse } from "../lib/ServiceEndpointResponse";
 
 describe("ServiceEndpointResponse", () => {
     it("should be a valid IServiceEndpointResponse when creating ServiceEndpointResponse<DataType>", async () => {
