@@ -16,12 +16,17 @@
   "license": "ISC",
   "devDependencies": {
     "@types/debug": "0.0.29",
+    "@types/es6-promise": "0.0.32",
     "@types/mocha": "^2.2.41",
-    "@types/raw-body": "^2.1.4"
+    "@types/node": "^8.0.22",
+    "@types/raw-body": "^2.1.4",
+    "@types/supertest": "^2.0.2"
   },
   "dependencies": {
     "debug": "^2.6.8",
+    "es6-promise": "^4.1.1",
     "mocha": "^3.5.0",
-    "raw-body": "^2.2.0"
+    "raw-body": "^2.2.0",
+    "supertest": "^3.0.0"
   }
 }

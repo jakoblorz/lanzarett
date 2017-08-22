@@ -1,7 +1,7 @@
 import * as mocha from "mocha";
 import * as assert from "assert";
 
-import { ServiceEndpoint, ServiceEndpointResponse } from "../lib/ServiceEndpoint";
+import { ServiceEndpoint, ServiceEndpointResponse, ServiceEndpointNamespace } from "../lib/ServiceEndpoint";
 
 class TestServiceEndpoint extends ServiceEndpoint.ServiceEndpoint<string> {
     
@@ -17,6 +17,7 @@ describe("ServiceEndpoint", () => {
 
         assert.equal("name" in ep, true);
         assert.equal("args" in ep, true);
+        assert.equal("namespace" in ep, true);
         assert.equal("role" in ep, true);
         assert.equal("sample" in ep, true);
     });
@@ -26,6 +27,7 @@ describe("ServiceEndpoint", () => {
 
         assert.equal(ep.name, "test");
         assert.equal(ep.role, "create");
+        assert.equal(ep.namespace, "*");
         assert.equal(ep.sample, "test-sample");
         assert.deepEqual(ep.args, ["a", "b"]);
     });
@@ -134,5 +136,70 @@ describe("ServiceEndpointRoleClasses", () => {
         
         const dep = new DeleteServiceEndpointTestClass("delete-test", [], "test-sample");
         assert.equal(dep.role, "delete");
+    });
+});
+
+describe("ServiceEndpointNamespace", () => {
+
+    class TestServiceNamespace extends ServiceEndpointNamespace {
+
+        constructor() {
+            super("test");
+            super.register<string>("read", "no-arg", TestServiceNamespace.noArgMethod, "");
+            super.register<string>("read", "single-arg", TestServiceNamespace.singleArgMethod, "");
+            super.register<string>("read", "multi-arg", TestServiceNamespace.multiArgMethod, "");
+        }
+
+        public static async noArgMethod(): Promise<string> {
+            return new Promise<string>((resolve, reject) => resolve("success"));
+        }
+
+        public static async singleArgMethod(a: string): Promise<string> {
+            return new Promise<string>((resolve, reject) => {
+                if (a !== undefined && a === "a") resolve("success");
+                else reject("error");
+            });
+        }
+
+        public static async multiArgMethod(a: string, b: string): Promise<string> {
+            return new Promise<string>((resolve, reject) => {
+                if (a !== undefined && a === "a" && b !== undefined && b === "b") resolve("success");
+                else reject("error");
+            });
+        }
+    }
+
+    let tNamespace: TestServiceNamespace;
+
+    before(async () => {
+        tNamespace = new TestServiceNamespace();
+    });
+
+    it("should have registered 3 endpoints", async () => {
+        assert.equal(tNamespace.endpoints.length, 3);
+    });
+
+    it("should have added own name to namespace field of each endpoint", async () => {
+        tNamespace.endpoints.forEach((e) =>
+            assert.equal(e.namespace, tNamespace.name));
+    });
+
+    it("should have correctly detected arguments", async () => {
+
+        const noarg = tNamespace.endpoints[0];
+        assert.equal(noarg.name, "no-arg");
+        assert.equal(noarg.args.length, 0);
+
+        const singlearg = tNamespace.endpoints[1];
+        assert.equal(singlearg.name, "single-arg");
+        assert.equal(singlearg.args.length, 1);
+        assert.equal(singlearg.args[0], "a");
+
+        const multiarg = tNamespace.endpoints[2];
+        assert.equal(multiarg.name, "multi-arg");
+        assert.equal(multiarg.args.length, 2);
+        assert.equal(multiarg.args[0], "a");
+        assert.equal(multiarg.args[1], "b");
+
     });
 });
