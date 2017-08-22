@@ -432,6 +432,11 @@ export class ServiceEndpointNamespace {
     public endpoints: ServiceEndpoint.IServiceEndpoint<any>[];
 
     constructor(name: string) {
+
+        if (name === "create" || name === "read" || name === "update" || name === "delete") {
+            throw new Error("namespace name forbidden error: create/read/update/delete are forbidden namespace names");
+        }
+
         this.name = name;
         this.endpoints = [];
     }
