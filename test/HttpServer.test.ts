@@ -1,10 +1,13 @@
-import { ServiceEndpoint, ServiceEndpointResponse } from "../lib/ServiceEndpoint";
+import { ServiceEndpoint } from "../lib/ServiceEndpoint";
+import { ServiceEndpointResponse } from "../lib/ServiceEndpointResponse";
 import { HttpServer } from "../src/servers/HttpServer";
 
 import * as mocha from "mocha";
 import * as assert from "assert";
 import * as http from "supertest";
 
+
+/*
 class TestEndpoint
     extends ServiceEndpoint.ServiceEndpoint<string> {
 
@@ -136,4 +139,4 @@ describe("HttpServer", () => {
         }
     });
 
-});
+});*/
