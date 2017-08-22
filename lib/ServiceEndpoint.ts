@@ -542,7 +542,8 @@ export abstract class ServiceEndpointMapper {
      */
     public async invokeServiceEndpointFromRequest(
         role: ServiceEndpoint.ServiceEndpointRole,
-        args: any): Promise<ServiceEndpointResponse.IServiceEndpointResponse> {
+        args: any,
+        namespace: string = "*"): Promise<ServiceEndpointResponse.IServiceEndpointResponse> {
 
         if (args === undefined) {
             return new ServiceEndpointResponse
@@ -562,6 +563,7 @@ export abstract class ServiceEndpointMapper {
         // matching the role and name filters - return a
         // Not Found Error if not found
         const endpoint = this.endpoints
+            .filter((v) => v.namespace === namespace)  
             .filter((v) => v.role === role)
             .filter((v) => v.name === name)[0];
         if (endpoint === undefined) {
