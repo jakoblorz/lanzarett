@@ -65,13 +65,24 @@ export abstract class HttpRequestMatcher extends ServiceEndpointMapper{
         // detected (send a Format Error because the role cannot
         // be determined)
         let role: ServiceEndpoint.ServiceEndpointRole | "void" = "void";
-        if (pathname === "/api/create" && method === "POST") {
+        let namespace: "*" | string = "*";
+
+        const path = pathname.split("/");
+        let roleIdent = "";
+        if (path[1] === "api" && path.length === 3) {
+            roleIdent = path[2];
+        } else if (path[1] === "api" && path.length === 4) {
+            roleIdent = path[3];
+            namespace = path[2];
+        }
+
+        if (roleIdent === "create" && method === "POST") {
             role = "create";
-        } else if (pathname === "/api/read" && method === "GET") {
+        } else if (roleIdent === "read" && method === "GET") {
             role = "read";
-        } else if (pathname === "/api/update" && method === "PUT") {
+        } else if (roleIdent === "update" && method === "PUT") {
             role = "update";
-        } else if (pathname === "/api/delete" && method === "DELETE") {
+        } else if (roleIdent === "delete" && method === "DELETE") {
             role = "delete";
         }
 
@@ -121,7 +132,7 @@ export abstract class HttpRequestMatcher extends ServiceEndpointMapper{
         // catch() should not get executed that much as most expected errors
         // will run through the then() clause as well; to prevent crashing send
         // a Server Error Response in case.
-        this.invokeServiceEndpointFromRequest(role, args)
+        this.invokeServiceEndpointFromRequest(role, args, namespace)
             .then((res) => this.sendResponse(response, res))
             .catch((err) => this.sendResponse(response, new ServiceEndpointResponse
                 .ServiceEndpointErrorResponse.ServerErrorResponse()));
