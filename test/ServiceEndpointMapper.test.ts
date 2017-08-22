@@ -10,7 +10,6 @@ class TestNamespace extends ServiceEndpointNamespace {
         super.register<string>("create", "noarg-create", this.noarg, "");
         super.register<string>("create", "singlearg-create", this.sgarg, "");
         super.register<string>("create", "multiarg-create", this.mtarg, "");
-        this.endpoints
     }
 
     public async noarg(): Promise<string> {
@@ -88,61 +87,61 @@ class Mapper extends ServiceEndpointMapper {
 
 describe("ServiceEndpointMapper", () => {
 
-    const testEndpointArray = (name: string, endpoints: ServiceEndpoint.IServiceEndpoint<any>[]) => {
+    const testEndpointArray = (name: string, endpoints: ServiceEndpoint.IServiceEndpoint<any>[], nspace: string = "*") => {
         describe(name, () => {
 
             const mapper: Mapper = new Mapper(endpoints);
 
             it("should resolve with Format Error when argument list is empty", async () => {
-                const response = await mapper.invokeServiceEndpointFromRequest("read", undefined);
+                const response = await mapper.invokeServiceEndpointFromRequest("read", undefined, nspace);
                 assert.deepEqual(response, new ServiceEndpointResponse.ServiceEndpointErrorResponse
                     .FormatErrorResponse());
             });
 
             it("should resolve with Format Error when argument rpc is missing", async () => {
-                const response = await mapper.invokeServiceEndpointFromRequest("create", {});
+                const response = await mapper.invokeServiceEndpointFromRequest("create", {}, nspace);
                 assert.deepEqual(response, new ServiceEndpointResponse.ServiceEndpointErrorResponse
                     .FormatErrorResponse());
             });
 
             it("should resolve with Not Found Error when endpoint cannot be found - cause 'name'", async () => {
-                const response = await mapper.invokeServiceEndpointFromRequest("create", { "rpc": "wrong-rpc" });
+                const response = await mapper.invokeServiceEndpointFromRequest("create", { "rpc": "wrong-rpc" }, nspace);
                 assert.deepEqual(response, new ServiceEndpointResponse.ServiceEndpointErrorResponse
                     .NotFoundErrorResponse());
             });
 
             it("should resolve with Not Found Error when endpoint cannot be found - cause 'role", async () => {
-                const response = await mapper.invokeServiceEndpointFromRequest("read", { "rpc": "noarg-create" });
+                const response = await mapper.invokeServiceEndpointFromRequest("read", { "rpc": "noarg-create" }, nspace);
                 assert.deepEqual(response, new ServiceEndpointResponse.ServiceEndpointErrorResponse
                     .NotFoundErrorResponse());
             });
 
             it("should resolve with success when endpoint does not need any arguments and rpc argument is present", async () => {
-                const response = await mapper.invokeServiceEndpointFromRequest("create", { "rpc": "noarg-create" });
+                const response = await mapper.invokeServiceEndpointFromRequest("create", { "rpc": "noarg-create" }, nspace);
                 assert.deepEqual(response, new ServiceEndpointResponse.ServiceEndpointRoleResponse
                     .CreateServiceEndpointResponse("success"));
             });
 
             it("should resolve with Format Error when arguments are missing", async () => {
-                const response = await mapper.invokeServiceEndpointFromRequest("create", { "rpc": "singlearg-create" });
+                const response = await mapper.invokeServiceEndpointFromRequest("create", { "rpc": "singlearg-create" }, nspace);
                 assert.deepEqual(response, new ServiceEndpointResponse.ServiceEndpointErrorResponse
                     .FormatErrorResponse());
             });
 
             it("should resolve with success when all arguments are present", async () => {
-                const response = await mapper.invokeServiceEndpointFromRequest("create", { "rpc": "singlearg-create", "a": "a" });
+                const response = await mapper.invokeServiceEndpointFromRequest("create", { "rpc": "singlearg-create", "a": "a" }, nspace);
                 assert.deepEqual(response, new ServiceEndpointResponse.ServiceEndpointRoleResponse
                     .CreateServiceEndpointResponse("success"));
             });
 
             it("should resolve with success when more then the required arguments are present", async () => {
-                const response = await mapper.invokeServiceEndpointFromRequest("create", { "rpc": "singlearg-create", "a": "a", "b": "b" });
+                const response = await mapper.invokeServiceEndpointFromRequest("create", { "rpc": "singlearg-create", "a": "a", "b": "b" }, nspace);
                 assert.deepEqual(response, new ServiceEndpointResponse.ServiceEndpointRoleResponse
                     .CreateServiceEndpointResponse("success"));
             });
 
             it("should resolve ith success when more then one argument are required - argument are in the right order", async () => {
-                const response = await mapper.invokeServiceEndpointFromRequest("create", { "rpc": "multiarg-create", "a": "a", "b": "b" });
+                const response = await mapper.invokeServiceEndpointFromRequest("create", { "rpc": "multiarg-create", "a": "a", "b": "b" }, nspace);
                 assert.deepEqual(response, new ServiceEndpointResponse.ServiceEndpointRoleResponse
                     .CreateServiceEndpointResponse("success"));
             });
@@ -151,7 +150,7 @@ describe("ServiceEndpointMapper", () => {
         });
     }
 
-    testEndpointArray("namespace based testing", new TestNamespace().endpoints);
+    testEndpointArray("namespace based testing", new TestNamespace().endpoints, "test");
     testEndpointArray("crud class based testing", [
         new NoArgCreateEndpoint(),
         new SingleArgCreateEndpoint(),
