@@ -18,6 +18,11 @@ export namespace ServiceEndpointResponse {
     export type ServiceEndpointResponseContentType = "boolean" | "number" | "object" | "string";
 
     /**
+     * allowed response data types that can be encoded into the response
+     */
+    export type ServiceEndpointResponseDataType = boolean | number | object | string;
+
+    /**
      * interface to standardise all kinds of responses that
      * get send to the client
      */
@@ -43,7 +48,7 @@ export namespace ServiceEndpointResponse {
      * class implementing response interface
      * can be used to create valid ServiceEndpointResponses
      */
-    export class ServiceEndpointResponse<DataType = boolean | number | object | string>
+    export class ServiceEndpointResponse<DataType = ServiceEndpointResponseDataType>
         implements IServiceEndpointResponse {
         
         /**
@@ -68,20 +73,26 @@ export namespace ServiceEndpointResponse {
          */
         constructor(data: DataType, code: ServiceEndpointResponseErrorCode | ServiceEndpointResponseStatusCode) {
 
+            // set the status code
             this.status_code = code;
 
+            // check the data-type, encode the data
+            // if data is boolean, content_data is then true or false
             if (typeof data === "boolean") {
                 this.content_type = "boolean";
                 this.content_data = data === true ? "true" : "false";
 
+            // if data is number, content_data is then stringified number
             } else if (typeof data === "number") {
                 this.content_type = "number";
                 this.content_data = data.toString();
 
+            // if data is object, content_data will be json encoded object
             } else if (typeof data === "object") {
                 this.content_type = "object";
                 this.content_data = JSON.stringify(data);
 
+            // if data is string, content_data will be the plain string
             } else if (typeof data === "string") {
                 this.content_type = "string";
                 this.content_data = data;
@@ -212,16 +223,59 @@ export namespace ServiceEndpoint {
     export type ServiceEndpointRole = "create" | "read" | "update" | "delete";
 
     /**
+     * describes a basic function endpoint
+     */
+    export interface IServiceEndpoint<T> {
+
+        /**
+         * name of this endpoint function
+         */
+        name: string;
+
+        /**
+         * namespace of this endpoint function
+         */
+        namespace: "*" | string;
+
+        /**
+         * arguments of this endpoint function
+         * in the right order
+         */
+        args: string[];
+
+        /**
+         * crud-role definition of this endpoint
+         * function
+         */
+        role: ServiceEndpointRole;
+
+        /**
+         * sample response of this endpoint function
+         */
+        sample: T;
+
+        /**
+         * actual function that will be called
+         */
+        callback: (...args: any[]) => Promise<ServiceEndpointResponse.IServiceEndpointResponse>;
+    }
+
+    /**
      * abstract implementation of a ServiceEndpoint
      * contains a name to be uniquely identifiable, args of the abstract call
      * method, the unique role and a response data sample
      */
-    export abstract class ServiceEndpoint<DataType> {
+    export abstract class ServiceEndpoint<DataType> implements IServiceEndpoint<DataType> {
 
         /**
          * unique name to be identifiable
          */
         public name: string;
+
+        /**
+         * namespace of this endpoint
+         */
+        public namespace: "*";
 
         /**
          * arguments of the abstract call method
@@ -239,6 +293,12 @@ export namespace ServiceEndpoint {
         public sample: DataType;
 
         /**
+         * method that will be called
+         */
+        public callback: (...args: any[]) => Promise<ServiceEndpointResponse.IServiceEndpointResponse>;
+
+
+        /**
          * create a new ServiceEndpoint
          * @param name unqiue name for this endpoint
          * @param args name the arguments of the abstract call method on a protocol level
@@ -247,9 +307,11 @@ export namespace ServiceEndpoint {
          */
         constructor(name: string, args: string[], role: ServiceEndpointRole, sample: DataType) {
             this.name = name;
+            this.namespace = "*";
             this.args = args;
             this.role = role;
             this.sample = sample;
+            this.callback = this.call;
         }
 
         public async abstract call(...args: any[]):
@@ -263,19 +325,19 @@ export namespace ServiceEndpoint {
 
             if (this.role === "create") {
                 return new ServiceEndpointResponse.ServiceEndpointRoleResponse
-                    .CreateServiceEndpointResponse(data);
+                    .CreateServiceEndpointResponse(data) as ServiceEndpointResponse.IServiceEndpointResponse;
 
             } else if (this.role === "read") {
                 return new ServiceEndpointResponse.ServiceEndpointRoleResponse
-                    .ReadServiceEndpointResponse(data);
+                    .ReadServiceEndpointResponse(data) as ServiceEndpointResponse.IServiceEndpointResponse;
 
             } else if (this.role === "update") {
                 return new ServiceEndpointResponse.ServiceEndpointRoleResponse
-                    .UpdateServiceEndpointResponse(data);
+                    .UpdateServiceEndpointResponse(data) as ServiceEndpointResponse.IServiceEndpointResponse;
 
             } else if (this.role === "delete") {
                 return new ServiceEndpointResponse.ServiceEndpointRoleResponse
-                    .DeleteServiceEndpointResponse(data);
+                    .DeleteServiceEndpointResponse(data) as ServiceEndpointResponse.IServiceEndpointResponse;
             }
 
         }
@@ -286,7 +348,7 @@ export namespace ServiceEndpoint {
          */
         public FormatError() {
             return new ServiceEndpointResponse.ServiceEndpointErrorResponse
-                .FormatErrorResponse();
+                .FormatErrorResponse() as ServiceEndpointResponse.IServiceEndpointResponse;
         }
 
         /**
@@ -295,7 +357,7 @@ export namespace ServiceEndpoint {
          */
         public ForbiddenError() {
             return new ServiceEndpointResponse.ServiceEndpointErrorResponse
-                .ForbiddenErrorResponse();
+                .ForbiddenErrorResponse() as ServiceEndpointResponse.IServiceEndpointResponse;
         }
 
         /**
@@ -304,7 +366,7 @@ export namespace ServiceEndpoint {
          */
         public NotFoundError() {
             return new ServiceEndpointResponse.ServiceEndpointErrorResponse
-                .NotFoundErrorResponse();
+                .NotFoundErrorResponse() as ServiceEndpointResponse.IServiceEndpointResponse;
         }
 
         /**
@@ -312,7 +374,7 @@ export namespace ServiceEndpoint {
          */
         public ServerError() {
             return new ServiceEndpointResponse.ServiceEndpointErrorResponse
-                .ServerErrorResponse();
+                .ServerErrorResponse() as ServiceEndpointResponse.IServiceEndpointResponse;
         }
     }
 
@@ -364,6 +426,94 @@ export namespace ServiceEndpoint {
     }
 }
 
+export class ServiceEndpointNamespace {
+
+    public name: string;
+    public endpoints: ServiceEndpoint.IServiceEndpoint<any>[];
+
+    constructor(name: string) {
+        this.name = name;
+        this.endpoints = [];
+    }
+
+    /**
+     * register a function to be accessible from http requests
+     * @param role specify the role of this endpoint function
+     * @param name name this endpoint functions - must be unique within this namespace
+     * @param fn the actual endpoint function
+     * @param sample provide as sample of a response
+     */
+    public register<T = ServiceEndpointResponse.ServiceEndpointResponseDataType>(
+        role: ServiceEndpoint.ServiceEndpointRole,
+        name: string,
+        fn: (...args: any[]) => Promise<T | ServiceEndpointResponse.IServiceEndpointResponse>,
+        sample: T) {
+
+        // wrapper function to respond to the client using the correct response structure
+        const callbackFn = async (...args: any[]): Promise<ServiceEndpointResponse.IServiceEndpointResponse> => {
+            const data = await fn.apply(this, args);
+
+            if (typeof data === "object" && "content_type" in data && "content_data" in data && "status_code" in data) {
+                return data as ServiceEndpointResponse.IServiceEndpointResponse;
+            }
+
+            if (role === "create") {
+                return new ServiceEndpointResponse.ServiceEndpointRoleResponse
+                    .CreateServiceEndpointResponse(data) as ServiceEndpointResponse.IServiceEndpointResponse;
+
+            } else if (role === "read") {
+                return new ServiceEndpointResponse.ServiceEndpointRoleResponse
+                    .ReadServiceEndpointResponse(data) as ServiceEndpointResponse.IServiceEndpointResponse;
+
+            } else if (role === "update") {
+                return new ServiceEndpointResponse.ServiceEndpointRoleResponse
+                    .UpdateServiceEndpointResponse(data) as ServiceEndpointResponse.IServiceEndpointResponse;
+
+            } else {
+                return new ServiceEndpointResponse.ServiceEndpointRoleResponse
+                    .DeleteServiceEndpointResponse(data) as ServiceEndpointResponse.IServiceEndpointResponse;
+            }
+        };
+
+        // check if there is an endpoint with the name already
+        const isDuplicateName = this.endpoints.filter((e) => e.name === name).length > 0;
+        if (isDuplicateName) {
+            throw new Error("duplicated endpoint name found: namespace '" + this.name + "' already contains endpoint with name '" + name + "'");
+        }
+        
+        // push this endpoint function to the list of endpoint functions, 
+        // making use of the wrapper function itself
+        this.endpoints.push({
+            callback: callbackFn,
+            args: this.extractFunctionArguments(fn),
+            name: name,
+            namespace: this.name,
+            role: role,
+            sample: sample
+        });
+    }
+
+    /**
+     * extractFunctionArguments
+     */
+    private extractFunctionArguments(fn: (...args: any[]) => any)  {
+        if (fn.toString().indexOf("function") === -1) {
+            throw new Error("could not find function string in callback argument");
+        }
+        
+        const args = (fn.toString()
+            .replace(/((\/\/.*$)|(\/\*[\s\S]*?\*\/)|(\s))/mg, "")
+            .match(/^function\s*[^\(]*\(\s*([^\)]*)\)/m) as RegExpMatchArray)[1]
+            .split(/,/);
+        
+        if (args.length === 1 && args[0] === "") {
+            return [];
+        } else {
+            return args;
+        }
+    }
+}
+
 /**
  * a abstract class to provide a method to invoke a endpoint from a list
  */
@@ -375,7 +525,7 @@ export abstract class ServiceEndpointMapper {
      * create a new ServiceEndpointMapper
      * @param endpoints list of endpoints that need to be available
      */
-    constructor(private endpoints: ServiceEndpoint.ServiceEndpoint<any>[]) {
+    constructor(private endpoints: ServiceEndpoint.IServiceEndpoint<any>[]) {
 
     }
 
@@ -431,7 +581,7 @@ export abstract class ServiceEndpointMapper {
         // be an error!)
         try {
 
-            return await endpoint.call.apply(endpoint, endpoint.args.map((a) => args[a]));
+            return await endpoint.callback.apply(endpoint, endpoint.args.map((a) => args[a]));
 
         } catch (err) {
             return new ServiceEndpointResponse.ServiceEndpointErrorResponse

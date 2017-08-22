@@ -1,4 +1,4 @@
-import { ServiceEndpoint, ServiceEndpointResponse } from "./lib/ServiceEndpoint";
+import { ServiceEndpoint, ServiceEndpointResponse, ServiceEndpointNamespace } from "./lib/ServiceEndpoint";
 
 const CreateServiceEndpoint = ServiceEndpoint.ServiceEndpointRoleClasses
     .CreateServiceEndpoint;
@@ -9,11 +9,11 @@ const UpdateServiceEndpoint = ServiceEndpoint.ServiceEndpointRoleClasses
 const DeleteServiceEndpoint = ServiceEndpoint.ServiceEndpointRoleClasses
     .DeleteServiceEndpoint;
 
-
 export {
     CreateServiceEndpoint,
     ReadServiceEndpoint,
     UpdateServiceEndpoint,
     DeleteServiceEndpoint,
-    ServiceEndpointResponse
+    ServiceEndpointResponse,
+    ServiceEndpointNamespace
 };
