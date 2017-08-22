@@ -17,6 +17,9 @@ export namespace ServiceEndpointResponse {
      */
     export type ServiceEndpointResponseContentType = "boolean" | "number" | "object" | "string";
 
+    /**
+     * allowed response data types that can be encoded into the response
+     */
     export type ServiceEndpointResponseDataType = boolean | number | object | string;
 
     /**
