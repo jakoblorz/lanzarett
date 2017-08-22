@@ -12,7 +12,7 @@ export class HttpsServer extends HttpRequestMatcher {
             this.server.listen(port, resolve));
     }
 
-    constructor(options: https.ServerOptions, endpoints: ServiceEndpoint.ServiceEndpoint<any>[]) {
+    constructor(options: https.ServerOptions, endpoints: ServiceEndpoint.IServiceEndpoint<any>[]) {
         super(endpoints);
 
         this.server = https.createServer(options, async (request, response) => {

@@ -1,11 +1,14 @@
-import { ServiceEndpointMapper, ServiceEndpoint, ServiceEndpointResponse } from "../../lib/ServiceEndpoint";
+import { ServiceEndpoint } from "../../lib/ServiceEndpoint";
+import { ServiceEndpointMapper } from "../../lib/ServiceEndpointMapper";
+import { ServiceEndpointResponse } from "../../lib/ServiceEndpointResponse";
+
 import * as http from "http";
 import * as urlp from "url";
 import * as body from "raw-body";
 
 export abstract class HttpRequestMatcher extends ServiceEndpointMapper{
 
-    constructor(endpoints: ServiceEndpoint.ServiceEndpoint<any>[]) {
+    constructor(endpoints: ServiceEndpoint.IServiceEndpoint<any>[]) {
         super(endpoints);
     }
 

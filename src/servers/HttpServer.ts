@@ -28,7 +28,7 @@ export class HttpServer extends HttpRequestMatcher {
      * @param endpoints specify the endpoints that can be reached with http
      * requests
      */
-    constructor(endpoints: ServiceEndpoint.ServiceEndpoint<any>[]) {
+    constructor(endpoints: ServiceEndpoint.IServiceEndpoint<any>[]) {
         super(endpoints);
 
         this.server = http.createServer(async (request, response) => {
