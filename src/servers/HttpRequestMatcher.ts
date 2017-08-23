@@ -68,26 +68,20 @@ export abstract class HttpRequestMatcher extends ServiceEndpointMapper{
         // detected (send a Format Error because the role cannot
         // be determined)
         let role: ServiceEndpoint.ServiceEndpointRole | "void" = "void";
-        let namespace: "*" | string = "*";
+        const path: string[] = pathname.split("/");
 
-        const path = pathname.split("/");
-        let roleIdent = "";
-        if (path[1] === "api" && path.length === 3) {
-            roleIdent = path[2];
-        } else if (path[1] === "api" && path.length === 4) {
-            roleIdent = path[3];
-            namespace = path[2];
-        }
+        if (path.length === 4 && path[1] === "api") {
 
-        if (roleIdent === "create" && method === "POST") {
-            role = "create";
-        } else if (roleIdent === "read" && method === "GET") {
-            role = "read";
-        } else if (roleIdent === "update" && method === "PUT") {
-            role = "update";
-        } else if (roleIdent === "delete" && method === "DELETE") {
-            role = "delete";
-        }
+            if (path[3] === "create" && method === "POST") {
+                role = "create";
+            } else if (path[3] === "read" && method === "GET") {
+                role = "read";
+            } else if (path[3] === "update" && method === "PUT") {
+                role = "update";
+            } else if (path[3] === "delete" && method === "DELETE") {
+                role = "delete";
+            }
+        }        
 
         // role could not be detected, send a Format Error
         if (role === "void") {
@@ -135,7 +129,7 @@ export abstract class HttpRequestMatcher extends ServiceEndpointMapper{
         // catch() should not get executed that much as most expected errors
         // will run through the then() clause as well; to prevent crashing send
         // a Server Error Response in case.
-        this.invokeServiceEndpointFromRequest(role, args, namespace)
+        this.invokeServiceEndpointFromRequest(role, args, path[2])
             .then((res) => this.sendResponse(response, res))
             .catch((err) => this.sendResponse(response, new ServiceEndpointResponse
                 .ServiceEndpointErrorResponse.ServerErrorResponse()));
