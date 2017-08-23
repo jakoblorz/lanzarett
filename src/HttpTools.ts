@@ -1,5 +1,5 @@
-import { ServiceEndpointResponse } from "../../lib/ServiceEndpointResponse";
-import { ServiceEndpoint } from "../../lib/ServiceEndpoint";
+import { ServiceEndpointResponse } from "../lib/ServiceEndpointResponse";
+import { ServiceEndpoint } from "../lib/ServiceEndpoint";
 
 import * as http from "http";
 

@@ -1,8 +1,8 @@
 import { ServiceEndpoint } from "../../lib/ServiceEndpoint";
-import { HttpRequestMatcher } from "./HttpRequestMatcher";
+import { HttpRequestMatcher } from "../HttpRequestMatcher";
 import * as https from "https";
 import * as fs from "fs";
-import { HttpTools } from "./HttpTools";
+import { HttpTools } from "../HttpTools";
 
 export class HttpsServer extends HttpRequestMatcher {
 

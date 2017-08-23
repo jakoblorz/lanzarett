@@ -1,5 +1,5 @@
 import { HttpRequestMatcher } from "./HttpRequestMatcher";
-import { ServiceEndpointNamespace } from "../../lib/ServiceEndpointNamespace";
+import { ServiceEndpointNamespace } from "../lib/ServiceEndpointNamespace";
 
 import * as mocha from "mocha";
 import * as assert from "assert";

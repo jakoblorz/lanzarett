@@ -1,7 +1,7 @@
 import { ServiceEndpoint } from "../../lib/ServiceEndpoint";
-import { HttpRequestMatcher } from "./HttpRequestMatcher";
+import { HttpRequestMatcher } from "../HttpRequestMatcher";
 import * as http from "http";
-import { HttpTools } from "./HttpTools";
+import { HttpTools } from "../HttpTools";
 
 /**
  * HttpServer is a server to respond to http requests on a given port
