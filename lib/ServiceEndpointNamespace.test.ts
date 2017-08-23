@@ -1,9 +1,9 @@
 import * as mocha from "mocha";
 import * as assert from "assert";
 
-import { ServiceEndpoint } from "../lib/ServiceEndpoint";
-import { ServiceEndpointResponse } from "../lib/ServiceEndpointResponse";
-import { ServiceEndpointNamespace } from "../lib/ServiceEndpointNamespace";
+import { ServiceEndpoint } from "./ServiceEndpoint";
+import { ServiceEndpointResponse } from "./ServiceEndpointResponse";
+import { ServiceEndpointNamespace } from "./ServiceEndpointNamespace";
 
 describe("ServiceEndpointNamespace", () => {
 

@@ -2,6 +2,7 @@ import { ServiceEndpoint } from "../../lib/ServiceEndpoint";
 import { HttpRequestMatcher } from "./HttpRequestMatcher";
 import * as https from "https";
 import * as fs from "fs";
+import { HttpTools } from "./HttpTools";
 
 export class HttpsServer extends HttpRequestMatcher {
 
@@ -16,7 +17,8 @@ export class HttpsServer extends HttpRequestMatcher {
         super(endpoints);
 
         this.server = https.createServer(options, async (request, response) => {
-            await super.requestCallback(request, response);
+            const res = await super.requestCallback(request);
+            HttpTools.sendIServiceResponse(response, res);
         });
     }
 }

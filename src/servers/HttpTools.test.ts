@@ -1,4 +1,4 @@
-import { HttpTools } from "../src/servers/HttpTools";
+import { HttpTools } from "./HttpTools";
 
 import * as mocha from "mocha";
 import * as assert from "assert";

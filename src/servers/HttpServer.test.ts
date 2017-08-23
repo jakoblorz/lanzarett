@@ -1,6 +1,6 @@
-import { ServiceEndpoint } from "../lib/ServiceEndpoint";
-import { ServiceEndpointResponse } from "../lib/ServiceEndpointResponse";
-import { HttpServer } from "../src/servers/HttpServer";
+import { ServiceEndpoint } from "../../lib/ServiceEndpoint";
+import { ServiceEndpointResponse } from "../../lib/ServiceEndpointResponse";
+import { HttpServer } from "./HttpServer";
 
 import * as mocha from "mocha";
 import * as assert from "assert";
