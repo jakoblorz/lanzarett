@@ -6,26 +6,12 @@ import * as http from "http";
 import * as urlp from "url";
 import * as body from "raw-body";
 
+import { HttpTools } from "./HttpTools";
+
 export abstract class HttpRequestMatcher extends ServiceEndpointMapper{
 
     constructor(endpoints: ServiceEndpoint.IServiceEndpoint<any>[]) {
         super(endpoints);
-    }
-
-    /**
-     * respond to a client using nodejs's own http module's
-     * response object
-     * @param response object representing the http
-     * response from the http module
-     * @param data IServiceEndpointResponse object to
-     * send
-     */
-    public sendResponse(
-        response: http.ServerResponse,
-        data: ServiceEndpointResponse.IServiceEndpointResponse) {
-
-        response.writeHead(data.status_code, { "Content-Type": "application/json" });
-        response.end(JSON.stringify(data));
     }
 
     /**
@@ -57,7 +43,7 @@ export abstract class HttpRequestMatcher extends ServiceEndpointMapper{
 
         // pathname could not be parsed, send a Format Error
         if (pathname === undefined) {
-            return this.sendResponse(response, new ServiceEndpointResponse
+            return HttpTools.sendIServiceResponse(response, new ServiceEndpointResponse
                 .ServiceEndpointErrorResponse.FormatErrorResponse());
         }
 
@@ -67,28 +53,15 @@ export abstract class HttpRequestMatcher extends ServiceEndpointMapper{
         // a own pathname. block requests where the role cannot be
         // detected (send a Format Error because the role cannot
         // be determined)
-        let role: ServiceEndpoint.ServiceEndpointRole | "void" = "void";
-        const path: string[] = pathname.split("/");
-
-        if (path.length === 4 && path[1] === "api") {
-
-            if (path[3] === "create" && method === "POST") {
-                role = "create";
-            } else if (path[3] === "read" && method === "GET") {
-                role = "read";
-            } else if (path[3] === "update" && method === "PUT") {
-                role = "update";
-            } else if (path[3] === "delete" && method === "DELETE") {
-                role = "delete";
-            }
-        }        
+        const path = pathname.split("/");
+        const role = HttpTools.detectRoleFromPathAndMethod(path, method as string);
+        const nspace = HttpTools.detectNamespaceFromPath(path);      
 
         // role could not be detected, send a Format Error
-        if (role === "void") {
-            return this.sendResponse(response, new ServiceEndpointResponse
+        if (nspace === undefined || role === undefined || (nspace === undefined && role === undefined)) {
+            return HttpTools.sendIServiceResponse(response, new ServiceEndpointResponse
                 .ServiceEndpointErrorResponse.FormatErrorResponse());
         }
-
 
 
         // strip all argument from the request (from the query, from the headers
@@ -129,9 +102,9 @@ export abstract class HttpRequestMatcher extends ServiceEndpointMapper{
         // catch() should not get executed that much as most expected errors
         // will run through the then() clause as well; to prevent crashing send
         // a Server Error Response in case.
-        this.invokeServiceEndpointFromRequest(role, args, path[2])
-            .then((res) => this.sendResponse(response, res))
-            .catch((err) => this.sendResponse(response, new ServiceEndpointResponse
+        this.invokeServiceEndpointFromRequest(role, args, nspace)
+            .then((res) => HttpTools.sendIServiceResponse(response, res))
+            .catch((err) => HttpTools.sendIServiceResponse(response, new ServiceEndpointResponse
                 .ServiceEndpointErrorResponse.ServerErrorResponse()));
 
     }
