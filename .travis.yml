@@ -9,4 +9,5 @@ before_install:
 
 script:
   - npm run build
-  - npm run test
+  - npm run test-lib
+  - npm run test-src
