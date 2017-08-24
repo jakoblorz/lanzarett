@@ -18,8 +18,8 @@ export class ClientGenerator {
     }
 
     /**
- * namespacedEndpoints
- */
+     * namespacedEndpoints
+     */
     public namespacedEndpoints(): INamespaceEndpointListTuple[] {
         return this.endpoints.reduce((list, current) => {
             const namespaceIndex = list
