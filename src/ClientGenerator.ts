@@ -17,4 +17,25 @@ export class ClientGenerator {
 
     }
 
+    /**
+ * namespacedEndpoints
+ */
+    public namespacedEndpoints(): INamespaceEndpointListTuple[] {
+        return this.endpoints.reduce((list, current) => {
+            const namespaceIndex = list
+                .map((v, i) => v.namespace === current.namespace ? i : -1)
+                .filter((i) => i !== -1)[0] | -1;
+
+            if (namespaceIndex !== -1) {
+                list[namespaceIndex].endpoints.push(current);
+            } else {
+                list.push({
+                    namespace: current.namespace,
+                    endpoints: [current]
+                });
+            }
+
+            return list;
+        }, [] as INamespaceEndpointListTuple[]);
+    }
 }
