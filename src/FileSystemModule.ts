@@ -14,7 +14,7 @@ export module FileSystemModule {
         fs.createReadStream(file);
 
     export const readFile = async (file: string) =>
-        new Promise((resolve, reject) =>
+        new Promise<string>((resolve, reject) =>
             fs.readFile(file, "utf-8", (err, data) => err ? reject(err) : resolve(data)));
 
     export const writeFile = async (file: string, data: string) =>
