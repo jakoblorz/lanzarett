@@ -38,4 +38,16 @@ export class ClientGenerator {
             return list;
         }, [] as INamespaceEndpointListTuple[]);
     }
+
+    /**
+     * generateClientSdk
+     */
+    public async generateClientSdk(client: SupportedClients, targetFilePath: string) {
+        const namespacedEndpoints = this.namespacedEndpoints();
+        const templatePath = path.join(__dirname, "../templates/" + client.replace("/", "_") + ".mustache");
+
+        const templateData = await FileSystemModule.readFile(templatePath);
+        const renderedData = mustache.render(templateData, namespacedEndpoints);
+        await FileSystemModule.writeFile(targetFilePath, renderedData);
+    }
 }
