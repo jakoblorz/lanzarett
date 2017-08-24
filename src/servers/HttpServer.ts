@@ -1,6 +1,7 @@
 import { ServiceEndpoint } from "../../lib/ServiceEndpoint";
-import { HttpRequestMatcher } from "./HttpRequestMatcher";
+import { HttpRequestMatcher } from "../HttpRequestMatcher";
 import * as http from "http";
+import { HttpTools } from "../HttpTools";
 
 /**
  * HttpServer is a server to respond to http requests on a given port
@@ -28,11 +29,12 @@ export class HttpServer extends HttpRequestMatcher {
      * @param endpoints specify the endpoints that can be reached with http
      * requests
      */
-    constructor(endpoints: ServiceEndpoint.ServiceEndpoint<any>[]) {
+    constructor(endpoints: ServiceEndpoint.IServiceEndpoint<any>[]) {
         super(endpoints);
 
         this.server = http.createServer(async (request, response) => {
-            await super.requestCallback(request, response);
+            const res = await super.requestCallback(request);
+            HttpTools.sendIServiceResponse(response, res);
         });
     }
 
