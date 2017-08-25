@@ -4,47 +4,82 @@ import { FileSystemModule } from "./FileSystemModule";
 import * as path from "path";
 import * as mustache from "mustache";
 
-export type SupportedClients = "typescript/request" | "javascript/request";
-
-export interface INamespaceEndpointListTuple {
-    namespace: string;
-    endpoints: ServiceEndpoint.IServiceEndpoint<any>[];
+export interface IKeyTypeTuple {
+    key: string;
+    type: string;
 }
 
-export class ClientGenerator {
+export interface IRenderableEndpoint {
+    role: ServiceEndpoint.ServiceEndpointRole;
+    name: string;
+    namespace: string;
+    args: string[];
+    sample: IKeyTypeTuple[];
+}
 
-    constructor(private endpoints: ServiceEndpoint.IServiceEndpoint<any>[]) {
+export interface INamespacedEndpoint {
+    namespace: string;
+    endpoints: IRenderableEndpoint[];
+}
 
+export interface ITypeDictionary {
+    string: string;
+    number: string;
+}
+
+export abstract class ClientGenerator {
+
+    public abstract identifier: string;
+
+    constructor(
+        private endpoints: ServiceEndpoint.IServiceEndpoint<any>[],
+        private typeDictionary: ITypeDictionary) {
+
+    }
+
+    public convertEndpoint(endpoint: ServiceEndpoint.IServiceEndpoint<any>): IRenderableEndpoint {
+        const keyTypeTupleArray = Object.keys(endpoint.sample)
+            .map((k) => {
+                return { key: k, type: (this.typeDictionary as any)[typeof endpoint.sample[k]] } as IKeyTypeTuple;
+            });
+        
+        return {
+            args: endpoint.args,
+            name: endpoint.name,
+            namespace: endpoint.namespace,
+            role: endpoint.role,
+            sample: keyTypeTupleArray
+        };
     }
 
     /**
      * namespacedEndpoints
      */
-    public namespacedEndpoints(): INamespaceEndpointListTuple[] {
+    public namespacedEndpoints(): INamespacedEndpoint[] {
         return this.endpoints.reduce((list, current) => {
             const namespaceIndex = list
                 .map((v, i) => v.namespace === current.namespace ? i : -1)
                 .filter((i) => i !== -1)[0] | -1;
 
             if (namespaceIndex !== -1) {
-                list[namespaceIndex].endpoints.push(current);
+                list[namespaceIndex].endpoints.push(this.convertEndpoint(current));
             } else {
                 list.push({
                     namespace: current.namespace,
-                    endpoints: [current]
+                    endpoints: [this.convertEndpoint(current)]
                 });
             }
 
             return list;
-        }, [] as INamespaceEndpointListTuple[]);
+        }, [] as INamespacedEndpoint[]);
     }
 
     /**
      * generateClientSdk
      */
-    public async generateClientSdk(client: SupportedClients, targetFilePath: string) {
+    public async generateClientSdk(targetFilePath: string) {
         const namespacedEndpoints = this.namespacedEndpoints();
-        const templatePath = path.join(__dirname, "../templates/" + client.replace("/", "_") + ".mustache");
+        const templatePath = path.join(__dirname, "../templates/" + this.identifier.replace("/", "_") + ".mustache");
 
         const templateData = await FileSystemModule.readFile(templatePath);
         const renderedData = mustache.render(templateData, namespacedEndpoints);
