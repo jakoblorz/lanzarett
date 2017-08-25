@@ -1,0 +1,32 @@
+const request = require("request");
+
+{{#.}}
+
+module.exports.{{namespace}} = (function () {
+    function {{namespace}}(baseUrl){
+        this.baseUrl = baseUrl;
+    }
+
+    {{#endpoints}}
+    {{namespace}}.prototype.{{name}} = function({{#args}}{{.}}, {{/args}}){
+        return new Promise(function(resolve, reject) {
+            const role = "{{role}}";
+            const options = {};
+            switch(role) {
+                case "create":
+                    break;
+                case "read":
+                    break;
+                case "update":
+                    break;
+                case "delete":
+                    break;
+            }
+        });
+    };
+    {{/endpoints}}
+
+    return {{namespace}};
+}());
+
+{{/.}}
