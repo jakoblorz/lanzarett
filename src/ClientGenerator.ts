@@ -4,6 +4,9 @@ import { FileSystemModule } from "./FileSystemModule";
 import * as path from "path";
 import * as mustache from "mustache";
 
+import { JavascriptRequestGenerator } from "./clients/javascript_request";
+import { TypescriptRequestGenerator } from "./clients/typescript_request";
+
 export interface IKeyTypeTuple {
     key: string;
     type: string;
@@ -84,5 +87,13 @@ export abstract class ClientGenerator {
         const templateData = await FileSystemModule.readFile(templatePath);
         const renderedData = mustache.render(templateData, namespacedEndpoints);
         await FileSystemModule.writeFile(targetFilePath, renderedData);
+    }
+
+    public static createTypescriptSDKGenerator(endpoints: ServiceEndpoint.IServiceEndpoint<any>[]) {
+        return new TypescriptRequestGenerator(endpoints);
+    }
+
+    public static createJavascriptSDKGenerator(endpoint: ServiceEndpoint.IServiceEndpoint<any>[]) {
+        return new JavascriptRequestGenerator(endpoint);
     }
 }
