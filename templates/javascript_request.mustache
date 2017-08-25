@@ -14,6 +14,7 @@ module.exports.{{namespace}} = (function () {
             const options = {};
             switch(role) {
                 case "create":
+                    options.url = this.baseUrl + "/api/" + {{namespace}} + "/create";
                     break;
                 case "read":
                     break;
@@ -22,6 +23,12 @@ module.exports.{{namespace}} = (function () {
                 case "delete":
                     break;
             }
+            options.q = {
+                rpc: {{name}},
+                {{#args}}
+                {{.}}: {{.}},
+                {{/args}}
+            };
         });
     };
     {{/endpoints}}
