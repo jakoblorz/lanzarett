@@ -36,85 +36,85 @@ function makeRequest(hostname, port, path, method, args){
 }
 
 function requestToRPCEndpoints(role, namespace, args, hostname, port) {
-        return new Promise(function(resolve, reject) {
-            let requestPromise = undefined;
-            switch(role) {
+    return new Promise(function(resolve, reject) {
+        let requestPromise = undefined;
+        switch(role) {
 
-                case "create":
-                    requestPromise = makeRequest(hostname, port,
-                        "/api/" + namespace + "/create", "POST", args);
-                    break;
+            case "create":
+                requestPromise = makeRequest(hostname, port,
+                    "/api/" + namespace + "/create", "POST", args);
+                break;
 
-                case "read":
-                    requestPromise = makeRequest(hostname, port,
-                        "/api/" + namespace + "/read", "GET", args);
-                    break;
+            case "read":
+                requestPromise = makeRequest(hostname, port,
+                    "/api/" + namespace + "/read", "GET", args);
+                break;
 
-                case "update":
-                    requestPromise = makeRequest(hostname, port,
-                        "/api/" + namespace + "/update", "PUT", args);
-                    break;
+            case "update":
+                requestPromise = makeRequest(hostname, port,
+                    "/api/" + namespace + "/update", "PUT", args);
+                break;
 
-                case "delete":
-                    requestPromise = makeRequest(hostname, port,
-                        "/api/" + namespace + "/delete", "DELETE", args);
-                    break;
-            }
+            case "delete":
+                requestPromise = makeRequest(hostname, port,
+                    "/api/" + namespace + "/delete", "DELETE", args);
+                break;
+        }
 
-            requestPromise
-                .then(function(res) {
-                    
-                    // error handling
-                    if(res.statusCode === 400){
-                        return resolve({
-                            isError: true,
-                            content: "Format Error"
-                        });
-                    } else if(res.statusCode === 403){
-                        return resolve({
-                            isError: true,
-                            content: "Forbidden Error"
-                        });
-                    } else if(res.statusCode === 404){
-                        return resolve({
-                            isError: true,
-                            content: "Not Found Error"
-                        });
-                    } else if(res.statusCode === 500){
-                        return resolve({
-                            isError: true,
-                            content: "General Server Error"
-                        });
-                    }
+        requestPromise
+            .then(function(res) {
+                
+                // error handling
+                if(res.statusCode === 400){
+                    return resolve({
+                        isError: true,
+                        content: "Format Error"
+                    });
+                } else if(res.statusCode === 403){
+                    return resolve({
+                        isError: true,
+                        content: "Forbidden Error"
+                    });
+                } else if(res.statusCode === 404){
+                    return resolve({
+                        isError: true,
+                        content: "Not Found Error"
+                    });
+                } else if(res.statusCode === 500){
+                    return resolve({
+                        isError: true,
+                        content: "General Server Error"
+                    });
+                }
 
-                    const { content_type, content_data, status_code } = JSON.parse(res.body);
+                const { content_type, content_data, status_code } = JSON.parse(res.body);
 
-                    if(content_type === "string"){
-                        return resolve({
-                            isError: false,
-                            content: content_data
-                        });
-                    } else if(content_type === "boolean"){
-                        return resolve({
-                            isError: false,
-                            content: content_data === true
-                        });
-                    } else if(content_type === "number"){
-                        return resolve({
-                            isError: false,
-                            content: content_data + 0
-                        });
-                    }
-
+                if(content_type === "string"){
                     return resolve({
                         isError: false,
                         content: content_data
                     });
+                } else if(content_type === "boolean"){
+                    return resolve({
+                        isError: false,
+                        content: content_data === true
+                    });
+                } else if(content_type === "number"){
+                    return resolve({
+                        isError: false,
+                        content: content_data + 0
+                    });
+                }
 
-                })
-                .catch(reject);
-        });
-    }
+                return resolve({
+                    isError: false,
+                    content: content_data
+                });
+
+            })
+            .catch(reject);
+    });
+}
 
 {{#.}}
 
