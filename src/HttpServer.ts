@@ -39,7 +39,9 @@ export class HttpServer {
                 const { pathname, query } = urll.parse(url as string, true);
                 const pathList = (pathname as string).split("/");
 
-                if (pathList.length !== 4) {
+                const isPathListInvalid = (pathList.length !== 4 ||
+                    pathList[1] !== "api" || (pathList.length !== 4 && pathList[1] !== "api"));
+                if (isPathListInvalid) {
                     return this.sendResponse(ServiceResponse.FormatError(), response);
                 }
 
