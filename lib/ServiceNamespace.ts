@@ -29,6 +29,12 @@ export class ServiceNamespace {
                 "' arlready contains endpoint '" + name + "'");
         }
 
+        Object.keys(requestSample)
+            .forEach((k) => (requestSample as any)[k] = typeof (requestSample as any)[k]);
+        
+        Object.keys(responseSample)
+            .forEach((k) => (responseSample as any)[k] = typeof (responseSample as any)[k]);
+
         this.endpoints.push({
             callback: callbackFn,
             name: name,
