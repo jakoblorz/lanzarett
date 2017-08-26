@@ -1,14 +1,11 @@
 import { IServiceEndpoint } from "../lib/interfaces/IServiceEndpoint";
 import { ITypeDictionary } from "./interfaces/ITypeDictionary";
+import { IRenderableServiceEndoint } from "./interfaces/IRenderableServiceEndpoints";
 
 import { FileSystem } from "./FileSystem";
 import * as mustache from "mustache";
 import * as path from "path";
 
-interface IRenderableServiceEndoint extends IServiceEndpoint<any, any> {
-    requestArgs: Array<{ key: string, type: string }>;
-    responseArgs: Array<{ key: string, type: string }>;
-}
 
 export class ClientGenerator {
 
