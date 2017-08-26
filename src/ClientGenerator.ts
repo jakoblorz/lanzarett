@@ -4,7 +4,7 @@ import { FileSystemModule } from "./FileSystemModule";
 import * as path from "path";
 import * as mustache from "mustache";
 
-import { JavascriptRequestGenerator } from "./clients/javascript_request";
+import { JavascriptRequestGenerator } from "./clients/javascript_native";
 import { TypescriptRequestGenerator } from "./clients/typescript_request";
 
 export interface IKeyTypeTuple {

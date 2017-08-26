@@ -1,0 +1,155 @@
+const http = require("http");
+
+function makeRequest(hostname, port, path, method, args){
+    return new Promise((resolve, reject) => {
+        const options = {
+            hostname: hostname,
+            port: port,
+            path: path,
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',    
+            }
+        };
+
+        Object.keys(args).forEach(function(k){
+            options.headers[k] = args[k];
+        });
+
+        const req = http.request(options, (res) => {
+            res.setEncoding('utf8');
+            let dataBuffer = "";
+
+            res.on('data', (chunk) => {
+                dataBuffer += chunk;
+            });
+
+            res.on('end', () => {
+                res.body = dataBuffer;
+                resolve(res);
+            });
+        });
+
+        req.on('error', reject);
+        req.end();
+    });
+}
+
+function requestToRPCEndpoints(role, namespace, args, hostname, port) {
+        return new Promise(function(resolve, reject) {
+            let requestPromise = undefined;
+            switch(role) {
+
+                case "create":
+                    requestPromise = makeRequest(hostname, port,
+                        "/api/" + namespace + "/create", "POST", args);
+                    break;
+
+                case "read":
+                    requestPromise = makeRequest(hostname, port,
+                        "/api/" + namespace + "/read", "GET", args);
+                    break;
+
+                case "update":
+                    requestPromise = makeRequest(hostname, port,
+                        "/api/" + namespace + "/update", "PUT", args);
+                    break;
+
+                case "delete":
+                    requestPromise = makeRequest(hostname, port,
+                        "/api/" + namespace + "/delete", "DELETE", args);
+                    break;
+            }
+
+            requestPromise
+                .then(function(res) {
+                    
+                    // error handling
+                    if(res.statusCode === 400){
+                        return resolve({
+                            isError: true,
+                            content: "Format Error"
+                        });
+                    } else if(res.statusCode === 403){
+                        return resolve({
+                            isError: true,
+                            content: "Forbidden Error"
+                        });
+                    } else if(res.statusCode === 404){
+                        return resolve({
+                            isError: true,
+                            content: "Not Found Error"
+                        });
+                    } else if(res.statusCode === 500){
+                        return resolve({
+                            isError: true,
+                            content: "General Server Error"
+                        });
+                    }
+
+                    const { content_type, content_data, status_code } = JSON.parse(res.body);
+
+                    if(content_type === "string"){
+                        return resolve({
+                            isError: false,
+                            content: content_data
+                        });
+                    } else if(content_type === "boolean"){
+                        return resolve({
+                            isError: false,
+                            content: content_data === true
+                        });
+                    } else if(content_type === "number"){
+                        return resolve({
+                            isError: false,
+                            content: content_data + 0
+                        });
+                    }
+
+                    return resolve({
+                        isError: false,
+                        content: content_data
+                    });
+
+                })
+                .catch(reject);
+        });
+    }
+
+{{#.}}
+
+module.exports.{{namespace}} = (function () {
+    function {{namespace}}(hostname, port){
+        this.hostname = hostname;
+        this.port = port;
+    }
+
+    {{#endpoints}}
+    {{namespace}}.prototype.{{name}} = function({{#args}}{{.}}, {{/args}}){
+        return new Promise(function(resolve, reject) {
+            
+            const args = {
+                rpc: "{{name}}",
+                {{#args}}
+                {{.}}: "{{.}}",
+                {{/args}}
+            };
+
+            requestToRPCEndpoint("{{role}}", "{{namespace}}", args, this.hostname, this.port)
+                .then(function (response){
+                    if(response.isError){
+                        return reject(new Error(response.content));
+                    }
+
+                    resolve(response.content);
+                })
+                .catch(reject);
+            
+        });
+    };
+    {{/endpoints}}
+
+    return {{namespace}};
+}());
+
+{{/.}}
