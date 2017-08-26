@@ -1,1 +1,0 @@
-export type TServiceEndpointRole = "create" | "read" | "update" | "delete";

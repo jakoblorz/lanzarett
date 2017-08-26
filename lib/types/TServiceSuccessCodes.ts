@@ -1,1 +1,0 @@
-export type TServiceSuccessCodes = 200 | 201 | 202 | 203;
