@@ -43,7 +43,7 @@ export class HttpServer {
                     return this.sendResponse(ServiceResponse.FormatError(), response);
                 }
 
-                const args: any = {};
+                const args: any = { rpc: pathList[3] };
 
                 Object.keys(headers)
                     .filter((k) => args[k] === undefined)
@@ -64,8 +64,7 @@ export class HttpServer {
                         .forEach((k) => args[k] = body[k]);
                 }
 
-                args["rpc"] = pathList[3];
-                const serviceResponse = await this.mapper.mapIncomingRequestObject(pathList[3], args);
+                const serviceResponse = await this.mapper.mapIncomingRequestObject(pathList[2], args);
                 this.sendResponse(serviceResponse, response);
             });
         });
