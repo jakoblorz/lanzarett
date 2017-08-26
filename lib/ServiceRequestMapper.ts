@@ -15,7 +15,7 @@ export class ServiceRequestMapper {
         
         const endpoint = this.endpoints
             .filter((v) => v.namespace === namespace)
-            .filter((v) => v.name === name)[0];
+            .filter((v) => v.name === request.rpc)[0];
         if (endpoint === undefined) {
             return ServiceResponse.NotFoundError();
         }
