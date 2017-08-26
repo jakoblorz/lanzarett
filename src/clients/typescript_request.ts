@@ -8,7 +8,8 @@ export class TypescriptRequestGenerator extends ClientGenerator {
     constructor(endpoints: ServiceEndpoint.IServiceEndpoint<any>[]) {
         super(endpoints, {
             string: "string",
-            number: "number"
+            number: "number",
+            boolean: "boolean"
         });
     }
 }

@@ -28,6 +28,7 @@ export interface INamespacedEndpoint {
 export interface ITypeDictionary {
     string: string;
     number: string;
+    boolean: string;
 }
 
 export abstract class ClientGenerator {
