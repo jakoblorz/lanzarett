@@ -12,20 +12,12 @@ export module FileSystem {
         new Promise((resolve, reject) => mkdirp(dir, (err) => err ? reject(err) : resolve()));
 
     /**
-     * copies a file from one path to another
-     * @param filePath file path for the file that currently exists
-     * @param targetPath folder path where to copy the file to
-     */
-    export const copyFile = (filePath: string, targetPath: string) =>
-        fs.createReadStream(filePath).pipe(fs.createWriteStream(targetPath));
-
-    /**
      * read a file asynchrosously
      * @param file read a file asynchronously
      */
     export const readFile = async (file: string) =>
         new Promise<string>((resolve, reject) =>
-            fs.readFile(file, "utf-8", (err, data) => err ? reject(err) : resolve(data)));
+            fs.readFile(file, "utf-8", (err, data) => err ? resolve("") : resolve(data)));
 
     /**
      * write data to a file
