@@ -25,9 +25,9 @@ describe("ServiceNamespace", () => {
         assert.equal(namespace.endpoints.length, 1);
         assert.equal(namespace.endpoints[0].name, "test-fn");
         assert.equal(namespace.endpoints[0].namespace, namespace.namespace);
-        assert.equal((namespace.endpoints[0].request as any)["message"], "test");
-        assert.equal((namespace.endpoints[0].response as any)["message"], "test");
-        assert.equal((namespace.endpoints[0].response as any)["author"], "test-user");
+        assert.equal((namespace.endpoints[0].request as any)["message"], "string");
+        assert.equal((namespace.endpoints[0].response as any)["message"], "string");
+        assert.equal((namespace.endpoints[0].response as any)["author"], "string");
     });
 
     it("should respond with valid IServiceResponse when invoking callback", async () => {
