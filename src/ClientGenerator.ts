@@ -1,6 +1,6 @@
 import { IServiceEndpoint } from "../lib/interfaces/IServiceEndpoint";
 import { ITypeDictionary } from "./interfaces/ITypeDictionary";
-import { IRenderableServiceEndoint } from "./interfaces/IRenderableServiceEndpoints";
+import { IRenderableServiceEndpoint } from "./interfaces/IRenderableServiceEndpoints";
 
 import { FileSystem } from "./FileSystem";
 import * as mustache from "mustache";
