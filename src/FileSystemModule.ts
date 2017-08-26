@@ -20,13 +20,6 @@ export module FileSystemModule {
         fs.createReadStream(filePath).pipe(fs.createWriteStream(targetPath));
 
     /**
-     * read of file from a given path
-     * @param file create a read stream of a file
-     */
-    export const readFileStream = (file: string) =>
-        fs.createReadStream(file);
-
-    /**
      * read a file asynchrosously
      * @param file read a file asynchronously
      */
