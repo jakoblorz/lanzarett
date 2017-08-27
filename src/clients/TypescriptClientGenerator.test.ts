@@ -41,7 +41,8 @@ describe("TypescriptClientGenerator", () => {
     });
 
     it("should have rendered sdk that can be required", async () => {
-        
+        const generated = require(path.join(__dirname, "./TSSDKGeneratorResult.js"));
+        assert.notEqual(generated, undefined);
     });
 
 
