@@ -1,0 +1,66 @@
+const http = require("http");
+
+const request = function(hostname, port, namespace, method, request, formatMessage) {
+    return new Promise(function(resolve, reject) {
+        const options = {
+            hostname: hostname,
+            port: port,
+            path: "/api/" + namespace + "/" + method,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+
+        const req = http.request(options, function(res) {
+            res.setEncoding("utf8");
+            let dataBuffer = "";
+
+            res.on("data", function(chunk) {
+                dataBuffer += chunk;
+            });
+
+            res.on("end", function() {
+
+                if (res.statusCode === 400) {
+                    return resolve({ error: "Format Error - expected " + formatMessage, isError: true });
+                } else if (res.statusCode === 403) {
+                    return resolve({ error: "Forbidden Error", isError: true });
+                } else if (res.statusCode === 404) {
+                    return resolve({ error: "Not Found Error", isError: true });
+                } else if (res.statusCode === 500) {
+                    return resolve({ error: "Server Error", isError: true });
+                }
+
+                const response = JSON.parse(dataBuffer);
+                const content_data = JSON.parse(response.content_data);
+                content_data.isError = false;
+                resolve(content_data);
+            });
+        });
+
+        req.on("error", reject);
+        req.write(JSON.stringify(request));
+        req.end();
+    });
+};
+
+{{#.}}
+
+module.exports.{{namespace}} = (function () {
+    function {{namespace}}(hostname, port){
+        this.hostname = hostname;
+        this.port = port;
+    }
+
+    {{#endpoints}}
+    {{namespace}}.prototype.{{name}} = function(requestObject){
+        return request(this.hostname, this.port, 
+            "{{namespace}}", "{{name}}", requestObject, "{ {{#requestArgs}} {{key}}: {{type}},{{/requestArgs}} }");
+    };
+    {{/endpoints}}
+
+    return {{namespace}};
+}());
+
+{{/.}}
