@@ -65,11 +65,34 @@ class NamespaceRequestHolder {
 }
 
 {{#.}}
+
+{{#endpoints}}
+interface {{namespace}}{{name}}Request {
+    {{#requestArgs}}
+    {{#key}}: {{#type}}
+    {{/requestArgs}}
+}
+
+interface {{namespace}}{{name}}Response {
+    isError: boolean;
+    {{#responseArgs}}
+    {{#key}}: {{#type}}
+    {{/responseArgs}}
+}
+{{.endpoints}}
+
+
 export class {{namespace}} extends NamespaceRequestHolder {
 
     constructor(hostname: string, port: number){
         super(hostname, port);
     }
+
+    {{#endpoints}}
+    public async {{name}}(request: {{namespace}}{{name}}Request): Promise<{{namespace}}{{name}}Response | IServiceError> {
+        return await this.request<{{namespace}}{{name}}Response>({{namespace}}, {{name}}, request);
+    }
+    {{.endpoints}}
 
 }
 {{/.}}
