@@ -1,0 +1,75 @@
+import * as http from "http";
+
+interface IErrorChecked {
+    isError: boolean;
+}
+
+interface IServiceError extends IErrorChecked {
+    error: string;
+}
+
+class NamespaceRequestHolder {
+
+    public hostname: string;
+    public port: number;
+
+    constructor(hostname: string, port: number){
+        this.hostname = hostname;
+        this.port = port;
+    }
+
+    public async request<T extends IErrorChecked>(namespace: string, method: string, request: any){
+        return new Promise<T | IServiceError>((resolve, reject) => {
+            const options = {
+                hostname: this.hostname,
+                port: this.port,
+                path: "/api/" + namespace + "/" + method,
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "rpc": method
+                }
+            };
+
+            const req = http.request(options, (res) => {
+                res.setEncoding("utf8");
+                let dataBuffer = "";
+
+                res.on("data", (chunk) => {
+                    dataBuffer += chunk;
+                });
+
+                res.on("end", () => {
+
+                    if (res.statusCode === 400) {
+                        return resolve({ error: "Format Error", isError: true });
+                    } else if (res.statusCode === 403) {
+                        return resolve({ error: "Forbidden Error", isError: true });
+                    } else if (res.statusCode === 404) {
+                        return resolve({ error: "Not Found Error", isError: true });
+                    } else if (res.statusCode === 500) {
+                        return resolve({ error: "Server Error", isError: true });
+                    }
+
+                    const response = JSON.parse(dataBuffer);
+                    response.isError = false;
+                    resolve(response);
+                });
+            });
+
+            req.on("error", reject);
+            req.write(JSON.stringify(request));
+            req.end();
+        });
+    }
+}
+
+{{#.}}
+export class {{namespace}} extends NamespaceRequestHolder {
+
+    constructor(hostname: string, port: number){
+        super(hostname, port);
+    }
+
+}
+{{/.}}
