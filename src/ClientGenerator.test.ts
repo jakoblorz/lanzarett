@@ -60,6 +60,6 @@ describe("ClientGenerator", () => {
     });
 
     after(() => {
-        //fs.unlinkSync(path.join(__dirname, "./test.ts"));
+        fs.unlinkSync(path.join(__dirname, "./test.ts"));
     });
 });
