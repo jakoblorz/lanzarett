@@ -59,7 +59,7 @@ describe("ClientGenerator", () => {
         assert.equal(renderableNamespaceEndpoints.length, 2);
     });
 
-    it("should generate ts-sdk", async () => {
+    it("should generate template", async () => {
         await generator.createClientSDK(path.join(__dirname, "./test.ts"), endpoints);
 
         assert.equal(fs.existsSync(path.join(__dirname, "./test.ts")), true);
