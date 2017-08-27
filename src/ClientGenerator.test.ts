@@ -20,14 +20,14 @@ export const createDummyEndpoints = () => {
     }
 
     const testNamespace1 = new ServiceNamespace("TestNamespace1");
-    testNamespace1.register("testFn1", (request: ITestRequest): ITestResponse => {
+    testNamespace1.register("TestFunction1", (request: ITestRequest): ITestResponse => {
         return { name: request.name, test: "test-msg" };
     }, { name: "" }, { name: "", test: "" });
-    testNamespace1.register("testFn2", (request: ITestRequest): ITestResponse => {
+    testNamespace1.register("TestFunction2", (request: ITestRequest): ITestResponse => {
         return { name: request.name, test: "test-msg" };
     }, { name: "" }, { name: "", test: "" });
     const testNamespace2 = new ServiceNamespace("TestNamespace2");
-    testNamespace2.register("testFn3", (request: ITestRequest): ITestResponse => {
+    testNamespace2.register("TestFunction3", (request: ITestRequest): ITestResponse => {
         return { name: request.name, test: "test-msg" };
     }, { name: "" }, { name: "", test: "" });
 
