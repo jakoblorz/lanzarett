@@ -33,7 +33,7 @@ const request = function(hostname, port, namespace, method, request, formatMessa
                 }
 
                 const response = JSON.parse(dataBuffer);
-                const content_data = response.content_data;
+                const content_data = JSON.parse(response.content_data);
                 content_data.isError = false;
                 resolve(content_data);
             });
