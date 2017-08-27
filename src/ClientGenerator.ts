@@ -18,11 +18,13 @@ export class ClientGenerator {
         this.templateName = templateName;
     }
 
-    public async createClientSDK(target: string, endpoints: IServiceEndpoint<any, any>[]) {
-        const template = await FileSystem.readFile(
+    public async readTemplateFile() {
+        return await FileSystem.readFile(
             path.join(__dirname, "../templates/" + this.templateName + ".mustache"));
-        
-        const renderableEndpoints: IRenderableNamespace[] = endpoints.map((e) => {
+    }
+
+    public processEndpoints(endpoints: IServiceEndpoint<any, any>[]) {
+        return endpoints.map((e) => {
             const rEndpoint: IRenderableServiceEndpoint = {
                 callback: e.callback,
                 name: e.name,
@@ -43,12 +45,12 @@ export class ClientGenerator {
                 }));
 
             return rEndpoint;
-        }).reduce((list, current) => { 
+        }).reduce((list, current) => {
 
             const namespaceIndex = list
                 .map((n, i) => n.namespace === current.namespace ? i : -1)
                 .filter((i) => i !== -1)[0] | -1;
-            
+
             if (namespaceIndex === -1) {
                 list.push({ namespace: current.namespace, endpoints: [current] });
             } else {
@@ -58,8 +60,11 @@ export class ClientGenerator {
             return list;
 
         }, [] as IRenderableNamespace[]);
+    }
 
-
+    public async createClientSDK(target: string, endpoints: IServiceEndpoint<any, any>[]) {
+        const template = await this.readTemplateFile();
+        const renderableEndpoints = this.processEndpoints(endpoints);
         const sdk = mustache.render(template, renderableEndpoints);
         await FileSystem.writeFile(target, sdk);
     }
