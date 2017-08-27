@@ -47,10 +47,10 @@ describe("TypescriptClientGenerator", () => {
 
     it("should actually connect to http server and invoke endpoint", async () => {
         const server = new HttpServer(endpoints);
-        await server.listen(25025);
+        await server.listen(25026);
 
         const generated = require(path.join(__dirname, "./TSSDKGeneratorResult.js"));
-        const nspace1 = new generated.TestNamespace1("localhost", 25025);
+        const nspace1 = new generated.TestNamespace1("localhost", 25026);
         const response = await nspace1.TestFunction1({ name: "test" });
 
         assert.equal(response.isError, false);
