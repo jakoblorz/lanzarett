@@ -12,7 +12,7 @@ export class ClientGenerator {
     public typeDictionary: ITypeDictionary;
     public templateName: string;
 
-    constructor(typeDictionary: ITypeDictionary, templateName: string) {
+    constructor(templateName: string, typeDictionary: ITypeDictionary) {
         this.typeDictionary = typeDictionary;
         this.templateName = templateName;
     }
