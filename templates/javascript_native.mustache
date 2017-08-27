@@ -33,14 +33,15 @@ const request = function(hostname, port, namespace, method, request, formatMessa
                 }
 
                 const response = JSON.parse(dataBuffer);
-                    response.isError = false;
-                    resolve(response);
-                });
+                const content_data = response.content_data;
+                content_data.isError = false;
+                resolve(content_data);
             });
+        });
 
-            req.on("error", reject);
-            req.write(JSON.stringify(request));
-            req.end();
+        req.on("error", reject);
+        req.write(JSON.stringify(request));
+        req.end();
     });
 };
 
