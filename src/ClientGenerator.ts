@@ -24,6 +24,7 @@ export class ClientGenerator {
     }
 
     public processEndpoints(endpoints: IServiceEndpoint<any, any>[]) {
+
         return endpoints.map((e) => {
             const rEndpoint: IRenderableServiceEndpoint = {
                 callback: e.callback,
@@ -47,16 +48,14 @@ export class ClientGenerator {
             return rEndpoint;
         }).reduce((list, current) => {
 
-            const namespaceIndex = list
-                .map((n, i) => n.namespace === current.namespace ? i : -1)
-                .filter((i) => i !== -1)[0] | -1;
-
-            if (namespaceIndex === -1) {
-                list.push({ namespace: current.namespace, endpoints: [current] });
-            } else {
-                list[namespaceIndex].endpoints.push(current);
+            for (let i = 0; i < list.length; i++){
+                if (list[i].namespace === current.namespace) {
+                    list[i].endpoints.push(current);
+                    return list;
+                }
             }
 
+            list.push({ namespace: current.namespace, endpoints: [current] });
             return list;
 
         }, [] as IRenderableNamespace[]);

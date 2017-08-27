@@ -78,9 +78,12 @@ interface {{namespace}}{{name}}Response {
     {{key}}: {{type}};
     {{/responseArgs}}
 }
+
 {{/endpoints}}
 
+{{/.}}
 
+{{#.}}
 export class {{namespace}} extends NamespaceRequestHolder {
 
     constructor(hostname: string, port: number){
