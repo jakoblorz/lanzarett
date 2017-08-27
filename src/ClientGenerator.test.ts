@@ -8,13 +8,7 @@ import * as assert from "assert";
 import * as path from "path";
 import * as fs from "fs";
 
-describe("ClientGenerator", () => {
-
-    const generator = new ClientGenerator("typescript_native", {
-        boolean: "boolean",
-        number: "number",
-        string: "string"
-    });
+export const createDummyEndpoints = () => {
 
     interface ITestRequest {
         name: string;
@@ -39,6 +33,18 @@ describe("ClientGenerator", () => {
 
     const endpoints = testNamespace1.endpoints;
     endpoints.push(testNamespace2.endpoints[0]);
+    return endpoints;
+};
+
+describe("ClientGenerator", () => {
+
+    const generator = new ClientGenerator("typescript_native", {
+        boolean: "boolean",
+        number: "number",
+        string: "string"
+    });
+
+    const endpoints = createDummyEndpoints();
 
     it("should read correct template file", async () => {
         const content = await generator.readTemplateFile();
