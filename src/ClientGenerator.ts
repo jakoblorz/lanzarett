@@ -1,6 +1,7 @@
 import { IServiceEndpoint } from "../lib/interfaces/IServiceEndpoint";
 import { ITypeDictionary } from "./interfaces/ITypeDictionary";
-import { IRenderableServiceEndpoint } from "./interfaces/IRenderableServiceEndpoints";
+import { IRenderableServiceEndpoint } from "./interfaces/IRenderableServiceEndpoint";
+import { IRenderableNamespace } from "./interfaces/IRenderableNamespace";
 
 import { FileSystem } from "./FileSystem";
 import * as mustache from "mustache";
@@ -21,7 +22,7 @@ export class ClientGenerator {
         const template = await FileSystem.readFile(
             path.join(__dirname, "../templates/" + this.templateName + ".mustache"));
         
-        const renderableEndpoints: IRenderableServiceEndpoint[] = endpoints.map((e) => {
+        const renderableEndpoints: IRenderableNamespace[] = endpoints.map((e) => {
             const rEndpoint: IRenderableServiceEndpoint = {
                 callback: e.callback,
                 name: e.name,
@@ -42,7 +43,21 @@ export class ClientGenerator {
                 }));
 
             return rEndpoint;
-        });
+        }).reduce((list, current) => { 
+
+            const namespaceIndex = list
+                .map((n, i) => n.namespace === current.namespace ? i : -1)
+                .filter((i) => i !== -1)[0] | -1;
+            
+            if (namespaceIndex === -1) {
+                list.push({ namespace: current.namespace, endpoints: [current] });
+            } else {
+                list[namespaceIndex].endpoints.push(current);
+            }
+
+            return list;
+
+        }, [] as IRenderableNamespace[]);
 
 
         const sdk = mustache.render(template, renderableEndpoints);
