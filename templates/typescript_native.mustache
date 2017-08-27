@@ -51,8 +51,9 @@ class NamespaceRequestHolder {
                     }
 
                     const response = JSON.parse(dataBuffer);
-                    response.isError = false;
-                    resolve(response);
+                    const content_data = JSON.parse(response.content_data);
+                    content_data.isError = false;
+                    resolve(content_data);
                 });
             });
 
