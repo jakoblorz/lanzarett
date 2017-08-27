@@ -45,41 +45,6 @@ const request = function(hostname, port, namespace, method, request, formatMessa
     });
 };
 
-function makeRequest(hostname, port, path, method, args){
-    return new Promise((resolve, reject) => {
-        const options = {
-            hostname: hostname,
-            port: port,
-            path: path,
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',    
-            }
-        };
-
-        Object.keys(args).forEach(function(k){
-            options.headers[k] = args[k];
-        });
-
-        const req = http.request(options, (res) => {
-            res.setEncoding('utf8');
-            let dataBuffer = "";
-
-            res.on('data', (chunk) => {
-                dataBuffer += chunk;
-            });
-
-            res.on('end', () => {
-                res.body = dataBuffer;
-                resolve(res);
-            });
-        });
-
-        req.on('error', reject);
-        req.end();
-    });
-}
-
 {{#.}}
 
 module.exports.{{namespace}} = (function () {
