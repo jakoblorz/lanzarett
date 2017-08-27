@@ -42,6 +42,6 @@ describe("JavascriptClientGenerator", () => {
     });
 
     after(() => {
-        // fs.unlinkSync(path.join(__dirname, "./JSSDKGeneratorResult.js"));
+        fs.unlinkSync(path.join(__dirname, "./JSSDKGeneratorResult.js"));
     });
 });
