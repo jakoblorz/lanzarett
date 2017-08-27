@@ -90,7 +90,7 @@ module.exports.{{namespace}} = (function () {
     {{#endpoints}}
     {{namespace}}.prototype.{{name}} = function(requestObject){
         return request(this.hostname, this.port, 
-            "{{namespace}}", "{{method}}", requestObject, "{{{#requestArgs}} {{key}}: {{type}},{{/requestArgs}}}");
+            "{{namespace}}", "{{name}}", requestObject, "{ {{#requestArgs}} {{key}}: {{type}},{{/requestArgs}} }");
     };
     {{/endpoints}}
 
