@@ -21,16 +21,22 @@ export class ClientGenerator {
         const template = await FileSystem.readFile(
             path.join(__dirname, "../templates/" + this.templateName + ".mustache"));
         
-        for (let i = 0; i < endpoints.length; i++) {
-            Object.keys(endpoints[i].request)
-                .forEach((k) =>
-                    endpoints[i].request[k] = (this.typeDictionary as any)[endpoints[i].request[k]]);
-            Object.keys(endpoints[i].response)
-                .forEach((k) =>
-                    endpoints[i].response[k] = (this.typeDictionary as any)[endpoints[i].response[k]]);
-        }    
+        const renderableEndpoints: IRenderableServiceEndpoint[] = endpoints.map((e) => {
+            const rEndpoint: IRenderableServiceEndpoint = {
+                callback: e.callback,
+                name: e.name,
+                namespace: e.namespace,
+                request: e.request,
+                requestArgs: [],
+                response: e.response,
+                responseArgs: []
+            };
 
-        const sdk = mustache.render(template, endpoints);
+            return rEndpoint;
+        });
+
+
+        const sdk = mustache.render(template, renderableEndpoints);
         await FileSystem.writeFile(target, sdk);
     }
 
