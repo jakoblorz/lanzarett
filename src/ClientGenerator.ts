@@ -32,6 +32,15 @@ export class ClientGenerator {
                 responseArgs: []
             };
 
+            Object.keys(e.request)
+                .forEach((k) => rEndpoint.requestArgs.push({
+                    key: k, type: (this.typeDictionary as any)[e.request[k]]
+                }));
+            Object.keys(e.response)
+                .forEach((k) => rEndpoint.responseArgs.push({
+                    key: k, type: (this.typeDictionary as any)[e.response[k]]
+                }));
+
             return rEndpoint;
         });
 
