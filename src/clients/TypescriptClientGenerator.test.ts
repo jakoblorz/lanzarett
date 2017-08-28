@@ -38,7 +38,7 @@ describe("TypescriptClientGenerator", () => {
         }
 
         assert.equal(fs.existsSync(path.join(__dirname, "./TSSDKGeneratorResult.js")), true);
-    }).timeout(5000);
+    }).timeout(10000);
 
     it("should have rendered sdk that can be required", async () => {
         const generated = require(path.join(__dirname, "./TSSDKGeneratorResult.js"));
