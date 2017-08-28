@@ -1,0 +1,32 @@
+{{#.}}
+
+{{#endpoints}}
+struct {{namespace}}{{name}}Request {
+    {{#requestArgs}}
+    {{key}}: {{type}}
+    {{/requestArgs}}
+}
+
+struct {{namespace}}{{name}}Response {
+    {{#responseArgs}}
+    {{key}}: {{type}}
+    {{/responseArgs}}
+}
+
+extension {{namespace}}{{name}}Response {
+    init(json: [String: Any]) throws {
+
+        {{#responseArgs}}
+        guard let {{key}} = json["{{key}}"] as? {{type}} else {
+            throw SerializationError.missing("{{key}}")
+        }
+        {{/responseArgs}}
+
+        {{#responseArgs}}
+        self.{{key}} = {{key}}
+        {{/responseArgs}}
+    }
+}
+{{/endpoints}}
+
+{{/.}}
