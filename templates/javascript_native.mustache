@@ -54,9 +54,13 @@ module.exports.{{namespace}} = (function () {
     }
 
     {{#endpoints}}
-    {{namespace}}.prototype.{{name}} = function(requestObject){
+    {{namespace}}.prototype.{{name}} = function({{argumentString}}){
         return request(this.hostname, this.port, 
-            "{{namespace}}", "{{name}}", requestObject, "{ {{#requestArgs}} {{key}}: {{type}},{{/requestArgs}} }");
+            "{{namespace}}", "{{name}}", {
+                {{#requestArgs}}
+                {{key}}: {{key}},
+                {{/requestArgs}}
+            }, "{ {{#requestArgs}} {{key}}: {{type}},{{/requestArgs}} }");
     };
     {{/endpoints}}
 

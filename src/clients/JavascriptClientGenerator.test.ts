@@ -32,7 +32,7 @@ describe("JavascriptClientGenerator", () => {
         
         const generated = require(path.join(__dirname, "./JSSDKGeneratorResult.js"));
         const nspace1 = new generated.TestNamespace1("localhost", 25025);
-        const response = await nspace1.TestFunction1({ name: "test" });
+        const response = await nspace1.TestFunction1("test");
 
         assert.equal(response.isError, false);
         assert.equal(response.name, "test");
@@ -42,6 +42,6 @@ describe("JavascriptClientGenerator", () => {
     });
 
     after(() => {
-        fs.unlinkSync(path.join(__dirname, "./JSSDKGeneratorResult.js"));
+        //fs.unlinkSync(path.join(__dirname, "./JSSDKGeneratorResult.js"));
     });
 });
