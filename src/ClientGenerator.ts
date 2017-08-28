@@ -12,10 +12,12 @@ export class ClientGenerator {
 
     public typeDictionary: ITypeDictionary;
     public templateName: string;
+    public customDataProcessor: (endpoints: IRenderableServiceEndpoint[]) => any;
 
-    constructor(templateName: string, typeDictionary: ITypeDictionary) {
+    constructor(templateName: string, typeDictionary: ITypeDictionary, customDataProcessor = (e: IRenderableServiceEndpoint[]) => e) {
         this.typeDictionary = typeDictionary;
         this.templateName = templateName;
+        this.customDataProcessor = customDataProcessor;
     }
 
     public async readTemplateFile() {
@@ -63,7 +65,7 @@ export class ClientGenerator {
 
     public async createClientSDK(target: string, endpoints: IServiceEndpoint<any, any>[]) {
         const template = await this.readTemplateFile();
-        const renderableEndpoints = this.processEndpoints(endpoints);
+        const renderableEndpoints = this.customDataProcessor(this.processEndpoints(endpoints));
         const sdk = mustache.render(template, renderableEndpoints);
         await FileSystem.writeFile(target, sdk);
     }
