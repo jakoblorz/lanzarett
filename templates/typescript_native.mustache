@@ -65,13 +65,7 @@ class NamespaceRequestHolder {
 }
 
 {{#.}}
-
 {{#endpoints}}
-interface {{namespace}}{{name}}Request {
-    {{#requestArgs}}
-    {{key}}: {{type}};
-    {{/requestArgs}}
-}
 
 interface {{namespace}}{{name}}Response {
     isError: boolean;
@@ -81,7 +75,6 @@ interface {{namespace}}{{name}}Response {
 }
 
 {{/endpoints}}
-
 {{/.}}
 
 {{#.}}
@@ -92,8 +85,12 @@ export class {{namespace}} extends NamespaceRequestHolder {
     }
 
     {{#endpoints}}
-    public async {{name}}(request: {{namespace}}{{name}}Request): Promise<{{namespace}}{{name}}Response | IServiceError> {
-        return await this.request<{{namespace}}{{name}}Response>("{{namespace}}", "{{name}}", request);
+    public async {{name}}({{typedArgumentString}}): Promise<{{namespace}}{{name}}Response | IServiceError> {
+        return await this.request<{{namespace}}{{name}}Response>("{{namespace}}", "{{name}}", {
+            {{#requestArgs}}
+            {{key}}: {{key}},
+            {{/requestArgs}}
+        });
     }
     {{/endpoints}}
 

@@ -51,7 +51,7 @@ describe("TypescriptClientGenerator", () => {
 
         const generated = require(path.join(__dirname, "./TSSDKGeneratorResult.js"));
         const nspace1 = new generated.TestNamespace1("localhost", 25026);
-        const response = await nspace1.TestFunction1({ name: "test" });
+        const response = await nspace1.TestFunction1("test");
 
         assert.equal(response.isError, false);
         assert.equal(response.name, "test");
