@@ -12,9 +12,9 @@ export class ClientGenerator {
 
     public typeDictionary: ITypeDictionary;
     public templateName: string;
-    public customDataProcessor: (endpoints: IRenderableServiceEndpoint[]) => any;
+    public customDataProcessor: (endpoints: IRenderableNamespace[]) => any;
 
-    constructor(templateName: string, typeDictionary: ITypeDictionary, customDataProcessor = (e: IRenderableServiceEndpoint[]) => e) {
+    constructor(templateName: string, typeDictionary: ITypeDictionary, customDataProcessor = (e: IRenderableNamespace[]) => e) {
         this.typeDictionary = typeDictionary;
         this.templateName = templateName;
         this.customDataProcessor = customDataProcessor;
@@ -25,7 +25,7 @@ export class ClientGenerator {
             path.join(__dirname, "../templates/" + this.templateName + ".mustache"));
     }
 
-    public processEndpoints(endpoints: IServiceEndpoint<any, any>[]): any {
+    public processEndpoints(endpoints: IServiceEndpoint<any, any>[]) {
 
         return endpoints.map((e) => {
             const rEndpoint: IRenderableServiceEndpoint = {
