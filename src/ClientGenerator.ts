@@ -23,7 +23,7 @@ export class ClientGenerator {
             path.join(__dirname, "../templates/" + this.templateName + ".mustache"));
     }
 
-    public processEndpoints(endpoints: IServiceEndpoint<any, any>[]) {
+    public processEndpoints(endpoints: IServiceEndpoint<any, any>[]): any {
 
         return endpoints.map((e) => {
             const rEndpoint: IRenderableServiceEndpoint = {
